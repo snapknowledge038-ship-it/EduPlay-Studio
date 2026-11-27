@@ -6,11 +6,20 @@
     <title>EduPlay Studio - Interactive Learning Games for Teachers</title>
 
     <!-- Open Graph Meta Tags (WhatsApp / Social Media Share කරන විට Name, Description, Logo පෙන්වීමට) -->
-    <meta property="og:title" content="EduPlay Studio - Interactive Learning Games">
-    <meta property="og:description" content="ගුරුවරුන්ට සහ සිසුන්ට පහසුවෙන් ඉගෙනුම් ක්‍රියාකාරකම් (Quizzes, Spin Wheel, Match Up) නිර්මාණය කළ හැකි නොමිලේ භාවිත කළ හැකි වේදිකාවකි.">
-    <meta property="og:image" content="images/logo.jpg">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/">
+    <meta property="og:title" content="EduPlay Studio - Interactive Learning Games">
+    <meta property="og:description" content="ගුරුවරුන්ට සහ සිසුන්ට පහසුවෙන් ඉගෙනුම් ක්‍රියාකාරකම් (Quizzes, Spin Wheel, Match Up, Flash Cards) නිර්මාණය කර Google Drive හි Save කළ හැකි වේදිකාවකි.">
+    <meta property="og:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
+    <meta property="og:image:secure_url" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:alt" content="EduPlay Studio Logo">
+
+    <!-- Twitter / Link Preview Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EduPlay Studio - Interactive Learning Games">
+    <meta name="twitter:description" content="ගුරුවරුන්ට සහ සිසුන්ට පහසුවෙන් ඉගෙනුම් ක්‍රියාකාරකම් නිර්මාණය කර Google Drive හි Save කළ හැකි වේදිකාවකි.">
+    <meta name="twitter:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -355,7 +364,7 @@
             gap: 5px;
         }
 
-        /* Modals (About Us, Share, Login/Drive) */
+        /* Modals */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -525,7 +534,7 @@
             <div class="nav-menu">
                 <a href="#templates-area" class="nav-btn">🎮 Templates</a>
                 <button class="nav-btn" onclick="openModal('about-modal')">💡 About Us</button>
-                
+
                 <!-- Contact Us Button (Google Form link එක මෙතනට දාන්න) -->
                 <a href="https://docs.google.com/forms" target="_blank" class="nav-btn btn-contact">
                     📩 Contact Us
@@ -591,7 +600,7 @@
         <div class="modal-box">
             <span class="modal-close" onclick="closeModal('share-modal')">&times;</span>
             <h2 style="margin-bottom: 15px;">Share EduPlay Studio</h2>
-            
+
             <!-- Preview Card -->
             <div class="share-preview">
                 <img src="images/logo.jpg" alt="EduPlay Studio">
@@ -711,16 +720,17 @@
 
         // WhatsApp Share Function
         function shareToWhatsApp() {
-            const siteUrl = window.location.href;
+            const siteUrl = "https://snapknowledge038-ship-it.github.io/EduPlay-Studio/";
             const title = "🎓 *EduPlay Studio* - Interactive Learning Games";
-            const desc = "ගුරුවරුන්ට සහ සිසුන්ට පහසුවෙන් Quizzes, Spin Wheel, Match Up වැනි ඉගෙනුම් ක්‍රියාකාරකම් නිර්මාණය කළ හැකි වේදිකාවකි. දැන්ම පිවිසෙන්න:";
+            const desc = "ගුරුවරුන්ට සහ සිසුන්ට පහසුවෙන් Quizzes, Spin Wheel, Match Up වැනි ඉගෙනුම් ක්‍රියාකාරකම් නිර්මාණය කර Google Drive හි Save කළ හැකි වේදිකාවකි.";
             const message = `${title}\n\n${desc}\n${siteUrl}`;
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
 
         function copySiteLink() {
-            navigator.clipboard.writeText(window.location.href);
+            const siteUrl = "https://snapknowledge038-ship-it.github.io/EduPlay-Studio/";
+            navigator.clipboard.writeText(siteUrl);
             alert("✅ Website link copied to clipboard!");
         }
 
@@ -749,7 +759,6 @@
                 openModal('login-modal');
                 return;
             }
-            // ඊළඟට හදන create.html පිටුවට template name එක සමඟ යොමු කිරීම
             window.location.href = `create.html?template=${encodeURIComponent(templateName)}`;
         }
     </script>
