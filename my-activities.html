@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Activities - EduPlay Studio</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/my-activities.html">
+    <meta property="og:title" content="My Activities - EduPlay Studio">
+    <meta property="og:description" content="Manage, play, share, and back up your saved classroom learning activities in EduPlay Studio.">
+    <meta property="og:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --edu-blue: #4F46E5;
+            --edu-blue-dark: #3730A3;
+            --play-green: #10B981;
+            --play-green-dark: #059669;
+            --accent-orange: #F59E0B;
+            --bg-light: #F8FAFC;
+            --white: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --danger: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        nav {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            padding: 12px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--edu-blue), var(--play-green), var(--accent-orange)) 1;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
+            transition: transform 0.25s ease;
+        }
+
+        .brand:hover img {
+            transform: scale(1.06) rotate(2deg);
+        }
+
+        .brand-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title .main-name {
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .brand-title .edu { color: var(--edu-blue); }
+        .brand-title .play { color: var(--play-green); }
+
+        .brand-title .sub-name {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-back {
+            background: #EEF2FF;
+            color: var(--edu-blue);
+        }
+
+        .btn-back:hover {
+            background: #E0E7FF;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-play {
+            background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.22);
+        }
+
+        .btn-play:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--edu-blue);
+            color: var(--edu-blue);
+        }
+
+        .btn-danger-soft {
+            background: #FEF2F2;
+            color: var(--danger);
+            border: 1px solid #FECACA;
+        }
+
+        .btn-danger-soft:hover {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 34px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .top-bar {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 24px 28px;
+            border: 1px solid var(--border);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .top-bar h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .top-bar p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            background: linear-gradient(135deg, #EEF2FF 0%, #ECFDF5 100%);
+            border: 1px solid #C7D2FE;
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--edu-blue-dark);
+        }
+
+        /* Toolbar (Search & Filter) */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 240px;
+            padding: 11px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: var(--white);
+            font-size: 0.92rem;
+            color: var(--text-dark);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--edu-blue);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .filter-select {
+            padding: 11px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: var(--white);
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--edu-blue);
+        }
+
+        /* Activities Grid */
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 20px;
+        }
+
+        .activity-card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--edu-blue), var(--play-green), var(--accent-orange));
+        }
+
+        .activity-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.1);
+        }
+
+        .template-chip {
+            display: inline-block;
+            background: #EEF2FF;
+            color: var(--edu-blue-dark);
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 4px 11px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+
+        .activity-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+
+        .activity-meta {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding-top: 14px;
+            border-top: 1px solid #F1F5F9;
+        }
+
+        /* Empty State */
+        .empty-state {
+            background: var(--white);
+            border: 1.5px dashed #CBD5E1;
+            border-radius: 20px;
+            padding: 50px 24px;
+            text-align: center;
+        }
+
+        .empty-state img {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            object-fit: cover;
+            margin-bottom: 14px;
+        }
+
+        .empty-state h2 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            max-width: 460px;
+            margin: 0 auto 20px;
+        }
+
+        footer {
+            background: var(--text-dark);
+            color: #CBD5E1;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.88rem;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="brand">
+            <img src="images/logo.jpg" alt="EduPlay Studio">
+            <div class="brand-title">
+                <span class="main-name"><span class="edu">Edu</span><span class="play">Play</span></span>
+                <span class="sub-name">STUDIO</span>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="index.html" class="btn btn-back">🎮 Templates</a>
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('import-file').click()">⬆ Import JSON</button>
+            <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importActivityJson(event)">
+            <a href="create.html" class="btn btn-primary">+ Create Activity</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="top-bar">
+            <div>
+                <h1>📂 My Activities</h1>
+                <p>View, launch, share, and manage your saved classroom games and learning activities.</p>
+            </div>
+            <div class="stats-row">
+                <div class="stat-pill" id="total-count-pill">Total: 0 Activities</div>
+                <div class="stat-pill" id="drive-badge-pill">☁️ Checking Drive...</div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <input type="text" id="search-input" class="search-input" placeholder="🔍 Search by activity title..." oninput="renderActivities()">
+            <select id="template-filter" class="filter-select" onchange="renderActivities()">
+                <option value="ALL">All Templates</option>
+                <option value="Anagram">Anagram</option>
+                <option value="Spin the wheel">Spin the wheel</option>
+                <option value="Open the box">Open the box</option>
+                <option value="Unjumble">Unjumble</option>
+                <option value="Quiz">Quiz</option>
+                <option value="Group sort">Group sort</option>
+                <option value="Match up">Match up</option>
+                <option value="Flash cards">Flash cards</option>
+                <option value="Random cards">Random cards</option>
+                <option value="Complete the sentence">Complete the sentence</option>
+                <option value="Gameshow quiz">Gameshow quiz</option>
+                <option value="Find the match">Find the match</option>
+                <option value="Type the answer">Type the answer</option>
+                <option value="Matching pairs">Matching pairs</option>
+                <option value="Spell the word">Spell the word</option>
+                <option value="Labelled diagram">Labelled diagram</option>
+                <option value="Wordsearch">Wordsearch</option>
+                <option value="Flip tiles">Flip tiles</option>
+                <option value="Hangman">Hangman</option>
+                <option value="Crossword">Crossword</option>
+                <option value="True or false">True or false</option>
+                <option value="Maze chase">Maze chase</option>
+                <option value="Airplane">Airplane</option>
+                <option value="Balloon pop">Balloon pop</option>
+                <option value="Whack-a-mole">Whack-a-mole</option>
+                <option value="Speed sorting">Speed sorting</option>
+            </select>
+        </div>
+
+        <div id="activities-container"></div>
+    </main>
+
+    <footer>
+        <p>© 2026 <strong>EduPlay Studio</strong> — Interactive Learning Games for Teachers & Students.</p>
+    </footer>
+
+    <script>
+        const STORAGE_KEY = "eduplay_saved_activities";
+        const BASE_URL = "https://snapknowledge038-ship-it.github.io/EduPlay-Studio/";
+
+        function getActivities() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveActivities(list) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        }
+
+        function updateDriveBadge() {
+            const pill = document.getElementById("drive-badge-pill");
+            const connected = localStorage.getItem("eduplay_drive_connected") === "true";
+            pill.textContent = connected ? "☁️ Drive Connected" : "💾 Local Storage";
+        }
+
+        function formatDate(isoStr) {
+            if (!isoStr) return "Saved recently";
+            const d = new Date(isoStr);
+            if (isNaN(d.getTime())) return "Saved recently";
+            return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+        }
+
+        function renderActivities() {
+            const all = getActivities();
+            const query = document.getElementById("search-input").value.trim().toLowerCase();
+            const selectedTemplate = document.getElementById("template-filter").value;
+
+            document.getElementById("total-count-pill").textContent = `Total: ${all.length} ${all.length === 1 ? "Activity" : "Activities"}`;
+            updateDriveBadge();
+
+            const filtered = all.filter(act => {
+                const titleMatch = !query || (act.title || "").toLowerCase().includes(query);
+                const templateMatch = selectedTemplate === "ALL" || act.template === selectedTemplate;
+                return titleMatch && templateMatch;
+            });
+
+            const container = document.getElementById("activities-container");
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <img src="images/logo.jpg" alt="EduPlay Studio">
+                        <h2>${all.length === 0 ? "No Saved Activities Yet" : "No Matching Activities Found"}</h2>
+                        <p>${
+                            all.length === 0
+                                ? "Start by choosing a template and creating your first interactive activity for your students."
+                                : "Try clearing your search filter or create a new activity."
+                        }</p>
+                        <a href="create.html" class="btn btn-primary">+ Create Your First Activity</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `<div class="activities-grid">` + filtered.map(act => {
+                const itemCount = Array.isArray(act.items) ? act.items.length : 0;
+                const playUrl = `play.html?id=${encodeURIComponent(act.id)}`;
+                return `
+                    <div class="activity-card">
+                        <div>
+                            <span class="template-chip">${escapeHtml(act.template || "Activity")}</span>
+                            <h3>${escapeHtml(act.title || "Untitled Activity")}</h3>
+                            <div class="activity-meta">
+                                📝 ${itemCount} ${itemCount === 1 ? "item" : "items"} • 📅 ${escapeHtml(formatDate(act.createdAt))}
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <a href="${playUrl}" class="btn btn-play">▶ Play</a>
+                            <button type="button" class="btn btn-outline" onclick="copyShareLink('${escapeAttr(act.id)}')">🔗 Share</button>
+                            <button type="button" class="btn btn-outline" onclick="exportSingleJson('${escapeAttr(act.id)}')">⬇ JSON</button>
+                            <button type="button" class="btn btn-danger-soft" onclick="deleteActivity('${escapeAttr(act.id)}')">🗑</button>
+                        </div>
+                    </div>
+                `;
+            }).join("") + `</div>`;
+        }
+
+        function copyShareLink(id) {
+            const shareUrl = `${BASE_URL}play.html?id=${encodeURIComponent(id)}`;
+            navigator.clipboard.writeText(shareUrl);
+            alert("✅ Play link copied to clipboard!");
+        }
+
+        function exportSingleJson(id) {
+            const act = getActivities().find(item => String(item.id) === String(id));
+            if (!act) return;
+
+            const blob = new Blob([JSON.stringify(act, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            const safeName = (act.title || "activity").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+            a.href = url;
+            a.download = `${safeName || "eduplay-activity"}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function deleteActivity(id) {
+            if (!confirm("Are you sure you want to delete this activity?")) return;
+            const remaining = getActivities().filter(item => String(item.id) !== String(id));
+            saveActivities(remaining);
+            renderActivities();
+        }
+
+        function importActivityJson(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (!parsed || !Array.isArray(parsed.items)) {
+                        alert("Invalid activity JSON file.");
+                        return;
+                    }
+                    const imported = {
+                        id: parsed.id || ("act_" + Date.now()),
+                        title: parsed.title || "Imported Activity",
+                        template: parsed.template || "Quiz",
+                        items: parsed.items,
+                        createdAt: parsed.createdAt || new Date().toISOString()
+                    };
+                    const list = getActivities();
+                    const existsIndex = list.findIndex(x => String(x.id) === String(imported.id));
+                    if (existsIndex >= 0) {
+                        imported.id = "act_" + Date.now();
+                    }
+                    list.unshift(imported);
+                    saveActivities(list);
+                    renderActivities();
+                    alert("✅ Activity imported successfully!");
+                } catch (err) {
+                    alert("Could not read JSON file.");
+                } finally {
+                    event.target.value = "";
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function escapeAttr(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        renderActivities();
+    </script>
+</body>
+</html>
