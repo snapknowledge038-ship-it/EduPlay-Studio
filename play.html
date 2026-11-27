@@ -534,6 +534,34 @@
             document.getElementById("score-display").textContent = `⭐ Score: ${score}`;
         }
 
+        function decodeActivityFromHash() {
+            try {
+                const hash = window.location.hash || "";
+                const match = hash.match(/d=([A-Za-z0-9\-_]+)/);
+                if (!match || !match[1]) return null;
+
+                let base64 = match[1].replace(/-/g, "+").replace(/_/g, "/");
+                while (base64.length % 4) {
+                    base64 += "=";
+                }
+
+                const binary = atob(base64);
+                const bytes = new Uint8Array(binary.length);
+                for (let i = 0; i < binary.length; i++) {
+                    bytes[i] = binary.charCodeAt(i);
+                }
+
+                const jsonStr = new TextDecoder().decode(bytes);
+                const parsed = JSON.parse(jsonStr);
+                if (parsed && Array.isArray(parsed.items) && parsed.items.length >= 2) {
+                    return parsed;
+                }
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+
         function loadActivity() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get("id");
@@ -545,9 +573,13 @@
                 saved = [];
             }
 
-            const found = id ? saved.find(item => String(item.id) === String(id)) : saved[0];
-            activeActivity = found && Array.isArray(found.items) && found.items.length >= 2
-                ? found
+            const foundById = id ? saved.find(item => String(item.id) === String(id)) : null;
+            const foundInHash = decodeActivityFromHash();
+            const firstSaved = !id && saved.length > 0 ? saved[0] : null;
+
+            const candidate = foundById || foundInHash || firstSaved;
+            activeActivity = candidate && Array.isArray(candidate.items) && candidate.items.length >= 2
+                ? candidate
                 : fallbackActivity;
 
             document.getElementById("activity-title-heading").textContent = activeActivity.title || "Untitled Activity";
