@@ -12,6 +12,7 @@
     <meta property="og:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="supabase-config.js"></script>
     <style>
         :root {
             --edu-blue: #4F46E5;
@@ -42,7 +43,6 @@
             flex-direction: column;
         }
 
-        /* Navbar */
         nav {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
@@ -152,7 +152,6 @@
             color: var(--edu-blue-dark);
         }
 
-        /* Main Container */
         .container {
             max-width: 1040px;
             width: 100%;
@@ -232,7 +231,6 @@
             text-align: center;
         }
 
-        /* Spin Wheel */
         .wheel-wrap {
             position: relative;
             width: 310px;
@@ -274,7 +272,6 @@
             width: 100%;
         }
 
-        /* Flashcards */
         .flashcard-box {
             width: 100%;
             max-width: 480px;
@@ -297,9 +294,7 @@
             background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
         }
 
-        .flashcard-box:hover {
-            transform: scale(1.02);
-        }
+        .flashcard-box:hover { transform: scale(1.02); }
 
         .card-side-tag {
             font-size: 0.75rem;
@@ -316,7 +311,6 @@
             line-height: 1.4;
         }
 
-        /* Open the Box */
         .boxes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
@@ -350,7 +344,6 @@
             box-shadow: 0 6px 14px rgba(16, 185, 129, 0.14);
         }
 
-        /* Quiz */
         .quiz-card {
             max-width: 640px;
             width: 100%;
@@ -403,7 +396,6 @@
             color: var(--danger);
         }
 
-        /* Match Up */
         .match-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -501,7 +493,9 @@
             <button type="button" class="btn btn-outline" id="mode-btn-match" onclick="switchMode('Match up')">🔗 Match Up</button>
         </div>
 
-        <section class="stage-card" id="game-stage"></section>
+        <section class="stage-card" id="game-stage">
+            <p style="color:var(--text-muted);">⏳ Loading game...</p>
+        </section>
     </main>
 
     <footer>
@@ -509,8 +503,6 @@
     </footer>
 
     <script>
-        const STORAGE_KEY = "eduplay_saved_activities";
-
         const fallbackActivity = {
             id: "sample_demo",
             title: "Demo Classroom Activity - Solar System",
@@ -541,9 +533,7 @@
                 if (!match || !match[1]) return null;
 
                 let base64 = match[1].replace(/-/g, "+").replace(/_/g, "/");
-                while (base64.length % 4) {
-                    base64 += "=";
-                }
+                while (base64.length % 4) base64 += "=";
 
                 const binary = atob(base64);
                 const bytes = new Uint8Array(binary.length);
@@ -562,22 +552,22 @@
             }
         }
 
-        function loadActivity() {
+        async function loadActivity() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get("id");
 
-            let saved = [];
-            try {
-                saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-            } catch (e) {
-                saved = [];
+            let candidate = null;
+            if (id) {
+                candidate = await cloudFetchActivityById(id);
+            }
+            if (!candidate) {
+                candidate = decodeActivityFromHash();
+            }
+            if (!candidate && !id) {
+                const all = await cloudFetchAllActivities();
+                if (all.length > 0) candidate = all[0];
             }
 
-            const foundById = id ? saved.find(item => String(item.id) === String(id)) : null;
-            const foundInHash = decodeActivityFromHash();
-            const firstSaved = !id && saved.length > 0 ? saved[0] : null;
-
-            const candidate = foundById || foundInHash || firstSaved;
             activeActivity = candidate && Array.isArray(candidate.items) && candidate.items.length >= 2
                 ? candidate
                 : fallbackActivity;
