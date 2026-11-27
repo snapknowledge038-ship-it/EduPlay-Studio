@@ -12,6 +12,7 @@
     <meta property="og:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="supabase-config.js"></script>
     <style>
         :root {
             --edu-blue: #4F46E5;
@@ -42,7 +43,6 @@
             flex-direction: column;
         }
 
-        /* Navbar */
         nav {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
@@ -72,11 +72,6 @@
             border-radius: 12px;
             object-fit: cover;
             box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
-            transition: transform 0.25s ease;
-        }
-
-        .brand:hover img {
-            transform: scale(1.06) rotate(2deg);
         }
 
         .brand-title {
@@ -126,9 +121,7 @@
             color: var(--edu-blue);
         }
 
-        .btn-back:hover {
-            background: #E0E7FF;
-        }
+        .btn-back:hover { background: #E0E7FF; }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
@@ -136,9 +129,7 @@
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-1px);
-        }
+        .btn-primary:hover { transform: translateY(-1px); }
 
         .btn-play {
             background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
@@ -146,9 +137,7 @@
             box-shadow: 0 4px 10px rgba(16, 185, 129, 0.22);
         }
 
-        .btn-play:hover {
-            transform: translateY(-1px);
-        }
+        .btn-play:hover { transform: translateY(-1px); }
 
         .btn-outline {
             background: var(--white);
@@ -172,7 +161,6 @@
             color: var(--white);
         }
 
-        /* Main Container */
         .container {
             max-width: 1200px;
             width: 100%;
@@ -223,7 +211,6 @@
             color: var(--edu-blue-dark);
         }
 
-        /* Toolbar (Search & Filter) */
         .toolbar {
             display: flex;
             gap: 12px;
@@ -264,7 +251,6 @@
             border-color: var(--edu-blue);
         }
 
-        /* Activities Grid */
         .activities-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
@@ -330,7 +316,6 @@
             border-top: 1px solid #F1F5F9;
         }
 
-        /* Empty State */
         .empty-state {
             background: var(--white);
             border: 1.5px dashed #CBD5E1;
@@ -396,13 +381,13 @@
             </div>
             <div class="stats-row">
                 <div class="stat-pill" id="total-count-pill">Total: 0 Activities</div>
-                <div class="stat-pill" id="drive-badge-pill">☁️ Checking Drive...</div>
+                <div class="stat-pill" id="drive-badge-pill">☁️ Supabase Cloud</div>
             </div>
         </div>
 
         <div class="toolbar">
-            <input type="text" id="search-input" class="search-input" placeholder="🔍 Search by activity title..." oninput="renderActivities()">
-            <select id="template-filter" class="filter-select" onchange="renderActivities()">
+            <input type="text" id="search-input" class="search-input" placeholder="🔍 Search by activity title..." oninput="renderFilteredActivities()">
+            <select id="template-filter" class="filter-select" onchange="renderFilteredActivities()">
                 <option value="ALL">All Templates</option>
                 <option value="Anagram">Anagram</option>
                 <option value="Spin the wheel">Spin the wheel</option>
@@ -441,26 +426,8 @@
     </footer>
 
     <script>
-        const STORAGE_KEY = "eduplay_saved_activities";
         const BASE_URL = "https://snapknowledge038-ship-it.github.io/EduPlay-Studio/";
-
-        function getActivities() {
-            try {
-                return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-            } catch (e) {
-                return [];
-            }
-        }
-
-        function saveActivities(list) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-        }
-
-        function updateDriveBadge() {
-            const pill = document.getElementById("drive-badge-pill");
-            const connected = localStorage.getItem("eduplay_drive_connected") === "true";
-            pill.textContent = connected ? "☁️ Drive Connected" : "💾 Local Storage";
-        }
+        let allActivities = [];
 
         function formatDate(isoStr) {
             if (!isoStr) return "Saved recently";
@@ -469,15 +436,20 @@
             return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
         }
 
-        function renderActivities() {
-            const all = getActivities();
+        async function loadAndRender() {
+            const container = document.getElementById("activities-container");
+            container.innerHTML = `<div class="empty-state"><p>⏳ Loading activities...</p></div>`;
+            allActivities = await cloudFetchAllActivities();
+            renderFilteredActivities();
+        }
+
+        function renderFilteredActivities() {
             const query = document.getElementById("search-input").value.trim().toLowerCase();
             const selectedTemplate = document.getElementById("template-filter").value;
 
-            document.getElementById("total-count-pill").textContent = `Total: ${all.length} ${all.length === 1 ? "Activity" : "Activities"}`;
-            updateDriveBadge();
+            document.getElementById("total-count-pill").textContent = `Total: ${allActivities.length} ${allActivities.length === 1 ? "Activity" : "Activities"}`;
 
-            const filtered = all.filter(act => {
+            const filtered = allActivities.filter(act => {
                 const titleMatch = !query || (act.title || "").toLowerCase().includes(query);
                 const templateMatch = selectedTemplate === "ALL" || act.template === selectedTemplate;
                 return titleMatch && templateMatch;
@@ -489,9 +461,9 @@
                 container.innerHTML = `
                     <div class="empty-state">
                         <img src="images/logo.jpg" alt="EduPlay Studio">
-                        <h2>${all.length === 0 ? "No Saved Activities Yet" : "No Matching Activities Found"}</h2>
+                        <h2>${allActivities.length === 0 ? "No Saved Activities Yet" : "No Matching Activities Found"}</h2>
                         <p>${
-                            all.length === 0
+                            allActivities.length === 0
                                 ? "Start by choosing a template and creating your first interactive activity for your students."
                                 : "Try clearing your search filter or create a new activity."
                         }</p>
@@ -531,7 +503,7 @@
         }
 
         function exportSingleJson(id) {
-            const act = getActivities().find(item => String(item.id) === String(id));
+            const act = allActivities.find(item => String(item.id) === String(id));
             if (!act) return;
 
             const blob = new Blob([JSON.stringify(act, null, 2)], { type: "application/json" });
@@ -544,11 +516,15 @@
             URL.revokeObjectURL(url);
         }
 
-        function deleteActivity(id) {
+        async function deleteActivity(id) {
             if (!confirm("Are you sure you want to delete this activity?")) return;
-            const remaining = getActivities().filter(item => String(item.id) !== String(id));
-            saveActivities(remaining);
-            renderActivities();
+            try {
+                await cloudDeleteActivity(id);
+                allActivities = allActivities.filter(item => String(item.id) !== String(id));
+                renderFilteredActivities();
+            } catch (e) {
+                alert("⚠️ Delete failed: " + e.message);
+            }
         }
 
         function importActivityJson(event) {
@@ -556,29 +532,24 @@
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 try {
                     const parsed = JSON.parse(e.target.result);
                     if (!parsed || !Array.isArray(parsed.items)) {
                         alert("Invalid activity JSON file.");
                         return;
                     }
+                    const exists = allActivities.some(x => String(x.id) === String(parsed.id));
                     const imported = {
-                        id: parsed.id || ("act_" + Date.now()),
+                        id: parsed.id && !exists ? parsed.id : ("act_" + Date.now()),
                         title: parsed.title || "Imported Activity",
                         template: parsed.template || "Quiz",
                         items: parsed.items,
                         createdAt: parsed.createdAt || new Date().toISOString()
                     };
-                    const list = getActivities();
-                    const existsIndex = list.findIndex(x => String(x.id) === String(imported.id));
-                    if (existsIndex >= 0) {
-                        imported.id = "act_" + Date.now();
-                    }
-                    list.unshift(imported);
-                    saveActivities(list);
-                    renderActivities();
-                    alert("✅ Activity imported successfully!");
+                    await cloudSaveActivity(imported);
+                    await loadAndRender();
+                    alert("✅ Activity imported and saved!");
                 } catch (err) {
                     alert("Could not read JSON file.");
                 } finally {
@@ -605,7 +576,7 @@
                 .replace(/>/g, "&gt;");
         }
 
-        renderActivities();
+        loadAndRender();
     </script>
 </body>
 </html>
