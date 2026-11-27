@@ -186,6 +186,12 @@
             margin-bottom: 6px;
         }
 
+        .source-note {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
         .play-header h1 {
             font-size: 1.55rem;
             font-weight: 800;
@@ -478,8 +484,9 @@
     <main class="container">
         <div class="play-header">
             <div>
-                <span class="mode-chip" id="activity-template-chip">Template: Spin the wheel</span>
+                <span class="mode-chip" id="activity-template-chip">Mode: Spin the wheel</span>
                 <h1 id="activity-title-heading">Loading Activity...</h1>
+                <div class="source-note" id="activity-source-note">Fetching activity details...</div>
             </div>
             <div class="score-box" id="score-display">⭐ Score: 0</div>
         </div>
@@ -552,30 +559,134 @@
             }
         }
 
+        function getLocalActivityById(id) {
+            try {
+                const list = JSON.parse(localStorage.getItem("eduplay_saved_activities") || "[]");
+                return list.find(item => String(item.id) === String(id)) || null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function fetchExactCloudActivity(id) {
+            if (!id || typeof SUPABASE_URL === "undefined" || typeof SUPABASE_ANON_KEY === "undefined") {
+                return null;
+            }
+
+            const endpoint = `${SUPABASE_URL}/rest/v1/activities?id=eq.${encodeURIComponent(id)}&select=*`;
+            const res = await fetch(endpoint, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+                }
+            });
+
+            if (!res.ok) {
+                throw new Error(`HTTP ${res.status}`);
+            }
+
+            const rows = await res.json();
+            if (!Array.isArray(rows) || rows.length === 0) {
+                return null;
+            }
+
+            const r = rows[0];
+            return {
+                id: r.id,
+                title: r.title,
+                template: r.template,
+                items: Array.isArray(r.items) ? r.items : [],
+                createdAt: r.created_at
+            };
+        }
+
         async function loadActivity() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get("id");
+            const hashActivity = decodeActivityFromHash();
+            const sourceNoteEl = document.getElementById("activity-source-note");
 
-            let candidate = null;
+            let loaded = null;
+            let sourceLabel = "";
+
             if (id) {
-                candidate = await cloudFetchActivityById(id);
-            }
-            if (!candidate) {
-                candidate = decodeActivityFromHash();
-            }
-            if (!candidate && !id) {
-                const all = await cloudFetchAllActivities();
-                if (all.length > 0) candidate = all[0];
+                try {
+                    const cloudAct = await fetchExactCloudActivity(id);
+                    if (cloudAct && Array.isArray(cloudAct.items) && cloudAct.items.length >= 2) {
+                        loaded = cloudAct;
+                        sourceLabel = `☁️ Loaded from Cloud (ID: ${id})`;
+                    }
+                } catch (err) {
+                    console.warn("Cloud fetch failed for id:", id, err);
+                }
+
+                // If cloud lookup didn't return it, check if the hash matches this exact ID
+                if (!loaded && hashActivity && String(hashActivity.id) === String(id)) {
+                    loaded = hashActivity;
+                    sourceLabel = "🔗 Loaded from Link Data";
+                }
+
+                // Check local cache for this exact ID (never pick a different activity's ID!)
+                if (!loaded) {
+                    const localMatch = getLocalActivityById(id);
+                    if (localMatch && Array.isArray(localMatch.items) && localMatch.items.length >= 2) {
+                        loaded = localMatch;
+                        sourceLabel = "💾 Loaded from Local Cache";
+                    }
+                }
+
+                if (!loaded) {
+                    activeActivity = {
+                        id: id,
+                        title: "Activity Not Found",
+                        template: "Spin the wheel",
+                        items: []
+                    };
+                    document.getElementById("activity-title-heading").textContent = "Activity Not Found";
+                    sourceNoteEl.textContent = `Could not find activity "${id}" in Cloud Database.`;
+                    document.getElementById("game-stage").innerHTML = `
+                        <div>
+                            <h2 style="margin-bottom:10px;">⚠️ Activity Not Found</h2>
+                            <p style="color:var(--text-muted); max-width:480px; margin:0 auto 20px;">
+                                This activity link may be incomplete or the activity was not saved to Supabase yet.
+                            </p>
+                            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                                <a href="my-activities.html" class="btn btn-outline">📂 My Activities</a>
+                                <a href="create.html" class="btn btn-primary">+ Create Activity</a>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+            } else {
+                // No ID in URL: use hash data if present, else latest activity, else demo
+                if (hashActivity) {
+                    loaded = hashActivity;
+                    sourceLabel = "🔗 Loaded from Link Data";
+                } else {
+                    const all = await cloudFetchAllActivities();
+                    if (all.length > 0) {
+                        loaded = all[0];
+                        sourceLabel = "☁️ Latest Activity";
+                    } else {
+                        loaded = fallbackActivity;
+                        sourceLabel = "✨ Demo Activity";
+                    }
+                }
             }
 
-            activeActivity = candidate && Array.isArray(candidate.items) && candidate.items.length >= 2
-                ? candidate
-                : fallbackActivity;
-
+            activeActivity = loaded;
             document.getElementById("activity-title-heading").textContent = activeActivity.title || "Untitled Activity";
+            sourceNoteEl.textContent = sourceLabel;
+            updateScore(0, true);
 
             const preferred = activeActivity.template || "Spin the wheel";
-            const supportedModes = ["Spin the wheel", "Quiz", "Gameshow quiz", "True or false", "Flash cards", "Random cards", "Open the box", "Match up", "Find the match"];
+            const supportedModes = [
+                "Spin the wheel", "Quiz", "Gameshow quiz", "True or false",
+                "Flash cards", "Random cards", "Open the box", "Match up", "Find the match"
+            ];
             currentMode = supportedModes.includes(preferred) ? preferred : "Spin the wheel";
 
             switchMode(currentMode);
@@ -589,6 +700,10 @@
         }
 
         function switchMode(mode) {
+            if (!activeActivity || !Array.isArray(activeActivity.items) || activeActivity.items.length < 2) {
+                return;
+            }
+
             currentMode = normalizeModeName(mode);
             document.getElementById("activity-template-chip").textContent = `Mode: ${currentMode}`;
 
