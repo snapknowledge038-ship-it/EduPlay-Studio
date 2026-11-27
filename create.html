@@ -419,6 +419,7 @@
 
         <div class="nav-actions">
             <a href="index.html" class="btn btn-back">⬅ All Templates</a>
+            <a href="my-activities.html" class="btn btn-outline">📂 My Activities</a>
             <button class="btn btn-outline" onclick="loadSampleData()">✨ Fill Sample</button>
         </div>
     </nav>
@@ -503,6 +504,7 @@
                 <div class="share-link-row">
                     <input type="text" id="activity-share-link" readonly>
                     <button type="button" class="btn btn-primary" onclick="copyActivityLink()">Copy Link</button>
+                    <a id="open-play-btn" href="play.html" class="btn btn-play">▶ Play Now</a>
                 </div>
             </div>
         </div>
@@ -552,8 +554,6 @@
             col2: "Answer / Paired Value"
         };
 
-        let rowCounter = 0;
-
         function init() {
             const params = new URLSearchParams(window.location.search);
             const requestedTemplate = params.get("template");
@@ -600,7 +600,6 @@
         }
 
         function addRow(val1 = "", val2 = "") {
-            rowCounter++;
             const templateName = document.getElementById("template-select").value;
             const guide = templateGuides[templateName] || defaultGuide;
             const list = document.getElementById("items-list");
@@ -687,11 +686,24 @@
             };
         }
 
+        function encodeActivityForUrl(activityObj) {
+            try {
+                const jsonStr = JSON.stringify(activityObj);
+                const bytes = new TextEncoder().encode(jsonStr);
+                let binary = "";
+                for (let i = 0; i < bytes.length; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+            } catch (e) {
+                return "";
+            }
+        }
+
         function saveToGoogleDrive() {
             const activity = collectActivityData();
             if (!activity) return;
 
-            // Save local copy so it persists on this browser
             const existing = JSON.parse(localStorage.getItem("eduplay_saved_activities") || "[]");
             existing.push(activity);
             localStorage.setItem("eduplay_saved_activities", JSON.stringify(existing));
@@ -700,14 +712,21 @@
             const resultBox = document.getElementById("result-box");
             const msg = document.getElementById("result-message");
             const shareInput = document.getElementById("activity-share-link");
+            const openPlayBtn = document.getElementById("open-play-btn");
 
             const baseUrl = "https://snapknowledge038-ship-it.github.io/EduPlay-Studio/";
-            shareInput.value = `${baseUrl}?activity=${encodeURIComponent(activity.id)}`;
+            const encodedPayload = encodeActivityForUrl(activity);
+            const playLink = encodedPayload
+                ? `${baseUrl}play.html?id=${encodeURIComponent(activity.id)}#d=${encodedPayload}`
+                : `${baseUrl}play.html?id=${encodeURIComponent(activity.id)}`;
+
+            shareInput.value = playLink;
+            openPlayBtn.href = playLink;
 
             if (isDriveConnected) {
-                msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> (${escapeHtml(activity.template)}) is prepared for your <strong>Google Drive ("EduPlay Studio")</strong> folder and saved locally as well.`;
+                msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> (${escapeHtml(activity.template)}) is prepared for your <strong>Google Drive ("EduPlay Studio")</strong> folder and saved locally as well. Use the link below to play or share.`;
             } else {
-                msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> saved locally. Connect Google Drive on the home page to sync directly with your Drive account.`;
+                msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> saved locally. Use the link below to open the game directly.`;
             }
 
             resultBox.classList.add("active");
@@ -731,7 +750,7 @@
         function copyActivityLink() {
             const input = document.getElementById("activity-share-link");
             navigator.clipboard.writeText(input.value);
-            alert("✅ Activity link copied!");
+            alert("✅ Play link copied!");
         }
 
         function escapeAttr(str) {
