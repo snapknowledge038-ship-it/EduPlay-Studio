@@ -247,6 +247,32 @@
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
         }
 
+        .lock-box-wrap {
+            grid-column: 1 / -1;
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .lock-box-wrap label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .lock-box-wrap input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--edu-blue);
+            cursor: pointer;
+        }
+
         .items-section-title {
             display: flex;
             justify-content: space-between;
@@ -451,6 +477,13 @@
                         </optgroup>
                     </select>
                 </div>
+
+                <div class="lock-box-wrap">
+                    <label for="lock-mode-checkbox">
+                        <input type="checkbox" id="lock-mode-checkbox">
+                        🔒 Lock to selected template (Prevents students from switching to Flash Cards to check answers)
+                    </label>
+                </div>
             </div>
 
             <div class="items-section-title">
@@ -479,7 +512,7 @@
                 <div class="share-link-row">
                     <input type="text" id="activity-share-link" readonly>
                     <button type="button" class="btn btn-primary" onclick="copyActivityLink()">Copy Link</button>
-                    <a id="open-play-btn" href="play.html" class="btn btn-play">▶ Play Now</a>
+                    <a id="open-play-btn" href="play.html" class="btn btn-drive">▶ Play Now</a>
                 </div>
             </div>
         </div>
@@ -555,6 +588,11 @@
             document.getElementById("page-heading").textContent = `Create "${templateName}" Activity`;
             document.getElementById("template-hint").innerHTML = guide.hint;
 
+            const lockBox = document.getElementById("lock-mode-checkbox");
+            if (lockBox) {
+                lockBox.checked = (templateName === "Quiz" || templateName === "Gameshow quiz");
+            }
+
             document.querySelectorAll(".col1-input").forEach(inp => inp.placeholder = guide.col1);
             document.querySelectorAll(".col2-input").forEach(inp => inp.placeholder = guide.col2);
         }
@@ -614,6 +652,7 @@
         function collectActivityData() {
             const title = document.getElementById("activity-title").value.trim();
             const template = document.getElementById("template-select").value;
+            const lockMode = Boolean(document.getElementById("lock-mode-checkbox")?.checked);
             const col1Inputs = document.querySelectorAll(".col1-input");
             const col2Inputs = document.querySelectorAll(".col2-input");
 
@@ -641,6 +680,7 @@
                 id: "act_" + Date.now(),
                 title,
                 template,
+                lockMode,
                 items,
                 createdAt: new Date().toISOString()
             };
