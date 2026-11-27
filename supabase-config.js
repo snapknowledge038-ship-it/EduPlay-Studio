@@ -1,5 +1,5 @@
 const SUPABASE_URL = "https://wdpkqlkexpjrcshxavjt.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_ANON_KEY = "sb_publishable_n4koDe4SFn0OMSoyUw-HFA_WAuQwH8v";
 
 function getLocalActivities() {
     try {
