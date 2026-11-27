@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPlay Studio - Interactive Learning Games for Teachers</title>
+
+    <!-- Open Graph Meta Tags (WhatsApp / Social Media Share කරන විට Name, Description, Logo පෙන්වීමට) -->
+    <meta property="og:title" content="EduPlay Studio - Interactive Learning Games">
+    <meta property="og:description" content="ගුරුවරුන්ට සහ සිසුන්ට පහසුවෙන් ඉගෙනුම් ක්‍රියාකාරකම් (Quizzes, Spin Wheel, Match Up) නිර්මාණය කළ හැකි නොමිලේ භාවිත කළ හැකි වේදිකාවකි.">
+    <meta property="og:image" content="images/logo.jpg">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Logo Colours Theme */
+        :root {
+            --edu-blue: #4F46E5;
+            --edu-blue-dark: #3730A3;
+            --play-green: #10B981;
+            --play-green-dark: #059669;
+            --accent-orange: #F59E0B;
+            --bg-light: #F8FAFC;
+            --white: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Opening Splash / Entrance Animation */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #FFFFFF 0%, #EEF2FF 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .splash-logo {
+            width: 130px;
+            height: 130px;
+            border-radius: 24px;
+            object-fit: cover;
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.25);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .splash-text {
+            margin-top: 18px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--edu-blue), var(--play-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5) rotate(-8deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Main Content Entrance */
+        .page-wrapper {
+            animation: pageReveal 0.9s ease 0.5s both;
+        }
+
+        @keyframes pageReveal {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--edu-blue), var(--play-green), var(--accent-orange)) 1;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .brand img {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .brand:hover img {
+            transform: scale(1.08) rotate(3deg);
+        }
+
+        .brand-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title .main-name {
+            font-size: 1.35rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .brand-title .edu { color: var(--edu-blue); }
+        .brand-title .play { color: var(--play-green); }
+
+        .brand-title .sub-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.92rem;
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #EEF2FF;
+            color: var(--edu-blue);
+        }
+
+        /* Share WhatsApp Button */
+        .btn-share {
+            background: #ECFDF5;
+            color: var(--play-green-dark);
+            border: 1px solid #A7F3D0;
+        }
+
+        .btn-share:hover {
+            background: var(--play-green);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Contact Button */
+        .btn-contact {
+            background: #FFFBEB;
+            color: #B45309;
+            border: 1px solid #FDE68A;
+        }
+
+        .btn-contact:hover {
+            background: var(--accent-orange);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Login / Drive Button */
+        .btn-login {
+            background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
+            color: var(--white);
+            padding: 9px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+        }
+
+        /* Container & Header */
+        .container {
+            max-width: 1240px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-free {
+            background: linear-gradient(135deg, var(--play-green), var(--accent-orange));
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Templates Grid */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 22px;
+            margin-bottom: 50px;
+        }
+
+        .template-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .template-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--edu-blue), var(--play-green));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .template-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 28px rgba(79, 70, 229, 0.12);
+            border-color: #C7D2FE;
+        }
+
+        .template-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .icon-box {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #EEF2FF 0%, #ECFDF5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .template-card:hover .icon-box {
+            transform: scale(1.1);
+        }
+
+        .template-card h3 {
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .template-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .create-tag {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--edu-blue);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Modals (About Us, Share, Login/Drive) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: 20px;
+            max-width: 520px;
+            width: 100%;
+            padding: 32px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px;
+            right: 22px;
+            font-size: 26px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #EF4444;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .modal-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .about-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #EEF2FF 0%, #ECFDF5 100%);
+            border-left: 4px solid var(--play-green);
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .share-preview {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #F8FAFC;
+            margin-bottom: 20px;
+        }
+
+        .share-preview img {
+            width: 65px;
+            height: 65px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .action-btn-full {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+        }
+
+        .whatsapp-btn:hover { background: #1EBE5D; }
+
+        .google-btn {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid var(--border);
+        }
+
+        .google-btn:hover {
+            border-color: var(--edu-blue);
+            background: #EEF2FF;
+        }
+
+        footer {
+            background: var(--text-dark);
+            color: #CBD5E1;
+            text-align: center;
+            padding: 25px 20px;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            nav { flex-direction: column; gap: 12px; }
+            .nav-menu { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Opening Animation Splash Screen -->
+    <div id="splash-screen">
+        <img src="images/logo.jpg" alt="EduPlay Studio Logo" class="splash-logo">
+        <div class="splash-text">EduPlay Studio</div>
+    </div>
+
+    <div class="page-wrapper">
+        <!-- Navigation Bar -->
+        <nav>
+            <div class="brand" onclick="window.scrollTo(0,0)">
+                <img src="images/logo.jpg" alt="EduPlay Studio">
+                <div class="brand-title">
+                    <span class="main-name"><span class="edu">Edu</span><span class="play">Play</span></span>
+                    <span class="sub-name">STUDIO</span>
+                </div>
+            </div>
+
+            <div class="nav-menu">
+                <a href="#templates-area" class="nav-btn">🎮 Templates</a>
+                <button class="nav-btn" onclick="openModal('about-modal')">💡 About Us</button>
+                
+                <!-- Contact Us Button (Google Form link එක මෙතනට දාන්න) -->
+                <a href="https://docs.google.com/forms" target="_blank" class="nav-btn btn-contact">
+                    📩 Contact Us
+                </a>
+
+                <!-- Share Website Button -->
+                <button class="nav-btn btn-share" onclick="openModal('share-modal')">
+                    📲 Share
+                </button>
+
+                <!-- Log In / Google Drive Save Button -->
+                <button class="btn-login" id="auth-btn" onclick="openModal('login-modal')">
+                    <span>☁️ Log In</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Templates Section Only (As Requested) -->
+        <main class="container" id="templates-area">
+            <div class="section-header">
+                <h2>🎯 Standard Templates</h2>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Select a template to start creating</span>
+            </div>
+            <div class="templates-grid" id="standard-grid"></div>
+
+            <div class="section-header">
+                <h2>🚀 Interactive & Pro Templates <span class="badge-free">Free for Teachers</span></h2>
+            </div>
+            <div class="templates-grid" id="pro-grid"></div>
+        </main>
+
+        <footer>
+            <p>© 2026 <strong>EduPlay Studio</strong> — Interactive Learning Games for Teachers & Students.</p>
+        </footer>
+    </div>
+
+    <!-- ABOUT US MODAL -->
+    <div class="modal-overlay" id="about-modal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeModal('about-modal')">&times;</span>
+            <div class="modal-header">
+                <img src="images/logo.jpg" alt="EduPlay Studio">
+                <div>
+                    <h2 style="color: var(--edu-blue);">About EduPlay Studio</h2>
+                    <span style="font-size: 0.8rem; color: var(--play-green-dark); font-weight: 600;">INTERACTIVE LEARNING PLATFORM</span>
+                </div>
+            </div>
+            <p class="about-text">
+                <strong>EduPlay Studio</strong> යනු ගුරුවරුන්ට තම ඉගැන්වීමේ කටයුතු වඩාත් ආකර්ෂණීය සහ විනෝදජනක කිරීමට සහායක් (Help) වශයෙන් නිර්මාණය කරන ලද නවීන ඩිජිටල් වේදිකාවකි.
+            </p>
+            <div class="highlight-box">
+                ✨ <strong>ගුරුවරුන්ට ලැබෙන පහසුකම්:</strong><br>
+                • විනාඩි කිහිපයකින් Quizzes, Spin Wheels, Match Up, සහ Word Games සෑදීම.<br>
+                • සිසුන්ගේ අවධානය පන්ති කාමරය තුළ රඳවා ගැනීම.<br>
+                • ඔබ හදන සියලුම Activities ආරක්ෂිතව ඔබගේ <strong>Google Drive</strong> එකේ Save කර තබා ගැනීම.
+            </div>
+            <button class="btn-login" style="width:100%; justify-content:center;" onclick="closeModal('about-modal')">Got it, Let's Explore!</button>
+        </div>
+    </div>
+
+    <!-- SHARE MODAL (WhatsApp & Copy Link) -->
+    <div class="modal-overlay" id="share-modal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeModal('share-modal')">&times;</span>
+            <h2 style="margin-bottom: 15px;">Share EduPlay Studio</h2>
+            
+            <!-- Preview Card -->
+            <div class="share-preview">
+                <img src="images/logo.jpg" alt="EduPlay Studio">
+                <div>
+                    <h4 style="color: var(--edu-blue);">EduPlay Studio</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">ගුරුවරුන්ට සහ සිසුන්ට පහසුවෙන් Interactive Learning Games නිර්මාණය කළ හැකි වේදිකාවකි.</p>
+                </div>
+            </div>
+
+            <button class="action-btn-full whatsapp-btn" onclick="shareToWhatsApp()">
+                💬 Share via WhatsApp
+            </button>
+            <button class="action-btn-full google-btn" onclick="copySiteLink()">
+                🔗 Copy Website Link
+            </button>
+        </div>
+    </div>
+
+    <!-- LOGIN & GOOGLE DRIVE SAVE MODAL -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeModal('login-modal')">&times;</span>
+            <div class="modal-header">
+                <img src="images/logo.jpg" alt="EduPlay Studio">
+                <div>
+                    <h2>Teacher Account</h2>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Save your activities directly to Google Drive</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="background: #EFF6FF; border-color: var(--edu-blue);">
+                ☁️ <strong>Google Drive Auto-Save:</strong><br>
+                ඔබගේ Google ගිණුමෙන් Log වූ පසු, ඔබ නිර්මාණය කරන සියලුම Games සහ Activities ස්වයංක්‍රීයව ඔබගේ <strong>Google Drive</strong> හි "EduPlay Studio" folder එකක Save වේ.
+            </div>
+
+            <button class="action-btn-full google-btn" onclick="simulateGoogleLogin()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google">
+                Continue with Google & Connect Drive
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Splash Screen Animation Hide
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('splash-screen').classList.add('hidden');
+            }, 1300);
+        });
+
+        // Templates List
+        const standardTemplates = [
+            { name: "Anagram", icon: "🔤", desc: "Drag the letters into their correct positions to unscramble the word or phrase." },
+            { name: "Spin the wheel", icon: "🎡", desc: "Spin the wheel to see which item comes up next." },
+            { name: "Open the box", icon: "📦", desc: "Tap each box in turn to open them up and reveal the item inside." },
+            { name: "Unjumble", icon: "🔀", desc: "Drag and drop words to rearrange each sentence into its correct order." },
+            { name: "Quiz", icon: "❓", desc: "A series of multiple choice questions. Tap the correct answer to proceed." },
+            { name: "Group sort", icon: "🗂️", desc: "Drag and drop each item into its correct group." },
+            { name: "Match up", icon: "🔗", desc: "Drag and drop each keyword next to its definition." },
+            { name: "Flash cards", icon: "📇", desc: "Test yourself using cards with prompts on the front and answers on the back." },
+            { name: "Random cards", icon: "🃏", desc: "Deal out cards at random from a shuffled deck." },
+            { name: "Complete the sentence", icon: "✍️", desc: "Drag and drop words into blank spaces within a text." },
+            { name: "Gameshow quiz", icon: "🏆", desc: "A multiple choice quiz with time pressure, lifelines and a bonus round." },
+            { name: "Find the match", icon: "🎯", desc: "Tap the matching answer to eliminate it until all answers are gone." }
+        ];
+
+        const proTemplates = [
+            { name: "Type the answer", icon: "⌨️", desc: "Type the correct answer to proceed." },
+            { name: "Matching pairs", icon: "👯", desc: "Tap a pair of tiles at a time to reveal if they are a match." },
+            { name: "Spell the word", icon: "🐝", desc: "Drag or type the letters to their correct positions to spell the answer." },
+            { name: "Labelled diagram", icon: "🏷️", desc: "Drag and drop the pins to their correct place on the image." },
+            { name: "Wordsearch", icon: "🔍", desc: "Words are hidden in a letter grid. Find them as fast as you can." },
+            { name: "Flip tiles", icon: "🔄", desc: "Explore a grid of tiles which flip over to reveal a different face." },
+            { name: "Hangman", icon: "😵", desc: "Try to complete the word by picking the correct letters." },
+            { name: "Crossword", icon: "📰", desc: "Use the clues to solve the crossword puzzle." },
+            { name: "True or false", icon: "✔️", desc: "Items fly by at speed. See how many you can get right before time runs out." },
+            { name: "Maze chase", icon: "👾", desc: "Run to the correct answer zone, whilst avoiding the enemies." },
+            { name: "Airplane", icon: "✈️", desc: "Fly into the correct answers and avoid the wrong ones." },
+            { name: "Balloon pop", icon: "🎈", desc: "Pop the balloons to drop each keyword onto its matching definition." },
+            { name: "Whack-a-mole", icon: "🔨", desc: "Moles appear one at a time, hit only the correct ones to win." },
+            { name: "Speed sorting", icon: "⚡", desc: "Sort the items into their correct group as fast as you can." }
+        ];
+
+        function renderCards(list, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = list.map(t => `
+                <div class="template-card" onclick="selectTemplate('${t.name}')">
+                    <div>
+                        <div class="card-top">
+                            <div class="icon-box">${t.icon}</div>
+                            <h3>${t.name}</h3>
+                        </div>
+                        <p>${t.desc}</p>
+                    </div>
+                    <div class="create-tag">Create Activity ➔</div>
+                </div>
+            `).join('');
+        }
+
+        renderCards(standardTemplates, 'standard-grid');
+        renderCards(proTemplates, 'pro-grid');
+
+        // Modal Controls
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal-overlay')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // WhatsApp Share Function
+        function shareToWhatsApp() {
+            const siteUrl = window.location.href;
+            const title = "🎓 *EduPlay Studio* - Interactive Learning Games";
+            const desc = "ගුරුවරුන්ට සහ සිසුන්ට පහසුවෙන් Quizzes, Spin Wheel, Match Up වැනි ඉගෙනුම් ක්‍රියාකාරකම් නිර්මාණය කළ හැකි වේදිකාවකි. දැන්ම පිවිසෙන්න:";
+            const message = `${title}\n\n${desc}\n${siteUrl}`;
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function copySiteLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("✅ Website link copied to clipboard!");
+        }
+
+        // Google Drive Login Simulation & Template Navigation
+        let isLoggedIn = localStorage.getItem('eduplay_drive_connected') === 'true';
+
+        function updateLoginUI() {
+            const authBtn = document.getElementById('auth-btn');
+            if (isLoggedIn) {
+                authBtn.innerHTML = `<span>✅ Drive Connected</span>`;
+                authBtn.style.background = "linear-gradient(135deg, var(--play-green), var(--play-green-dark))";
+            }
+        }
+        updateLoginUI();
+
+        function simulateGoogleLogin() {
+            isLoggedIn = true;
+            localStorage.setItem('eduplay_drive_connected', 'true');
+            updateLoginUI();
+            closeModal('login-modal');
+            alert("🎉 Google Account connected! ඔබ හදන activities දැන් Google Drive හි Save වේ.");
+        }
+
+        function selectTemplate(templateName) {
+            if (!isLoggedIn) {
+                openModal('login-modal');
+                return;
+            }
+            // ඊළඟට හදන create.html පිටුවට template name එක සමඟ යොමු කිරීම
+            window.location.href = `create.html?template=${encodeURIComponent(templateName)}`;
+        }
+    </script>
+</body>
+</html>
