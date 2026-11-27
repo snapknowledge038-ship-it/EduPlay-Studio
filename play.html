@@ -454,6 +454,54 @@
             opacity: 0.85;
         }
 
+        .word-game-box {
+            max-width: 660px;
+            width: 100%;
+        }
+
+        .scrambled-display {
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: 5px;
+            color: var(--edu-blue-dark);
+            background: #EEF2FF;
+            border: 1.5px solid #C7D2FE;
+            padding: 16px 20px;
+            border-radius: 16px;
+            margin: 14px 0 18px;
+            word-break: break-word;
+        }
+
+        .word-input-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .word-input {
+            padding: 11px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            font-size: 1rem;
+            min-width: 220px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .word-input:focus {
+            outline: none;
+            border-color: var(--edu-blue);
+        }
+
+        .feedback-text {
+            margin-top: 14px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            min-height: 24px;
+        }
+
         footer {
             background: var(--text-dark);
             color: #CBD5E1;
@@ -495,9 +543,12 @@
             <span class="switcher-label">Play Mode:</span>
             <button type="button" class="btn btn-outline" id="mode-btn-wheel" onclick="switchMode('Spin the wheel')">🎡 Spin Wheel</button>
             <button type="button" class="btn btn-outline" id="mode-btn-quiz" onclick="switchMode('Quiz')">❓ Quiz</button>
+            <button type="button" class="btn btn-outline" id="mode-btn-tf" onclick="switchMode('True or false')">✅ True/False</button>
             <button type="button" class="btn btn-outline" id="mode-btn-flash" onclick="switchMode('Flash cards')">📇 Flash Cards</button>
             <button type="button" class="btn btn-outline" id="mode-btn-box" onclick="switchMode('Open the box')">📦 Open Box</button>
             <button type="button" class="btn btn-outline" id="mode-btn-match" onclick="switchMode('Match up')">🔗 Match Up</button>
+            <button type="button" class="btn btn-outline" id="mode-btn-anagram" onclick="switchMode('Anagram')">🔤 Anagram</button>
+            <button type="button" class="btn btn-outline" id="mode-btn-unjumble" onclick="switchMode('Unjumble')">🧩 Unjumble</button>
         </div>
 
         <section class="stage-card" id="game-stage">
@@ -514,6 +565,7 @@
             id: "sample_demo",
             title: "Demo Classroom Activity - Solar System",
             template: "Spin the wheel",
+            lockMode: false,
             items: [
                 { prompt: "Sun", answer: "Star at the center of our Solar System" },
                 { prompt: "Mercury", answer: "Smallest planet closest to the Sun" },
@@ -526,6 +578,7 @@
 
         let activeActivity = null;
         let currentMode = "Spin the wheel";
+        let isActivityLocked = false;
         let score = 0;
 
         function updateScore(delta, reset = false) {
@@ -597,6 +650,7 @@
                 id: r.id,
                 title: r.title,
                 template: r.template,
+                lockMode: Boolean(r.lockMode),
                 items: Array.isArray(r.items) ? r.items : [],
                 createdAt: r.created_at
             };
@@ -622,13 +676,11 @@
                     console.warn("Cloud fetch failed for id:", id, err);
                 }
 
-                // If cloud lookup didn't return it, check if the hash matches this exact ID
                 if (!loaded && hashActivity && String(hashActivity.id) === String(id)) {
                     loaded = hashActivity;
                     sourceLabel = "🔗 Loaded from Link Data";
                 }
 
-                // Check local cache for this exact ID (never pick a different activity's ID!)
                 if (!loaded) {
                     const localMatch = getLocalActivityById(id);
                     if (localMatch && Array.isArray(localMatch.items) && localMatch.items.length >= 2) {
@@ -638,12 +690,7 @@
                 }
 
                 if (!loaded) {
-                    activeActivity = {
-                        id: id,
-                        title: "Activity Not Found",
-                        template: "Spin the wheel",
-                        items: []
-                    };
+                    activeActivity = { id, title: "Activity Not Found", template: "Spin the wheel", items: [] };
                     document.getElementById("activity-title-heading").textContent = "Activity Not Found";
                     sourceNoteEl.textContent = `Could not find activity "${id}" in Cloud Database.`;
                     document.getElementById("game-stage").innerHTML = `
@@ -661,7 +708,6 @@
                     return;
                 }
             } else {
-                // No ID in URL: use hash data if present, else latest activity, else demo
                 if (hashActivity) {
                     loaded = hashActivity;
                     sourceLabel = "🔗 Loaded from Link Data";
@@ -683,36 +729,57 @@
             updateScore(0, true);
 
             const preferred = activeActivity.template || "Spin the wheel";
+            isActivityLocked = Boolean(
+                activeActivity.lockMode ||
+                preferred === "Quiz" ||
+                preferred === "Gameshow quiz"
+            );
+
+            const switcherEl = document.querySelector(".switcher-bar");
+            if (switcherEl) {
+                switcherEl.style.display = isActivityLocked ? "none" : "flex";
+            }
+
             const supportedModes = [
                 "Spin the wheel", "Quiz", "Gameshow quiz", "True or false",
-                "Flash cards", "Random cards", "Open the box", "Match up", "Find the match"
+                "Flash cards", "Random cards", "Open the box", "Match up", "Find the match",
+                "Anagram", "Unjumble"
             ];
             currentMode = supportedModes.includes(preferred) ? preferred : "Spin the wheel";
 
-            switchMode(currentMode);
+            switchMode(currentMode, true);
         }
 
         function normalizeModeName(mode) {
-            if (mode === "Gameshow quiz" || mode === "True or false") return "Quiz";
+            if (mode === "Gameshow quiz") return "Quiz";
             if (mode === "Random cards") return "Flash cards";
             if (mode === "Find the match") return "Match up";
             return mode;
         }
 
-        function switchMode(mode) {
+        function switchMode(mode, initialLoad = false) {
             if (!activeActivity || !Array.isArray(activeActivity.items) || activeActivity.items.length < 2) {
                 return;
             }
 
+            if (!initialLoad && isActivityLocked && mode !== currentMode) {
+                return;
+            }
+
             currentMode = normalizeModeName(mode);
-            document.getElementById("activity-template-chip").textContent = `Mode: ${currentMode}`;
+            document.getElementById("activity-template-chip").textContent = isActivityLocked
+                ? `🔒 Locked Mode: ${currentMode}`
+                : `Mode: ${currentMode}`;
 
             const btnMap = {
                 "Spin the wheel": "mode-btn-wheel",
                 "Quiz": "mode-btn-quiz",
+                "True or false": "mode-btn-tf",
                 "Flash cards": "mode-btn-flash",
                 "Open the box": "mode-btn-box",
-                "Match up": "mode-btn-match"
+                "Match up": "mode-btn-match",
+                "Anagram": "mode-btn-anagram",
+                "Unjumble": "mode-btn-unjumble"
             };
 
             Object.values(btnMap).forEach(btnId => {
@@ -727,9 +794,12 @@
 
             const stage = document.getElementById("game-stage");
             if (currentMode === "Quiz") renderQuiz(stage);
+            else if (currentMode === "True or false") renderTrueOrFalse(stage);
             else if (currentMode === "Flash cards") renderFlashcards(stage);
             else if (currentMode === "Open the box") renderOpenBox(stage);
             else if (currentMode === "Match up") renderMatchUp(stage);
+            else if (currentMode === "Anagram") renderAnagram(stage);
+            else if (currentMode === "Unjumble") renderUnjumble(stage);
             else renderSpinWheel(stage);
         }
 
@@ -908,7 +978,97 @@
             drawQuestion();
         }
 
-        /* 3. FLASHCARDS */
+        /* 3. TRUE OR FALSE */
+        function renderTrueOrFalse(stage) {
+            const items = activeActivity.items;
+            let idx = 0;
+
+            function makeStatement(itemIndex) {
+                const current = items[itemIndex];
+                const promptText = current.prompt || `Item ${itemIndex + 1}`;
+                const trueMatch = current.answer || current.prompt;
+                const isTrue = Math.random() >= 0.5;
+
+                if (isTrue) {
+                    return {
+                        statement: `${promptText} — ${trueMatch}`,
+                        expected: "True",
+                        explanation: `Correct match: ${trueMatch}`
+                    };
+                }
+
+                const others = items.filter((_, i) => i !== itemIndex).map(x => x.answer || x.prompt).filter(Boolean);
+                const wrongMatch = others.length > 0 ? others[Math.floor(Math.random() * others.length)] : trueMatch;
+                const actuallyTrue = wrongMatch === trueMatch;
+
+                return {
+                    statement: `${promptText} — ${wrongMatch}`,
+                    expected: actuallyTrue ? "True" : "False",
+                    explanation: `Actual match: ${trueMatch}`
+                };
+            }
+
+            function drawTF() {
+                if (idx >= items.length) {
+                    stage.innerHTML = `
+                        <div class="quiz-card">
+                            <h2>🏆 True or False Completed!</h2>
+                            <p style="margin:12px 0 20px; color:var(--text-muted);">Final Score: <strong>${score}</strong></p>
+                            <button type="button" class="btn btn-primary" onclick="restartTF()">🔄 Play Again</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const q = makeStatement(idx);
+
+                stage.innerHTML = `
+                    <div class="quiz-card">
+                        <div style="font-size:0.85rem; font-weight:700; color:var(--edu-blue);">Statement ${idx + 1} of ${items.length}</div>
+                        <div class="quiz-question">${escapeHtml(q.statement)}</div>
+                        <div class="options-list">
+                            <button type="button" class="opt-btn" onclick="checkTF(this, 'True', '${escapeAttr(q.expected)}', '${escapeAttr(q.explanation)}')">✅ True</button>
+                            <button type="button" class="opt-btn" onclick="checkTF(this, 'False', '${escapeAttr(q.expected)}', '${escapeAttr(q.explanation)}')">❌ False</button>
+                        </div>
+                        <div class="feedback-text" id="tf-feedback"></div>
+                        <div style="margin-top:16px;">
+                            <button type="button" class="btn btn-play" id="next-tf-btn" style="display:none;" onclick="nextTF()">Next Statement ➔</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            window.checkTF = (btn, chosen, expected, explanation) => {
+                stage.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
+                const fb = document.getElementById("tf-feedback");
+                if (chosen === expected) {
+                    btn.classList.add("correct");
+                    fb.style.color = "var(--play-green-dark)";
+                    fb.textContent = `✅ Correct! (${explanation})`;
+                    updateScore(15);
+                } else {
+                    btn.classList.add("wrong");
+                    fb.style.color = "var(--danger)";
+                    fb.textContent = `❌ Not quite — Answer is ${expected}. (${explanation})`;
+                }
+                document.getElementById("next-tf-btn").style.display = "inline-flex";
+            };
+
+            window.nextTF = () => {
+                idx++;
+                drawTF();
+            };
+
+            window.restartTF = () => {
+                idx = 0;
+                updateScore(0, true);
+                drawTF();
+            };
+
+            drawTF();
+        }
+
+        /* 4. FLASHCARDS */
         function renderFlashcards(stage) {
             const items = activeActivity.items;
             let idx = 0;
@@ -955,7 +1115,7 @@
             drawCard();
         }
 
-        /* 4. OPEN THE BOX */
+        /* 5. OPEN THE BOX */
         function renderOpenBox(stage) {
             const items = activeActivity.items;
             stage.innerHTML = `
@@ -982,7 +1142,7 @@
             };
         }
 
-        /* 5. MATCH UP */
+        /* 6. MATCH UP */
         function renderMatchUp(stage) {
             const items = activeActivity.items;
             let selectedLeftIndex = null;
@@ -1049,6 +1209,171 @@
                     }, 450);
                 }
             };
+        }
+
+        /* 7. ANAGRAM */
+        function scrambleLetters(word) {
+            const clean = String(word || "").trim();
+            if (clean.length <= 1) return clean;
+            const chars = clean.split("");
+            let attempt = "";
+            let guard = 0;
+            do {
+                attempt = [...chars].sort(() => Math.random() - 0.5).join("");
+                guard++;
+            } while (attempt.toLowerCase() === clean.toLowerCase() && guard < 12);
+            return attempt;
+        }
+
+        function renderAnagram(stage) {
+            const items = activeActivity.items;
+            let idx = 0;
+
+            function drawAnagram() {
+                if (idx >= items.length) {
+                    stage.innerHTML = `
+                        <div class="word-game-box">
+                            <h2>🏆 Anagram Challenge Complete!</h2>
+                            <p style="margin:12px 0 20px; color:var(--text-muted);">Final Score: <strong>${score}</strong></p>
+                            <button type="button" class="btn btn-primary" onclick="restartAnagram()">🔄 Play Again</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const current = items[idx];
+                const clue = current.prompt || `Clue ${idx + 1}`;
+                const targetWord = (current.answer || current.prompt || "WORD").trim();
+                const scrambled = scrambleLetters(targetWord);
+
+                stage.innerHTML = `
+                    <div class="word-game-box">
+                        <div style="font-size:0.85rem; font-weight:700; color:var(--edu-blue);">Word ${idx + 1} of ${items.length}</div>
+                        <p style="margin-top:8px; color:var(--text-muted); font-size:0.95rem;">Clue: <strong>${escapeHtml(clue)}</strong></p>
+                        <div class="scrambled-display">${escapeHtml(scrambled.toUpperCase())}</div>
+                        <div class="word-input-row">
+                            <input type="text" id="anagram-input" class="word-input" placeholder="Type the unscrambled word..." onkeydown="if(event.key==='Enter') submitAnagram()">
+                            <button type="button" class="btn btn-play" onclick="submitAnagram()">Check</button>
+                            <button type="button" class="btn btn-outline" onclick="skipAnagram()">Skip</button>
+                        </div>
+                        <div class="feedback-text" id="anagram-feedback"></div>
+                    </div>
+                `;
+                document.getElementById("anagram-input")?.focus();
+
+                window.submitAnagram = () => {
+                    const guess = (document.getElementById("anagram-input")?.value || "").trim();
+                    const fb = document.getElementById("anagram-feedback");
+                    if (!guess) return;
+
+                    if (guess.toLowerCase() === targetWord.toLowerCase()) {
+                        fb.style.color = "var(--play-green-dark)";
+                        fb.textContent = `✅ Correct! "${targetWord}"`;
+                        updateScore(20);
+                        setTimeout(() => { idx++; drawAnagram(); }, 850);
+                    } else {
+                        fb.style.color = "var(--danger)";
+                        fb.textContent = "❌ Try again! Rearrange the letters.";
+                    }
+                };
+
+                window.skipAnagram = () => {
+                    const fb = document.getElementById("anagram-feedback");
+                    fb.style.color = "var(--text-muted)";
+                    fb.textContent = `Answer: ${targetWord}`;
+                    setTimeout(() => { idx++; drawAnagram(); }, 1000);
+                };
+            }
+
+            window.restartAnagram = () => {
+                idx = 0;
+                updateScore(0, true);
+                drawAnagram();
+            };
+
+            drawAnagram();
+        }
+
+        /* 8. UNJUMBLE */
+        function renderUnjumble(stage) {
+            const items = activeActivity.items;
+            let idx = 0;
+
+            function drawUnjumble() {
+                if (idx >= items.length) {
+                    stage.innerHTML = `
+                        <div class="word-game-box">
+                            <h2>🏆 Unjumble Completed!</h2>
+                            <p style="margin:12px 0 20px; color:var(--text-muted);">Final Score: <strong>${score}</strong></p>
+                            <button type="button" class="btn btn-primary" onclick="restartUnjumble()">🔄 Play Again</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const current = items[idx];
+                const hint = current.prompt || `Item ${idx + 1}`;
+                const targetPhrase = (current.answer || current.prompt || "").trim();
+                const words = targetPhrase.split(/\s+/).filter(Boolean);
+
+                let jumbledText = "";
+                if (words.length >= 2) {
+                    let guard = 0;
+                    do {
+                        jumbledText = [...words].sort(() => Math.random() - 0.5).join(" / ");
+                        guard++;
+                    } while (jumbledText.toLowerCase() === targetPhrase.toLowerCase() && guard < 12);
+                } else {
+                    jumbledText = scrambleLetters(targetPhrase);
+                }
+
+                stage.innerHTML = `
+                    <div class="word-game-box">
+                        <div style="font-size:0.85rem; font-weight:700; color:var(--edu-blue);">Challenge ${idx + 1} of ${items.length}</div>
+                        <p style="margin-top:8px; color:var(--text-muted); font-size:0.95rem;">Prompt: <strong>${escapeHtml(hint)}</strong></p>
+                        <div class="scrambled-display" style="letter-spacing:1.5px; font-size:1.3rem;">${escapeHtml(jumbledText)}</div>
+                        <div class="word-input-row">
+                            <input type="text" id="unjumble-input" class="word-input" style="min-width:260px;" placeholder="Type in the right order..." onkeydown="if(event.key==='Enter') submitUnjumble()">
+                            <button type="button" class="btn btn-play" onclick="submitUnjumble()">Check</button>
+                            <button type="button" class="btn btn-outline" onclick="skipUnjumble()">Skip</button>
+                        </div>
+                        <div class="feedback-text" id="unjumble-feedback"></div>
+                    </div>
+                `;
+                document.getElementById("unjumble-input")?.focus();
+
+                window.submitUnjumble = () => {
+                    const guess = (document.getElementById("unjumble-input")?.value || "").trim().replace(/\s+/g, " ");
+                    const expectedClean = targetPhrase.replace(/\s+/g, " ");
+                    const fb = document.getElementById("unjumble-feedback");
+                    if (!guess) return;
+
+                    if (guess.toLowerCase() === expectedClean.toLowerCase()) {
+                        fb.style.color = "var(--play-green-dark)";
+                        fb.textContent = `✅ Spot on! "${expectedClean}"`;
+                        updateScore(20);
+                        setTimeout(() => { idx++; drawUnjumble(); }, 850);
+                    } else {
+                        fb.style.color = "var(--danger)";
+                        fb.textContent = "❌ Not quite right — check the order and try again.";
+                    }
+                };
+
+                window.skipUnjumble = () => {
+                    const fb = document.getElementById("unjumble-feedback");
+                    fb.style.color = "var(--text-muted)";
+                    fb.textContent = `Correct order: ${targetPhrase}`;
+                    setTimeout(() => { idx++; drawUnjumble(); }, 1000);
+                };
+            }
+
+            window.restartUnjumble = () => {
+                idx = 0;
+                updateScore(0, true);
+                drawUnjumble();
+            };
+
+            drawUnjumble();
         }
 
         function escapeHtml(str) {
