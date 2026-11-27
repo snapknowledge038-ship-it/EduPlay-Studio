@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Activity - EduPlay Studio</title>
+
+    <meta property="og:title" content="Create Activity - EduPlay Studio">
+    <meta property="og:description" content="Create custom interactive learning games for your classroom and save them to Google Drive.">
+    <meta property="og:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --edu-blue: #4F46E5;
+            --edu-blue-dark: #3730A3;
+            --play-green: #10B981;
+            --play-green-dark: #059669;
+            --accent-orange: #F59E0B;
+            --bg-light: #F8FAFC;
+            --white: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --danger: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        nav {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            padding: 12px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--edu-blue), var(--play-green), var(--accent-orange)) 1;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
+        }
+
+        .brand-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title .main-name {
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .brand-title .edu { color: var(--edu-blue); }
+        .brand-title .play { color: var(--play-green); }
+
+        .brand-title .sub-name {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-back {
+            background: #EEF2FF;
+            color: var(--edu-blue);
+        }
+
+        .btn-back:hover {
+            background: #E0E7FF;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-drive {
+            background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-drive:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--edu-blue);
+            color: var(--edu-blue);
+        }
+
+        /* Main Creator Layout */
+        .container {
+            max-width: 960px;
+            width: 100%;
+            margin: 32px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .creator-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
+        }
+
+        .creator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #F1F5F9;
+        }
+
+        .template-badge {
+            background: linear-gradient(135deg, #EEF2FF 0%, #ECFDF5 100%);
+            color: var(--edu-blue-dark);
+            border: 1px solid #C7D2FE;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .creator-header h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 6px;
+        }
+
+        .creator-header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .drive-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 10px;
+            background: #ECFDF5;
+            color: var(--play-green-dark);
+            border: 1px solid #A7F3D0;
+        }
+
+        .drive-status.disconnected {
+            background: #FFFBEB;
+            color: #B45309;
+            border-color: #FDE68A;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 680px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 7px;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-size: 0.94rem;
+            color: var(--text-dark);
+            background: #FAFBFD;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--edu-blue);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+
+        .items-section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .items-section-title h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .helper-hint {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            background: #F8FAFC;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border-left: 3px solid var(--accent-orange);
+            margin-bottom: 16px;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 36px 1fr 1fr 40px;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .item-row {
+                grid-template-columns: 28px 1fr;
+            }
+            .item-row .ans-col {
+                grid-column: 2;
+            }
+            .item-row .del-btn {
+                grid-column: 2;
+                justify-self: end;
+            }
+        }
+
+        .row-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #EEF2FF;
+            color: var(--edu-blue);
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-row input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .item-row input:focus {
+            outline: none;
+            border-color: var(--edu-blue);
+        }
+
+        .del-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: none;
+            background: #FEF2F2;
+            color: var(--danger);
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .del-btn:hover {
+            background: var(--danger);
+            color: var(--white);
+        }
+
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 2px solid #F1F5F9;
+        }
+
+        .right-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Saved Result Box */
+        .result-box {
+            display: none;
+            margin-top: 24px;
+            background: linear-gradient(135deg, #ECFDF5 0%, #EEF2FF 100%);
+            border: 1.5px solid #A7F3D0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .result-box.active {
+            display: block;
+        }
+
+        .share-link-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .share-link-row input {
+            flex: 1;
+            min-width: 220px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 1px solid #CBD5E1;
+            background: var(--white);
+            font-size: 0.88rem;
+        }
+
+        footer {
+            background: var(--text-dark);
+            color: #CBD5E1;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.88rem;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="brand">
+            <img src="images/logo.jpg" alt="EduPlay Studio">
+            <div class="brand-title">
+                <span class="main-name"><span class="edu">Edu</span><span class="play">Play</span></span>
+                <span class="sub-name">STUDIO</span>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="index.html" class="btn btn-back">⬅ All Templates</a>
+            <button class="btn btn-outline" onclick="loadSampleData()">✨ Fill Sample</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="creator-card">
+            <div class="creator-header">
+                <div>
+                    <span class="template-badge" id="badge-template">Template: Quiz</span>
+                    <h1 id="page-heading">Create New Activity</h1>
+                    <p id="page-desc">Enter your title, subject/notes, and items below to build your interactive classroom activity.</p>
+                </div>
+                <div class="drive-status" id="drive-status-pill">☁️ Google Drive Ready</div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="activity-title">Activity Title *</label>
+                    <input type="text" id="activity-title" placeholder="e.g., Grade 7 Science - Solar System">
+                </div>
+
+                <div class="form-group">
+                    <label for="template-select">Choose / Switch Template</label>
+                    <select id="template-select" onchange="onTemplateChange()">
+                        <optgroup label="Standard Templates">
+                            <option value="Anagram">Anagram</option>
+                            <option value="Spin the wheel">Spin the wheel</option>
+                            <option value="Open the box">Open the box</option>
+                            <option value="Unjumble">Unjumble</option>
+                            <option value="Quiz">Quiz</option>
+                            <option value="Group sort">Group sort</option>
+                            <option value="Match up">Match up</option>
+                            <option value="Flash cards">Flash cards</option>
+                            <option value="Random cards">Random cards</option>
+                            <option value="Complete the sentence">Complete the sentence</option>
+                            <option value="Gameshow quiz">Gameshow quiz</option>
+                            <option value="Find the match">Find the match</option>
+                        </optgroup>
+                        <optgroup label="Interactive & Pro Templates">
+                            <option value="Type the answer">Type the answer</option>
+                            <option value="Matching pairs">Matching pairs</option>
+                            <option value="Spell the word">Spell the word</option>
+                            <option value="Labelled diagram">Labelled diagram</option>
+                            <option value="Wordsearch">Wordsearch</option>
+                            <option value="Flip tiles">Flip tiles</option>
+                            <option value="Hangman">Hangman</option>
+                            <option value="Crossword">Crossword</option>
+                            <option value="True or false">True or false</option>
+                            <option value="Maze chase">Maze chase</option>
+                            <option value="Airplane">Airplane</option>
+                            <option value="Balloon pop">Balloon pop</option>
+                            <option value="Whack-a-mole">Whack-a-mole</option>
+                            <option value="Speed sorting">Speed sorting</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="items-section-title">
+                <h2 id="items-heading">Questions & Answers / Items</h2>
+                <button type="button" class="btn btn-outline" onclick="addRow()">+ Add Item</button>
+            </div>
+
+            <div class="helper-hint" id="template-hint">
+                💡 Tip: Add at least 2 items. For quizzes or match-ups, put the prompt/question on the left and the answer/match on the right.
+            </div>
+
+            <div id="items-list"></div>
+
+            <div class="footer-actions">
+                <button type="button" class="btn btn-outline" onclick="clearForm()">🗑 Clear All</button>
+
+                <div class="right-actions">
+                    <button type="button" class="btn btn-outline" onclick="downloadActivityJson()">⬇ Download Backup (.json)</button>
+                    <button type="button" class="btn btn-drive" onclick="saveToGoogleDrive()">☁️ Save to Google Drive</button>
+                </div>
+            </div>
+
+            <div class="result-box" id="result-box">
+                <h3 style="color: var(--play-green-dark);">✅ Activity Saved!</h3>
+                <p id="result-message" style="font-size: 0.9rem; margin-top: 6px; color: var(--text-dark);"></p>
+                <div class="share-link-row">
+                    <input type="text" id="activity-share-link" readonly>
+                    <button type="button" class="btn btn-primary" onclick="copyActivityLink()">Copy Link</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 <strong>EduPlay Studio</strong> — Helping Teachers Create Engaging Lessons.</p>
+    </footer>
+
+    <script>
+        const templateGuides = {
+            "Anagram": {
+                hint: "🔤 Anagram: Left side එකේ Word/Clue එක සහ Right side එකේ Target Word එක දාන්න (උදා: Planet / SATURN).",
+                col1: "Clue / Hint",
+                col2: "Target Word"
+            },
+            "Spin the wheel": {
+                hint: "🎡 Spin the wheel: Wheel එකේ පෙන්වන items/names/questions ටික Left column එකේ ඇතුළත් කරන්න.",
+                col1: "Wheel Slice / Item",
+                col2: "Optional Note / Question"
+            },
+            "Open the box": {
+                hint: "📦 Open the box: සිසුන් open කරන පෙට්ටි තුළ තියෙන ප්‍රශ්න හෝ hints ඇතුළත් කරන්න.",
+                col1: "Box Prompt / Clue",
+                col2: "Answer / Reveal"
+            },
+            "Quiz": {
+                hint: "❓ Quiz: Left side එකේ ප්‍රශ්නය සහ Right side එකේ නිවැරදි පිළිතුර ලියන්න.",
+                col1: "Question",
+                col2: "Correct Answer"
+            },
+            "Match up": {
+                hint: "🔗 Match up: Left side එකේ Keyword/Term එක සහ Right side එකේ Definition/Match එක දාන්න.",
+                col1: "Term / Keyword",
+                col2: "Matching Definition"
+            },
+            "Flash cards": {
+                hint: "📇 Flash cards: Card එකේ Front side එක Left එකේත්, Back side (Answer) එක Right එකේත් දාන්න.",
+                col1: "Front (Question / Term)",
+                col2: "Back (Answer / Meaning)"
+            }
+        };
+
+        const defaultGuide = {
+            hint: "💡 Add at least 2 items. Enter your prompt/item on the left and its answer/paired value on the right.",
+            col1: "Item / Prompt",
+            col2: "Answer / Paired Value"
+        };
+
+        let rowCounter = 0;
+
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            const requestedTemplate = params.get("template");
+            const select = document.getElementById("template-select");
+
+            if (requestedTemplate) {
+                const match = Array.from(select.options).find(
+                    opt => opt.value.toLowerCase() === requestedTemplate.toLowerCase()
+                );
+                if (match) {
+                    select.value = match.value;
+                }
+            }
+
+            updateDriveStatusUI();
+            onTemplateChange();
+            addRow("Sun", "Star at the center of our Solar System");
+            addRow("Mars", "Known as the Red Planet");
+            addRow("Jupiter", "Largest planet in our Solar System");
+        }
+
+        function updateDriveStatusUI() {
+            const pill = document.getElementById("drive-status-pill");
+            const connected = localStorage.getItem("eduplay_drive_connected") === "true";
+            if (connected) {
+                pill.textContent = "☁️ Google Drive Connected";
+                pill.classList.remove("disconnected");
+            } else {
+                pill.textContent = "⚠️ Drive Not Connected (Local Save Active)";
+                pill.classList.add("disconnected");
+            }
+        }
+
+        function onTemplateChange() {
+            const templateName = document.getElementById("template-select").value;
+            const guide = templateGuides[templateName] || defaultGuide;
+
+            document.getElementById("badge-template").textContent = `Template: ${templateName}`;
+            document.getElementById("page-heading").textContent = `Create "${templateName}" Activity`;
+            document.getElementById("template-hint").innerHTML = guide.hint;
+
+            document.querySelectorAll(".col1-input").forEach(inp => inp.placeholder = guide.col1);
+            document.querySelectorAll(".col2-input").forEach(inp => inp.placeholder = guide.col2);
+        }
+
+        function addRow(val1 = "", val2 = "") {
+            rowCounter++;
+            const templateName = document.getElementById("template-select").value;
+            const guide = templateGuides[templateName] || defaultGuide;
+            const list = document.getElementById("items-list");
+
+            const row = document.createElement("div");
+            row.className = "item-row";
+            row.innerHTML = `
+                <div class="row-num">${list.children.length + 1}</div>
+                <input type="text" class="col1-input" placeholder="${escapeAttr(guide.col1)}" value="${escapeAttr(val1)}">
+                <div class="ans-col">
+                    <input type="text" class="col2-input" placeholder="${escapeAttr(guide.col2)}" value="${escapeAttr(val2)}">
+                </div>
+                <button type="button" class="del-btn" title="Remove row" onclick="removeRow(this)">✕</button>
+            `;
+            list.appendChild(row);
+            renumberRows();
+        }
+
+        function removeRow(btn) {
+            const list = document.getElementById("items-list");
+            if (list.children.length <= 2) {
+                alert("At least 2 items are required for an activity.");
+                return;
+            }
+            btn.closest(".item-row").remove();
+            renumberRows();
+        }
+
+        function renumberRows() {
+            document.querySelectorAll("#items-list .row-num").forEach((el, idx) => {
+                el.textContent = idx + 1;
+            });
+        }
+
+        function clearForm() {
+            document.getElementById("activity-title").value = "";
+            document.getElementById("items-list").innerHTML = "";
+            document.getElementById("result-box").classList.remove("active");
+            addRow();
+            addRow();
+        }
+
+        function loadSampleData() {
+            document.getElementById("activity-title").value = "General Knowledge Challenge";
+            document.getElementById("items-list").innerHTML = "";
+            addRow("Capital of Sri Lanka", "Sri Jayawardenepura Kotte");
+            addRow("Fastest land animal", "Cheetah");
+            addRow("Chemical symbol for Water", "H2O");
+            addRow("Largest ocean on Earth", "Pacific Ocean");
+        }
+
+        function collectActivityData() {
+            const title = document.getElementById("activity-title").value.trim();
+            const template = document.getElementById("template-select").value;
+            const col1Inputs = document.querySelectorAll(".col1-input");
+            const col2Inputs = document.querySelectorAll(".col2-input");
+
+            const items = [];
+            col1Inputs.forEach((inp, i) => {
+                const v1 = inp.value.trim();
+                const v2 = col2Inputs[i] ? col2Inputs[i].value.trim() : "";
+                if (v1 || v2) {
+                    items.push({ prompt: v1, answer: v2 });
+                }
+            });
+
+            if (!title) {
+                alert("Please enter an Activity Title.");
+                document.getElementById("activity-title").focus();
+                return null;
+            }
+
+            if (items.length < 2) {
+                alert("Please fill in at least 2 items.");
+                return null;
+            }
+
+            return {
+                id: "act_" + Date.now(),
+                title,
+                template,
+                items,
+                createdAt: new Date().toISOString()
+            };
+        }
+
+        function saveToGoogleDrive() {
+            const activity = collectActivityData();
+            if (!activity) return;
+
+            // Save local copy so it persists on this browser
+            const existing = JSON.parse(localStorage.getItem("eduplay_saved_activities") || "[]");
+            existing.push(activity);
+            localStorage.setItem("eduplay_saved_activities", JSON.stringify(existing));
+
+            const isDriveConnected = localStorage.getItem("eduplay_drive_connected") === "true";
+            const resultBox = document.getElementById("result-box");
+            const msg = document.getElementById("result-message");
+            const shareInput = document.getElementById("activity-share-link");
+
+            const baseUrl = "https://snapknowledge038-ship-it.github.io/EduPlay-Studio/";
+            shareInput.value = `${baseUrl}?activity=${encodeURIComponent(activity.id)}`;
+
+            if (isDriveConnected) {
+                msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> (${escapeHtml(activity.template)}) is prepared for your <strong>Google Drive ("EduPlay Studio")</strong> folder and saved locally as well.`;
+            } else {
+                msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> saved locally. Connect Google Drive on the home page to sync directly with your Drive account.`;
+            }
+
+            resultBox.classList.add("active");
+            resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+
+        function downloadActivityJson() {
+            const activity = collectActivityData();
+            if (!activity) return;
+
+            const blob = new Blob([JSON.stringify(activity, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            const safeName = activity.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+            a.href = url;
+            a.download = `${safeName || "eduplay-activity"}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function copyActivityLink() {
+            const input = document.getElementById("activity-share-link");
+            navigator.clipboard.writeText(input.value);
+            alert("✅ Activity link copied!");
+        }
+
+        function escapeAttr(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/"/g, "&quot;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        init();
+    </script>
+</body>
+</html>
