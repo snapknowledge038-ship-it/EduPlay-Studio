@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Activity - EduPlay Studio</title>
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/play.html">
+    <meta property="og:title" content="Play Activity - EduPlay Studio">
+    <meta property="og:description" content="Play interactive classroom learning games created on EduPlay Studio.">
+    <meta property="og:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --edu-blue: #4F46E5;
+            --edu-blue-dark: #3730A3;
+            --play-green: #10B981;
+            --play-green-dark: #059669;
+            --accent-orange: #F59E0B;
+            --bg-light: #F8FAFC;
+            --white: #FFFFFF;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --danger: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        nav {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            padding: 12px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, var(--edu-blue), var(--play-green), var(--accent-orange)) 1;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand img {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
+        }
+
+        .brand-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title .main-name {
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .brand-title .edu { color: var(--edu-blue); }
+        .brand-title .play { color: var(--play-green); }
+
+        .brand-title .sub-name {
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 9px 16px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-back {
+            background: #EEF2FF;
+            color: var(--edu-blue);
+        }
+
+        .btn-back:hover { background: #E0E7FF; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
+        }
+
+        .btn-primary:hover { transform: translateY(-1px); }
+
+        .btn-play {
+            background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.24);
+        }
+
+        .btn-play:hover { transform: translateY(-1px); }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-outline:hover,
+        .btn-outline.active-mode {
+            border-color: var(--edu-blue);
+            background: #EEF2FF;
+            color: var(--edu-blue-dark);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1040px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .play-header {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 22px 26px;
+            border: 1px solid var(--border);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .mode-chip {
+            display: inline-block;
+            background: linear-gradient(135deg, #EEF2FF 0%, #ECFDF5 100%);
+            color: var(--edu-blue-dark);
+            border: 1px solid #C7D2FE;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .play-header h1 {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .score-box {
+            background: #FFFBEB;
+            border: 1.5px solid #FDE68A;
+            color: #92400E;
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        .switcher-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .switcher-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-right: 4px;
+        }
+
+        .stage-card {
+            background: var(--white);
+            border-radius: 22px;
+            padding: 36px 26px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Spin Wheel */
+        .wheel-wrap {
+            position: relative;
+            width: 310px;
+            height: 310px;
+            max-width: 82vw;
+            max-height: 82vw;
+            margin: 10px auto 20px;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 16px solid transparent;
+            border-right: 16px solid transparent;
+            border-top: 32px solid var(--text-dark);
+            z-index: 10;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+        }
+
+        #wheel-canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 12px 28px rgba(79, 70, 229, 0.2);
+            transition: transform 4.2s cubic-bezier(0.15, 0.72, 0.1, 1);
+        }
+
+        .result-banner {
+            margin-top: 12px;
+            padding: 14px 20px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #EEF2FF 0%, #ECFDF5 100%);
+            border: 1.5px solid #C7D2FE;
+            max-width: 620px;
+            width: 100%;
+        }
+
+        /* Flashcards */
+        .flashcard-box {
+            width: 100%;
+            max-width: 480px;
+            min-height: 230px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
+            color: var(--white);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 14px 28px rgba(79, 70, 229, 0.25);
+            transition: transform 0.25s ease, background 0.3s ease;
+            user-select: none;
+        }
+
+        .flashcard-box.flipped {
+            background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
+        }
+
+        .flashcard-box:hover {
+            transform: scale(1.02);
+        }
+
+        .card-side-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.85;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .card-main-text {
+            font-size: 1.45rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        /* Open the Box */
+        .boxes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+            gap: 16px;
+            width: 100%;
+            max-width: 820px;
+        }
+
+        .mystery-box {
+            min-height: 145px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-orange) 0%, #EA580C 100%);
+            color: var(--white);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 700;
+            box-shadow: 0 8px 18px rgba(245, 158, 11, 0.25);
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        .mystery-box:hover { transform: translateY(-3px); }
+
+        .mystery-box.opened {
+            background: var(--white);
+            color: var(--text-dark);
+            border: 2px solid var(--play-green);
+            box-shadow: 0 6px 14px rgba(16, 185, 129, 0.14);
+        }
+
+        /* Quiz */
+        .quiz-card {
+            max-width: 640px;
+            width: 100%;
+        }
+
+        .quiz-question {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin: 12px 0 22px;
+            color: var(--text-dark);
+        }
+
+        .options-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 560px) {
+            .options-list { grid-template-columns: 1fr; }
+        }
+
+        .opt-btn {
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: #F8FAFC;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--edu-blue);
+            background: #EEF2FF;
+        }
+
+        .opt-btn.correct {
+            background: #ECFDF5;
+            border-color: var(--play-green);
+            color: var(--play-green-dark);
+        }
+
+        .opt-btn.wrong {
+            background: #FEF2F2;
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* Match Up */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            width: 100%;
+            max-width: 760px;
+            text-align: left;
+        }
+
+        @media (max-width: 620px) {
+            .match-grid { grid-template-columns: 1fr; }
+        }
+
+        .match-col h3 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .match-item {
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: #F8FAFC;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.92rem;
+            transition: all 0.2s ease;
+        }
+
+        .match-item:hover:not(.matched) {
+            border-color: var(--edu-blue);
+            background: #EEF2FF;
+        }
+
+        .match-item.selected {
+            border-color: var(--edu-blue);
+            background: var(--edu-blue);
+            color: var(--white);
+        }
+
+        .match-item.matched {
+            border-color: var(--play-green);
+            background: #ECFDF5;
+            color: var(--play-green-dark);
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        footer {
+            background: var(--text-dark);
+            color: #CBD5E1;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.88rem;
+            margin-top: 36px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="brand">
+            <img src="images/logo.jpg" alt="EduPlay Studio">
+            <div class="brand-title">
+                <span class="main-name"><span class="edu">Edu</span><span class="play">Play</span></span>
+                <span class="sub-name">STUDIO</span>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <a href="my-activities.html" class="btn btn-back">📂 My Activities</a>
+            <a href="create.html" class="btn btn-primary">+ Create New</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="play-header">
+            <div>
+                <span class="mode-chip" id="activity-template-chip">Template: Spin the wheel</span>
+                <h1 id="activity-title-heading">Loading Activity...</h1>
+            </div>
+            <div class="score-box" id="score-display">⭐ Score: 0</div>
+        </div>
+
+        <div class="switcher-bar">
+            <span class="switcher-label">Play Mode:</span>
+            <button type="button" class="btn btn-outline" id="mode-btn-wheel" onclick="switchMode('Spin the wheel')">🎡 Spin Wheel</button>
+            <button type="button" class="btn btn-outline" id="mode-btn-quiz" onclick="switchMode('Quiz')">❓ Quiz</button>
+            <button type="button" class="btn btn-outline" id="mode-btn-flash" onclick="switchMode('Flash cards')">📇 Flash Cards</button>
+            <button type="button" class="btn btn-outline" id="mode-btn-box" onclick="switchMode('Open the box')">📦 Open Box</button>
+            <button type="button" class="btn btn-outline" id="mode-btn-match" onclick="switchMode('Match up')">🔗 Match Up</button>
+        </div>
+
+        <section class="stage-card" id="game-stage"></section>
+    </main>
+
+    <footer>
+        <p>© 2026 <strong>EduPlay Studio</strong> — Interactive Learning Games for Teachers & Students.</p>
+    </footer>
+
+    <script>
+        const STORAGE_KEY = "eduplay_saved_activities";
+
+        const fallbackActivity = {
+            id: "sample_demo",
+            title: "Demo Classroom Activity - Solar System",
+            template: "Spin the wheel",
+            items: [
+                { prompt: "Sun", answer: "Star at the center of our Solar System" },
+                { prompt: "Mercury", answer: "Smallest planet closest to the Sun" },
+                { prompt: "Earth", answer: "Our home planet with liquid water" },
+                { prompt: "Mars", answer: "Known as the Red Planet" },
+                { prompt: "Jupiter", answer: "Largest planet in our Solar System" },
+                { prompt: "Saturn", answer: "Famous for its bright ring system" }
+            ]
+        };
+
+        let activeActivity = null;
+        let currentMode = "Spin the wheel";
+        let score = 0;
+
+        function updateScore(delta, reset = false) {
+            score = reset ? 0 : Math.max(0, score + delta);
+            document.getElementById("score-display").textContent = `⭐ Score: ${score}`;
+        }
+
+        function loadActivity() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get("id");
+
+            let saved = [];
+            try {
+                saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+            } catch (e) {
+                saved = [];
+            }
+
+            const found = id ? saved.find(item => String(item.id) === String(id)) : saved[0];
+            activeActivity = found && Array.isArray(found.items) && found.items.length >= 2
+                ? found
+                : fallbackActivity;
+
+            document.getElementById("activity-title-heading").textContent = activeActivity.title || "Untitled Activity";
+
+            const preferred = activeActivity.template || "Spin the wheel";
+            const supportedModes = ["Spin the wheel", "Quiz", "Gameshow quiz", "True or false", "Flash cards", "Random cards", "Open the box", "Match up", "Find the match"];
+            currentMode = supportedModes.includes(preferred) ? preferred : "Spin the wheel";
+
+            switchMode(currentMode);
+        }
+
+        function normalizeModeName(mode) {
+            if (mode === "Gameshow quiz" || mode === "True or false") return "Quiz";
+            if (mode === "Random cards") return "Flash cards";
+            if (mode === "Find the match") return "Match up";
+            return mode;
+        }
+
+        function switchMode(mode) {
+            currentMode = normalizeModeName(mode);
+            document.getElementById("activity-template-chip").textContent = `Mode: ${currentMode}`;
+
+            const btnMap = {
+                "Spin the wheel": "mode-btn-wheel",
+                "Quiz": "mode-btn-quiz",
+                "Flash cards": "mode-btn-flash",
+                "Open the box": "mode-btn-box",
+                "Match up": "mode-btn-match"
+            };
+
+            Object.values(btnMap).forEach(btnId => {
+                const el = document.getElementById(btnId);
+                if (el) el.classList.remove("active-mode");
+            });
+
+            if (btnMap[currentMode]) {
+                const activeBtn = document.getElementById(btnMap[currentMode]);
+                if (activeBtn) activeBtn.classList.add("active-mode");
+            }
+
+            const stage = document.getElementById("game-stage");
+            if (currentMode === "Quiz") renderQuiz(stage);
+            else if (currentMode === "Flash cards") renderFlashcards(stage);
+            else if (currentMode === "Open the box") renderOpenBox(stage);
+            else if (currentMode === "Match up") renderMatchUp(stage);
+            else renderSpinWheel(stage);
+        }
+
+        /* 1. SPIN THE WHEEL */
+        function renderSpinWheel(stage) {
+            const items = activeActivity.items;
+            stage.innerHTML = `
+                <div class="wheel-wrap">
+                    <div class="wheel-pointer"></div>
+                    <canvas id="wheel-canvas" width="320" height="320"></canvas>
+                </div>
+                <button type="button" class="btn btn-play" id="spin-action-btn" style="font-size:1.05rem; padding:12px 28px;" onclick="spinWheelNow()">
+                    🎡 Spin the Wheel
+                </button>
+                <div class="result-banner" id="wheel-result">
+                    <strong>Ready!</strong> Click "Spin the Wheel" to pick an item.
+                </div>
+            `;
+
+            drawWheelCanvas(items);
+            let currentRotation = 0;
+
+            window.spinWheelNow = () => {
+                const spinBtn = document.getElementById("spin-action-btn");
+                const resultEl = document.getElementById("wheel-result");
+                spinBtn.disabled = true;
+
+                const sliceDeg = 360 / items.length;
+                const randomIndex = Math.floor(Math.random() * items.length);
+                const extraSpins = 5 * 360;
+                const targetCenterAngle = randomIndex * sliceDeg + sliceDeg / 2;
+                const offsetToPointer = (360 - targetCenterAngle + 360) % 360;
+
+                currentRotation += extraSpins + offsetToPointer;
+                const canvas = document.getElementById("wheel-canvas");
+                canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+                resultEl.innerHTML = "⏳ Spinning...";
+
+                setTimeout(() => {
+                    const chosen = items[randomIndex];
+                    const label = chosen.prompt || chosen.answer || `Item ${randomIndex + 1}`;
+                    const sub = chosen.answer && chosen.prompt ? `<div style="margin-top:4px; color:var(--text-muted); font-size:0.9rem;">${escapeHtml(chosen.answer)}</div>` : "";
+                    resultEl.innerHTML = `🎉 Selected: <strong style="color:var(--edu-blue-dark);">${escapeHtml(label)}</strong>${sub}`;
+                    updateScore(10);
+                    spinBtn.disabled = false;
+                }, 4250);
+            };
+        }
+
+        function drawWheelCanvas(items) {
+            const canvas = document.getElementById("wheel-canvas");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const radius = cx - 6;
+            const colors = ["#4F46E5", "#10B981", "#F59E0B", "#0EA5E9", "#8B5CF6", "#EC4899", "#14B8A6", "#F97316"];
+            const arc = (2 * Math.PI) / items.length;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            items.forEach((item, i) => {
+                const startAngle = i * arc - Math.PI / 2;
+                const endAngle = startAngle + arc;
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "#FFFFFF";
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(startAngle + arc / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#FFFFFF";
+                ctx.font = "bold 13px Poppins, sans-serif";
+                const text = (item.prompt || item.answer || `Item ${i + 1}`).slice(0, 14);
+                ctx.fillText(text, radius - 14, 5);
+                ctx.restore();
+            });
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, 20, 0, 2 * Math.PI);
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "#1E293B";
+            ctx.stroke();
+        }
+
+        /* 2. QUIZ */
+        function renderQuiz(stage) {
+            const items = activeActivity.items;
+            let qIndex = 0;
+
+            function drawQuestion() {
+                if (qIndex >= items.length) {
+                    stage.innerHTML = `
+                        <div class="quiz-card">
+                            <h2>🏆 Quiz Completed!</h2>
+                            <p style="margin:12px 0 20px; color:var(--text-muted);">Final Score: <strong>${score}</strong></p>
+                            <button type="button" class="btn btn-primary" onclick="restartQuiz()">🔄 Play Again</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const current = items[qIndex];
+                const questionText = current.prompt || `Item ${qIndex + 1}`;
+                const correctAnswer = current.answer || current.prompt;
+
+                const distractors = items
+                    .filter((_, idx) => idx !== qIndex)
+                    .map(x => x.answer || x.prompt)
+                    .filter(val => val && val !== correctAnswer);
+
+                const choices = [correctAnswer];
+                while (choices.length < Math.min(4, items.length) && distractors.length > 0) {
+                    const pick = distractors.splice(Math.floor(Math.random() * distractors.length), 1)[0];
+                    if (!choices.includes(pick)) choices.push(pick);
+                }
+
+                choices.sort(() => Math.random() - 0.5);
+
+                stage.innerHTML = `
+                    <div class="quiz-card">
+                        <div style="font-size:0.85rem; font-weight:700; color:var(--edu-blue);">Question ${qIndex + 1} of ${items.length}</div>
+                        <div class="quiz-question">${escapeHtml(questionText)}</div>
+                        <div class="options-list">
+                            ${choices.map(choice => `
+                                <button type="button" class="opt-btn" onclick="checkQuizChoice(this, '${escapeAttr(choice)}', '${escapeAttr(correctAnswer)}')">
+                                    ${escapeHtml(choice)}
+                                </button>
+                            `).join("")}
+                        </div>
+                        <div style="margin-top:22px;">
+                            <button type="button" class="btn btn-play" id="next-q-btn" style="display:none;" onclick="advanceQuiz()">Next Question ➔</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            window.checkQuizChoice = (btn, chosen, correct) => {
+                const buttons = stage.querySelectorAll(".opt-btn");
+                buttons.forEach(b => b.disabled = true);
+
+                if (chosen === correct) {
+                    btn.classList.add("correct");
+                    updateScore(20);
+                } else {
+                    btn.classList.add("wrong");
+                    buttons.forEach(b => {
+                        if (b.textContent.trim() === correct) b.classList.add("correct");
+                    });
+                }
+                document.getElementById("next-q-btn").style.display = "inline-flex";
+            };
+
+            window.advanceQuiz = () => {
+                qIndex++;
+                drawQuestion();
+            };
+
+            window.restartQuiz = () => {
+                qIndex = 0;
+                updateScore(0, true);
+                drawQuestion();
+            };
+
+            drawQuestion();
+        }
+
+        /* 3. FLASHCARDS */
+        function renderFlashcards(stage) {
+            const items = activeActivity.items;
+            let idx = 0;
+            let isFlipped = false;
+
+            function drawCard() {
+                const item = items[idx];
+                const front = item.prompt || `Card ${idx + 1}`;
+                const back = item.answer || "No back text provided";
+
+                stage.innerHTML = `
+                    <div style="margin-bottom:14px; font-size:0.88rem; font-weight:700; color:var(--text-muted);">
+                        Card ${idx + 1} of ${items.length} (Click card to flip)
+                    </div>
+                    <div class="flashcard-box ${isFlipped ? "flipped" : ""}" onclick="flipFlashcard()">
+                        <div class="card-side-tag">${isFlipped ? "Answer / Back" : "Prompt / Front"}</div>
+                        <div class="card-main-text">${escapeHtml(isFlipped ? back : front)}</div>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; justify-content:center;">
+                        <button type="button" class="btn btn-outline" onclick="prevFlashcard()">⬅ Previous</button>
+                        <button type="button" class="btn btn-primary" onclick="nextFlashcard()">Next Card ➔</button>
+                    </div>
+                `;
+            }
+
+            window.flipFlashcard = () => {
+                isFlipped = !isFlipped;
+                drawCard();
+            };
+
+            window.nextFlashcard = () => {
+                idx = (idx + 1) % items.length;
+                isFlipped = false;
+                updateScore(5);
+                drawCard();
+            };
+
+            window.prevFlashcard = () => {
+                idx = (idx - 1 + items.length) % items.length;
+                isFlipped = false;
+                drawCard();
+            };
+
+            drawCard();
+        }
+
+        /* 4. OPEN THE BOX */
+        function renderOpenBox(stage) {
+            const items = activeActivity.items;
+            stage.innerHTML = `
+                <p style="margin-bottom:18px; color:var(--text-muted); font-size:0.92rem;">Click any box to reveal its content.</p>
+                <div class="boxes-grid">
+                    ${items.map((item, i) => `
+                        <div class="mystery-box" onclick="revealBox(this, ${i})">
+                            <div style="font-size:1.8rem; margin-bottom:6px;">📦</div>
+                            <div>Box ${i + 1}</div>
+                        </div>
+                    `).join("")}
+                </div>
+            `;
+
+            window.revealBox = (el, index) => {
+                if (el.classList.contains("opened")) return;
+                const item = items[index];
+                el.classList.add("opened");
+                el.innerHTML = `
+                    <div style="font-weight:800; color:var(--edu-blue-dark); margin-bottom:4px;">${escapeHtml(item.prompt || `Item ${index + 1}`)}</div>
+                    <div style="font-size:0.85rem; color:var(--text-dark);">${escapeHtml(item.answer || "")}</div>
+                `;
+                updateScore(10);
+            };
+        }
+
+        /* 5. MATCH UP */
+        function renderMatchUp(stage) {
+            const items = activeActivity.items;
+            let selectedLeftIndex = null;
+            let matchedCount = 0;
+
+            const rightPool = items.map((item, idx) => ({
+                text: item.answer || item.prompt || `Match ${idx + 1}`,
+                pairIndex: idx
+            })).sort(() => Math.random() - 0.5);
+
+            stage.innerHTML = `
+                <p style="margin-bottom:18px; color:var(--text-muted); font-size:0.92rem;">Select an item on the left, then click its matching pair on the right.</p>
+                <div class="match-grid">
+                    <div class="match-col">
+                        <h3>Items</h3>
+                        ${items.map((item, idx) => `
+                            <div class="match-item left-match" data-index="${idx}" onclick="selectLeftMatch(${idx})">
+                                ${escapeHtml(item.prompt || `Item ${idx + 1}`)}
+                            </div>
+                        `).join("")}
+                    </div>
+                    <div class="match-col">
+                        <h3>Matches</h3>
+                        ${rightPool.map(r => `
+                            <div class="match-item right-match" data-pair="${r.pairIndex}" onclick="selectRightMatch(this, ${r.pairIndex})">
+                                ${escapeHtml(r.text)}
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+            `;
+
+            window.selectLeftMatch = (idx) => {
+                const leftEl = stage.querySelector(`.left-match[data-index="${idx}"]`);
+                if (!leftEl || leftEl.classList.contains("matched")) return;
+
+                stage.querySelectorAll(".left-match").forEach(el => el.classList.remove("selected"));
+                leftEl.classList.add("selected");
+                selectedLeftIndex = idx;
+            };
+
+            window.selectRightMatch = (rightEl, pairIdx) => {
+                if (selectedLeftIndex === null || rightEl.classList.contains("matched")) return;
+                const leftEl = stage.querySelector(`.left-match[data-index="${selectedLeftIndex}"]`);
+                if (!leftEl) return;
+
+                if (selectedLeftIndex === pairIdx) {
+                    leftEl.classList.remove("selected");
+                    leftEl.classList.add("matched");
+                    rightEl.classList.add("matched");
+                    selectedLeftIndex = null;
+                    matchedCount++;
+                    updateScore(15);
+
+                    if (matchedCount === items.length) {
+                        setTimeout(() => {
+                            alert("🎉 Great job! All items matched!");
+                        }, 200);
+                    }
+                } else {
+                    rightEl.style.borderColor = "var(--danger)";
+                    setTimeout(() => {
+                        rightEl.style.borderColor = "";
+                    }, 450);
+                }
+            };
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function escapeAttr(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        loadActivity();
+    </script>
+</body>
+</html>
