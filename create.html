@@ -6,10 +6,11 @@
     <title>Create Activity - EduPlay Studio</title>
 
     <meta property="og:title" content="Create Activity - EduPlay Studio">
-    <meta property="og:description" content="Create custom interactive learning games for your classroom and save them to Google Drive.">
+    <meta property="og:description" content="Create custom interactive learning games for your classroom and save them to the cloud.">
     <meta property="og:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="supabase-config.js"></script>
     <style>
         :root {
             --edu-blue: #4F46E5;
@@ -40,7 +41,6 @@
             flex-direction: column;
         }
 
-        /* Navbar */
         nav {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
@@ -119,9 +119,7 @@
             color: var(--edu-blue);
         }
 
-        .btn-back:hover {
-            background: #E0E7FF;
-        }
+        .btn-back:hover { background: #E0E7FF; }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
@@ -129,9 +127,7 @@
             box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-1px);
-        }
+        .btn-primary:hover { transform: translateY(-1px); }
 
         .btn-drive {
             background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
@@ -139,9 +135,7 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
         }
 
-        .btn-drive:hover {
-            transform: translateY(-1px);
-        }
+        .btn-drive:hover { transform: translateY(-1px); }
 
         .btn-outline {
             background: var(--white);
@@ -154,7 +148,6 @@
             color: var(--edu-blue);
         }
 
-        /* Main Creator Layout */
         .container {
             max-width: 960px;
             width: 100%;
@@ -215,12 +208,6 @@
             border: 1px solid #A7F3D0;
         }
 
-        .drive-status.disconnected {
-            background: #FFFBEB;
-            color: #B45309;
-            border-color: #FDE68A;
-        }
-
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -241,8 +228,7 @@
         }
 
         .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group select {
             width: 100%;
             padding: 11px 14px;
             border: 1.5px solid var(--border);
@@ -254,8 +240,7 @@
         }
 
         .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group select:focus {
             outline: none;
             border-color: var(--edu-blue);
             background: var(--white);
@@ -293,16 +278,9 @@
         }
 
         @media (max-width: 640px) {
-            .item-row {
-                grid-template-columns: 28px 1fr;
-            }
-            .item-row .ans-col {
-                grid-column: 2;
-            }
-            .item-row .del-btn {
-                grid-column: 2;
-                justify-self: end;
-            }
+            .item-row { grid-template-columns: 28px 1fr; }
+            .item-row .ans-col { grid-column: 2; }
+            .item-row .del-btn { grid-column: 2; justify-self: end; }
         }
 
         .row-num {
@@ -365,7 +343,6 @@
             flex-wrap: wrap;
         }
 
-        /* Saved Result Box */
         .result-box {
             display: none;
             margin-top: 24px;
@@ -375,9 +352,7 @@
             padding: 20px;
         }
 
-        .result-box.active {
-            display: block;
-        }
+        .result-box.active { display: block; }
 
         .share-link-row {
             display: flex;
@@ -420,7 +395,7 @@
         <div class="nav-actions">
             <a href="index.html" class="btn btn-back">⬅ All Templates</a>
             <a href="my-activities.html" class="btn btn-outline">📂 My Activities</a>
-            <button class="btn btn-outline" onclick="loadSampleData()">✨ Fill Sample</button>
+            <button type="button" class="btn btn-outline" onclick="loadSampleData()">✨ Fill Sample</button>
         </div>
     </nav>
 
@@ -430,9 +405,9 @@
                 <div>
                     <span class="template-badge" id="badge-template">Template: Quiz</span>
                     <h1 id="page-heading">Create New Activity</h1>
-                    <p id="page-desc">Enter your title, subject/notes, and items below to build your interactive classroom activity.</p>
+                    <p id="page-desc">Enter your title and items below to build and publish your interactive classroom activity.</p>
                 </div>
-                <div class="drive-status" id="drive-status-pill">☁️ Google Drive Ready</div>
+                <div class="drive-status" id="drive-status-pill">☁️ Cloud DB Connected</div>
             </div>
 
             <div class="form-grid">
@@ -494,7 +469,7 @@
 
                 <div class="right-actions">
                     <button type="button" class="btn btn-outline" onclick="downloadActivityJson()">⬇ Download Backup (.json)</button>
-                    <button type="button" class="btn btn-drive" onclick="saveToGoogleDrive()">☁️ Save to Google Drive</button>
+                    <button type="button" class="btn btn-drive" id="save-cloud-btn" onclick="saveToCloud()">☁️ Save & Get Link</button>
                 </div>
             </div>
 
@@ -563,28 +538,13 @@
                 const match = Array.from(select.options).find(
                     opt => opt.value.toLowerCase() === requestedTemplate.toLowerCase()
                 );
-                if (match) {
-                    select.value = match.value;
-                }
+                if (match) select.value = match.value;
             }
 
-            updateDriveStatusUI();
             onTemplateChange();
             addRow("Sun", "Star at the center of our Solar System");
             addRow("Mars", "Known as the Red Planet");
             addRow("Jupiter", "Largest planet in our Solar System");
-        }
-
-        function updateDriveStatusUI() {
-            const pill = document.getElementById("drive-status-pill");
-            const connected = localStorage.getItem("eduplay_drive_connected") === "true";
-            if (connected) {
-                pill.textContent = "☁️ Google Drive Connected";
-                pill.classList.remove("disconnected");
-            } else {
-                pill.textContent = "⚠️ Drive Not Connected (Local Save Active)";
-                pill.classList.add("disconnected");
-            }
         }
 
         function onTemplateChange() {
@@ -700,37 +660,43 @@
             }
         }
 
-        function saveToGoogleDrive() {
+        async function saveToCloud() {
             const activity = collectActivityData();
             if (!activity) return;
 
-            const existing = JSON.parse(localStorage.getItem("eduplay_saved_activities") || "[]");
-            existing.push(activity);
-            localStorage.setItem("eduplay_saved_activities", JSON.stringify(existing));
+            const btn = document.getElementById("save-cloud-btn");
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "⏳ Saving...";
 
-            const isDriveConnected = localStorage.getItem("eduplay_drive_connected") === "true";
-            const resultBox = document.getElementById("result-box");
-            const msg = document.getElementById("result-message");
-            const shareInput = document.getElementById("activity-share-link");
-            const openPlayBtn = document.getElementById("open-play-btn");
+            try {
+                const result = await cloudSaveActivity(activity);
+                const resultBox = document.getElementById("result-box");
+                const msg = document.getElementById("result-message");
+                const shareInput = document.getElementById("activity-share-link");
+                const openPlayBtn = document.getElementById("open-play-btn");
 
-            const baseUrl = "https://snapknowledge038-ship-it.github.io/EduPlay-Studio/";
-            const encodedPayload = encodeActivityForUrl(activity);
-            const playLink = encodedPayload
-                ? `${baseUrl}play.html?id=${encodeURIComponent(activity.id)}#d=${encodedPayload}`
-                : `${baseUrl}play.html?id=${encodeURIComponent(activity.id)}`;
+                const baseUrl = "https://snapknowledge038-ship-it.github.io/EduPlay-Studio/";
+                const encodedPayload = encodeActivityForUrl(activity);
+                const playLink = `${baseUrl}play.html?id=${encodeURIComponent(activity.id)}${encodedPayload ? `#d=${encodedPayload}` : ""}`;
 
-            shareInput.value = playLink;
-            openPlayBtn.href = playLink;
+                shareInput.value = playLink;
+                openPlayBtn.href = playLink;
 
-            if (isDriveConnected) {
-                msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> (${escapeHtml(activity.template)}) is prepared for your <strong>Google Drive ("EduPlay Studio")</strong> folder and saved locally as well. Use the link below to play or share.`;
-            } else {
-                msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> saved locally. Use the link below to open the game directly.`;
+                if (result.savedToCloud) {
+                    msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> (${escapeHtml(activity.template)}) is saved to <strong>Supabase Cloud</strong> and cached locally. Anyone can open the link below to play.`;
+                } else {
+                    msg.innerHTML = `<strong>"${escapeHtml(activity.title)}"</strong> saved locally. Use the link below to open the game.`;
+                }
+
+                resultBox.classList.add("active");
+                resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            } catch (err) {
+                alert("⚠️ Saved locally, but cloud sync had an issue: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
             }
-
-            resultBox.classList.add("active");
-            resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
 
         function downloadActivityJson() {
