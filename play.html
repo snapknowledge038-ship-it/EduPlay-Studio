@@ -1,1399 +1,1439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Activity - EduPlay Studio</title>
-
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/play.html">
-    <meta property="og:title" content="Play Activity - EduPlay Studio">
-    <meta property="og:description" content="Play interactive classroom learning games created on EduPlay Studio.">
-    <meta property="og:image" content="https://snapknowledge038-ship-it.github.io/EduPlay-Studio/images/logo.jpg">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="supabase-config.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduPlay Studio — Play Activity (26 Templates)</title>
     <style>
         :root {
-            --edu-blue: #4F46E5;
-            --edu-blue-dark: #3730A3;
-            --play-green: #10B981;
-            --play-green-dark: #059669;
-            --accent-orange: #F59E0B;
-            --bg-light: #F8FAFC;
-            --white: #FFFFFF;
-            --text-dark: #1E293B;
-            --text-muted: #64748B;
-            --border: #E2E8F0;
-            --danger: #EF4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --ok: #16a34a;
+            --ok-bg: #dcfce7;
+            --bad: #dc2626;
+            --bad-bg: #fee2e2;
+            --border: #e2e8f0;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
         body {
-            background-color: var(--bg-light);
-            color: var(--text-dark);
+            background: var(--bg);
+            color: var(--ink);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
-
-        nav {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(10px);
-            padding: 12px 5%;
+        header {
+            background: var(--ink);
+            color: #ffffff;
+            padding: 14px 24px;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid transparent;
-            border-image: linear-gradient(90deg, var(--edu-blue), var(--play-green), var(--accent-orange)) 1;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
             gap: 12px;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .brand img {
-            width: 46px;
-            height: 46px;
-            border-radius: 12px;
-            object-fit: cover;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
-        }
-
-        .brand-title {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .brand-title .main-name {
-            font-size: 1.3rem;
-            font-weight: 800;
-            line-height: 1.1;
-        }
-
-        .brand-title .edu { color: var(--edu-blue); }
-        .brand-title .play { color: var(--play-green); }
-
-        .brand-title .sub-name {
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: var(--text-muted);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
             flex-wrap: wrap;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
         }
-
-        .btn {
-            padding: 9px 16px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 600;
-            font-size: 0.88rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-back {
-            background: #EEF2FF;
-            color: var(--edu-blue);
-        }
-
-        .btn-back:hover { background: #E0E7FF; }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
-            color: var(--white);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
-        }
-
-        .btn-primary:hover { transform: translateY(-1px); }
-
-        .btn-play {
-            background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
-            color: var(--white);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.24);
-        }
-
-        .btn-play:hover { transform: translateY(-1px); }
-
-        .btn-outline {
-            background: var(--white);
-            color: var(--text-dark);
-            border: 1.5px solid var(--border);
-        }
-
-        .btn-outline:hover,
-        .btn-outline.active-mode {
-            border-color: var(--edu-blue);
-            background: #EEF2FF;
-            color: var(--edu-blue-dark);
-        }
-
-        .container {
-            max-width: 1040px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            flex: 1;
-        }
-
-        .play-header {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 22px 26px;
-            border: 1px solid var(--border);
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.03);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-        }
-
-        .mode-chip {
-            display: inline-block;
-            background: linear-gradient(135deg, #EEF2FF 0%, #ECFDF5 100%);
-            color: var(--edu-blue-dark);
-            border: 1px solid #C7D2FE;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .source-note {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-
-        .play-header h1 {
-            font-size: 1.55rem;
-            font-weight: 800;
-            color: var(--text-dark);
-        }
-
-        .score-box {
-            background: #FFFBEB;
-            border: 1.5px solid #FDE68A;
-            color: #92400E;
-            padding: 10px 16px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 0.92rem;
-        }
-
-        .switcher-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .switcher-label {
+        .brand { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.3px; }
+        .activity-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .badge {
+            background: rgba(255, 255, 255, 0.14);
+            padding: 5px 12px;
+            border-radius: 999px;
             font-size: 0.85rem;
             font-weight: 600;
-            color: var(--text-muted);
-            margin-right: 4px;
         }
+        .badge.locked { background: var(--bad); color: #fff; }
+        .nav-link { color: #cbd5e1; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+        .nav-link:hover { color: #ffffff; }
 
-        .stage-card {
-            background: var(--white);
-            border-radius: 22px;
-            padding: 36px 26px;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
-            min-height: 420px;
+        main {
+            flex: 1;
+            max-width: 980px;
+            width: 100%;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        }
+        .title-row {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            text-align: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
         }
-
-        .wheel-wrap {
-            position: relative;
-            width: 310px;
-            height: 310px;
-            max-width: 82vw;
-            max-height: 82vw;
-            margin: 10px auto 20px;
-        }
-
-        .wheel-pointer {
-            position: absolute;
-            top: -14px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 16px solid transparent;
-            border-right: 16px solid transparent;
-            border-top: 32px solid var(--text-dark);
-            z-index: 10;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
-        }
-
-        #wheel-canvas {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            box-shadow: 0 12px 28px rgba(79, 70, 229, 0.2);
-            transition: transform 4.2s cubic-bezier(0.15, 0.72, 0.1, 1);
-        }
-
-        .result-banner {
-            margin-top: 12px;
-            padding: 14px 20px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #EEF2FF 0%, #ECFDF5 100%);
-            border: 1.5px solid #C7D2FE;
-            max-width: 620px;
-            width: 100%;
-        }
-
-        .flashcard-box {
-            width: 100%;
-            max-width: 480px;
-            min-height: 230px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, var(--edu-blue) 0%, #6366F1 100%);
-            color: var(--white);
-            padding: 28px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 14px 28px rgba(79, 70, 229, 0.25);
-            transition: transform 0.25s ease, background 0.3s ease;
+            transition: 0.15s;
+        }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary {
+            background: #f8fafc;
+            color: var(--ink);
+            border: 1px solid #cbd5e1;
+            padding: 9px 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn-secondary:hover { background: #eef2ff; border-color: var(--primary); }
+
+        /* --- Template Switcher --- */
+        .switcher-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            padding: 12px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 18px;
+        }
+        .switcher-label {
+            width: 100%;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--muted);
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .switch-btn {
+            padding: 6px 11px;
+            border-radius: 9px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #334155;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .switch-btn:hover { border-color: var(--primary); color: var(--primary); background: #eef2ff; }
+        .switch-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+
+        /* --- Shared Game Styles --- */
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 2px solid #cbd5e1;
+            background: #f8fafc;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .option-btn:hover { border-color: var(--primary); background: #eef2ff; }
+        .option-btn.correct { background: var(--ok-bg); border-color: var(--ok); color: #166534; }
+        .option-btn.wrong { background: var(--bad-bg); border-color: var(--bad); color: #991b1b; }
+
+        .flashcard {
+            min-height: 190px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 16px 0;
             user-select: none;
         }
-
-        .flashcard-box.flipped {
-            background: linear-gradient(135deg, var(--play-green) 0%, var(--play-green-dark) 100%);
-        }
-
-        .flashcard-box:hover { transform: scale(1.02); }
-
-        .card-side-tag {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            opacity: 0.85;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .card-main-text {
-            font-size: 1.45rem;
-            font-weight: 700;
-            line-height: 1.4;
-        }
-
-        .boxes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-            gap: 16px;
-            width: 100%;
-            max-width: 820px;
-        }
-
-        .mystery-box {
-            min-height: 145px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--accent-orange) 0%, #EA580C 100%);
-            color: var(--white);
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-weight: 700;
-            box-shadow: 0 8px 18px rgba(245, 158, 11, 0.25);
-            transition: transform 0.2s ease, background 0.3s ease;
-        }
-
-        .mystery-box:hover { transform: translateY(-3px); }
-
-        .mystery-box.opened {
-            background: var(--white);
-            color: var(--text-dark);
-            border: 2px solid var(--play-green);
-            box-shadow: 0 6px 14px rgba(16, 185, 129, 0.14);
-        }
-
-        .quiz-card {
-            max-width: 640px;
-            width: 100%;
-        }
-
-        .quiz-question {
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin: 12px 0 22px;
-            color: var(--text-dark);
-        }
-
-        .options-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        @media (max-width: 560px) {
-            .options-list { grid-template-columns: 1fr; }
-        }
-
-        .opt-btn {
-            padding: 14px 16px;
-            border-radius: 12px;
-            border: 1.5px solid var(--border);
-            background: #F8FAFC;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-        }
-
-        .opt-btn:hover:not(:disabled) {
-            border-color: var(--edu-blue);
-            background: #EEF2FF;
-        }
-
-        .opt-btn.correct {
-            background: #ECFDF5;
-            border-color: var(--play-green);
-            color: var(--play-green-dark);
-        }
-
-        .opt-btn.wrong {
-            background: #FEF2F2;
-            border-color: var(--danger);
-            color: var(--danger);
-        }
+        .flashcard.back { background: linear-gradient(135deg, #0f766e, #14b8a6); }
 
         .match-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px;
-            width: 100%;
-            max-width: 760px;
-            text-align: left;
-        }
-
-        @media (max-width: 620px) {
-            .match-grid { grid-template-columns: 1fr; }
-        }
-
-        .match-col h3 {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        .match-item {
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 1.5px solid var(--border);
-            background: #F8FAFC;
-            margin-bottom: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.92rem;
-            transition: all 0.2s ease;
-        }
-
-        .match-item:hover:not(.matched) {
-            border-color: var(--edu-blue);
-            background: #EEF2FF;
-        }
-
-        .match-item.selected {
-            border-color: var(--edu-blue);
-            background: var(--edu-blue);
-            color: var(--white);
-        }
-
-        .match-item.matched {
-            border-color: var(--play-green);
-            background: #ECFDF5;
-            color: var(--play-green-dark);
-            cursor: default;
-            opacity: 0.85;
-        }
-
-        .word-game-box {
-            max-width: 660px;
-            width: 100%;
-        }
-
-        .scrambled-display {
-            font-size: 1.7rem;
-            font-weight: 800;
-            letter-spacing: 5px;
-            color: var(--edu-blue-dark);
-            background: #EEF2FF;
-            border: 1.5px solid #C7D2FE;
-            padding: 16px 20px;
-            border-radius: 16px;
-            margin: 14px 0 18px;
-            word-break: break-word;
-        }
-
-        .word-input-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .word-input {
-            padding: 11px 16px;
-            border-radius: 12px;
-            border: 1.5px solid var(--border);
-            font-size: 1rem;
-            min-width: 220px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .word-input:focus {
-            outline: none;
-            border-color: var(--edu-blue);
-        }
-
-        .feedback-text {
+            gap: 14px;
             margin-top: 14px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            min-height: 24px;
+        }
+        .match-item {
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+            background: #f8fafc;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+        .match-item.selected { border-color: var(--primary); background: #e0e7ff; }
+        .match-item.matched { border-color: var(--ok); background: var(--ok-bg); color: #166534; opacity: 0.75; }
+
+        .type-input-box {
+            width: 100%;
+            max-width: 460px;
+            padding: 14px 18px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
+            outline: none;
+            transition: 0.2s;
+            margin: 14px auto;
+            display: block;
+        }
+        .type-input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); }
+
+        .spell-slots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 18px 0; }
+        .spell-slot {
+            width: 42px; height: 48px; border-bottom: 3px solid var(--primary); background: #f8fafc;
+            border-radius: 8px 8px 0 0; display: flex; align-items: center; justify-content: center;
+            font-size: 1.35rem; font-weight: 800; color: var(--ink); cursor: pointer; user-select: none;
+        }
+        .spell-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 14px; }
+        .spell-tile {
+            width: 44px; height: 44px; border-radius: 10px; background: var(--primary); color: #fff;
+            font-weight: 700; font-size: 1.15rem; border: none; cursor: pointer; box-shadow: 0 3px 0 var(--primary-dark);
+        }
+        .spell-tile:disabled { opacity: 0.28; cursor: not-allowed; box-shadow: none; }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            max-width: 740px;
+            margin: 16px auto;
+        }
+        .mem-card {
+            height: 95px; border-radius: 14px; background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff; display: flex; align-items: center; justify-content: center; text-align: center;
+            padding: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; user-select: none;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25); transition: 0.2s;
+        }
+        .mem-card.flipped { background: #ffffff; color: var(--ink); border: 2px solid var(--primary); }
+        .mem-card.matched { background: var(--ok-bg); color: #166534; border: 2px solid #22c55e; cursor: default; opacity: 0.85; }
+
+        .hangman-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .hm-word { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px 0; }
+        .hm-letter {
+            min-width: 32px; height: 40px; border-bottom: 3px solid #334155; font-size: 1.4rem;
+            font-weight: 800; display: flex; align-items: center; justify-content: center;
+        }
+        .hm-letter.space { border-bottom: none; width: 18px; }
+        .hm-keyboard { display: grid; grid-template-columns: repeat(9, minmax(30px, 1fr)); gap: 6px; max-width: 480px; width: 100%; }
+        .hm-key { padding: 10px 0; border-radius: 8px; border: 1px solid #cbd5e1; background: #f1f5f9; font-weight: 700; cursor: pointer; }
+        .hm-key.correct { background: #22c55e; color: #fff; border-color: var(--ok); }
+        .hm-key.wrong { background: #ef4444; color: #fff; border-color: var(--bad); opacity: 0.65; }
+
+        /* --- Wordsearch & Crossword --- */
+        .ws-grid { display: inline-grid; gap: 3px; background: #cbd5e1; padding: 6px; border-radius: 10px; margin: 12px auto; }
+        .ws-cell {
+            width: 34px; height: 34px; background: #fff; border: none; border-radius: 6px;
+            font-weight: 800; font-size: 0.95rem; cursor: pointer; color: var(--ink);
+        }
+        .ws-cell.selected { background: #fde68a; }
+        .ws-cell.found { background: var(--ok-bg); color: #166534; }
+        .ws-words { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+        .ws-tag { padding: 5px 11px; border-radius: 999px; background: #e2e8f0; font-weight: 700; font-size: 0.85rem; }
+        .ws-tag.done { background: var(--ok-bg); color: #166534; text-decoration: line-through; }
+
+        .cw-grid { display: inline-grid; gap: 3px; background: #334155; padding: 6px; border-radius: 10px; margin: 12px auto; }
+        .cw-cell {
+            width: 36px; height: 36px; text-align: center; font-weight: 800; font-size: 1rem;
+            text-transform: uppercase; border: none; border-radius: 4px; background: #fff;
+        }
+        .cw-cell.blocked { background: #1e293b; pointer-events: none; }
+        .cw-cell.right { background: var(--ok-bg); color: #166534; }
+
+        /* --- Group Sort & Order --- */
+        .sort-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 14px; }
+        .sort-zone {
+            min-height: 160px; border: 2px dashed #94a3b8; border-radius: 14px; padding: 12px;
+            background: #f8fafc;
+        }
+        .sort-zone h3 { font-size: 1rem; margin-bottom: 10px; color: var(--primary); text-align: center; }
+        .chip-btn {
+            display: inline-block; margin: 5px; padding: 8px 14px; border-radius: 999px;
+            border: 2px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer;
+        }
+        .chip-btn.picked { border-color: var(--primary); background: #eef2ff; color: var(--primary); }
+
+        .order-row {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            padding: 12px 16px; margin: 8px 0; border-radius: 12px;
+            border: 2px solid #cbd5e1; background: #f8fafc; font-weight: 700;
         }
 
-        footer {
-            background: var(--text-dark);
-            color: #CBD5E1;
-            text-align: center;
-            padding: 20px;
-            font-size: 0.88rem;
-            margin-top: 36px;
+        /* --- Canvas Arcade Games --- */
+        canvas.arcade-canvas {
+            display: block;
+            margin: 12px auto;
+            border-radius: 14px;
+            border: 2px solid #cbd5e1;
+            background: #0f172a;
+            max-width: 100%;
         }
     </style>
 </head>
 <body>
+    <header>
+        <div class="brand">🎮 EduPlay Studio</div>
+        <div class="activity-meta">
+            <span id="templateBadge" class="badge">Loading...</span>
+            <span id="lockBadge" class="badge" style="display:none;">🔒 Mode Locked</span>
+            <button type="button" class="btn-secondary" id="soundToggleBtn" style="padding:5px 11px;font-size:0.82rem;">🔊 Sound: ON</button>
+            <a href="create.html" class="nav-link">+ Create</a>
+            <a href="my-activities.html" class="nav-link">My Activities</a>
+        </div>
+    </header>
 
-    <nav>
-        <a href="index.html" class="brand">
-            <img src="images/logo.jpg" alt="EduPlay Studio">
-            <div class="brand-title">
-                <span class="main-name"><span class="edu">Edu</span><span class="play">Play</span></span>
-                <span class="sub-name">STUDIO</span>
+    <main>
+        <div class="card">
+            <div class="title-row">
+                <div>
+                    <h1 id="activityTitle" style="font-size:1.5rem;">Loading Activity...</h1>
+                    <p id="activityInfo" style="color:var(--muted);font-size:0.9rem;margin-top:4px;"></p>
+                </div>
+                <div id="liveStats" style="font-weight:700;color:var(--primary);"></div>
             </div>
-        </a>
 
-        <div class="nav-actions">
-            <a href="my-activities.html" class="btn btn-back">📂 My Activities</a>
-            <a href="create.html" class="btn btn-primary">+ Create New</a>
-        </div>
-    </nav>
-
-    <main class="container">
-        <div class="play-header">
-            <div>
-                <span class="mode-chip" id="activity-template-chip">Mode: Spin the wheel</span>
-                <h1 id="activity-title-heading">Loading Activity...</h1>
-                <div class="source-note" id="activity-source-note">Fetching activity details...</div>
+            <div id="switcherBar" class="switcher-bar" style="display:none;">
+                <div class="switcher-label">
+                    <span>Switch Game Template</span>
+                    <span style="font-weight:700;text-transform:none;">All 26 Templates Ready</span>
+                </div>
+                <div id="switcherButtons" style="display:flex;flex-wrap:wrap;gap:7px;width:100%;"></div>
             </div>
-            <div class="score-box" id="score-display">⭐ Score: 0</div>
-        </div>
 
-        <div class="switcher-bar">
-            <span class="switcher-label">Play Mode:</span>
-            <button type="button" class="btn btn-outline" id="mode-btn-wheel" onclick="switchMode('Spin the wheel')">🎡 Spin Wheel</button>
-            <button type="button" class="btn btn-outline" id="mode-btn-quiz" onclick="switchMode('Quiz')">❓ Quiz</button>
-            <button type="button" class="btn btn-outline" id="mode-btn-tf" onclick="switchMode('True or false')">✅ True/False</button>
-            <button type="button" class="btn btn-outline" id="mode-btn-flash" onclick="switchMode('Flash cards')">📇 Flash Cards</button>
-            <button type="button" class="btn btn-outline" id="mode-btn-box" onclick="switchMode('Open the box')">📦 Open Box</button>
-            <button type="button" class="btn btn-outline" id="mode-btn-match" onclick="switchMode('Match up')">🔗 Match Up</button>
-            <button type="button" class="btn btn-outline" id="mode-btn-anagram" onclick="switchMode('Anagram')">🔤 Anagram</button>
-            <button type="button" class="btn btn-outline" id="mode-btn-unjumble" onclick="switchMode('Unjumble')">🧩 Unjumble</button>
+            <div id="gameContainer">
+                <p style="text-align:center;color:var(--muted);padding:30px;">Loading game data...</p>
+            </div>
         </div>
-
-        <section class="stage-card" id="game-stage">
-            <p style="color:var(--text-muted);">⏳ Loading game...</p>
-        </section>
     </main>
 
-    <footer>
-        <p>© 2026 <strong>EduPlay Studio</strong> — Interactive Learning Games for Teachers & Students.</p>
-    </footer>
-
+    <script src="supabase-config.js"></script>
     <script>
-        const fallbackActivity = {
-            id: "sample_demo",
-            title: "Demo Classroom Activity - Solar System",
-            template: "Spin the wheel",
-            lockMode: false,
-            items: [
-                { prompt: "Sun", answer: "Star at the center of our Solar System" },
-                { prompt: "Mercury", answer: "Smallest planet closest to the Sun" },
-                { prompt: "Earth", answer: "Our home planet with liquid water" },
-                { prompt: "Mars", answer: "Known as the Red Planet" },
-                { prompt: "Jupiter", answer: "Largest planet in our Solar System" },
-                { prompt: "Saturn", answer: "Famous for its bright ring system" }
-            ]
+        const container = document.getElementById("gameContainer");
+        const titleEl = document.getElementById("activityTitle");
+        const infoEl = document.getElementById("activityInfo");
+        const liveStats = document.getElementById("liveStats");
+        const templateBadge = document.getElementById("templateBadge");
+        const lockBadge = document.getElementById("lockBadge");
+        const switcherBar = document.getElementById("switcherBar");
+        const switcherButtons = document.getElementById("switcherButtons");
+        const soundToggleBtn = document.getElementById("soundToggleBtn");
+
+        let soundEnabled = true;
+        let activeCleanup = null;
+
+        function playTone(freq = 520, duration = 0.12, type = "sine") {
+            if (!soundEnabled) return;
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (_) {}
+        }
+
+        function sfxCorrect() { playTone(660, 0.14, "triangle"); setTimeout(() => playTone(880, 0.16, "triangle"), 90); }
+        function sfxWrong() { playTone(220, 0.22, "sawtooth"); }
+
+        soundToggleBtn.onclick = () => {
+            soundEnabled = !soundEnabled;
+            soundToggleBtn.textContent = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
         };
 
-        let activeActivity = null;
-        let currentMode = "Spin the wheel";
-        let isActivityLocked = false;
-        let score = 0;
+        /* ================= ALL 26 TEMPLATES ================= */
+        const SWITCHABLE_TEMPLATES = [
+            "Quiz",
+            "True or false",
+            "Flash cards",
+            "Match up",
+            "Spin the wheel",
+            "Open the box",
+            "Anagram",
+            "Unjumble",
+            "Type the answer",
+            "Spell the word",
+            "Matching pairs",
+            "Hangman",
+            "Wordsearch",
+            "Crossword",
+            "Complete the sentence",
+            "Flip tiles",
+            "Group sort",
+            "Balloon pop",
+            "Whack-a-mole",
+            "Maze chase",
+            "Airplane",
+            "Speed sorting",
+            "Labelled diagram",
+            "Order / Sequence",
+            "Missing word",
+            "Find the match"
+        ];
 
-        function updateScore(delta, reset = false) {
-            score = reset ? 0 : Math.max(0, score + delta);
-            document.getElementById("score-display").textContent = `⭐ Score: ${score}`;
-        }
+        let currentActivity = null;
+        let currentTemplate = "";
+        let normalizedItems = [];
 
-        function decodeActivityFromHash() {
-            try {
-                const hash = window.location.hash || "";
-                const match = hash.match(/d=([A-Za-z0-9\-_]+)/);
-                if (!match || !match[1]) return null;
-
-                let base64 = match[1].replace(/-/g, "+").replace(/_/g, "/");
-                while (base64.length % 4) base64 += "=";
-
-                const binary = atob(base64);
-                const bytes = new Uint8Array(binary.length);
-                for (let i = 0; i < binary.length; i++) {
-                    bytes[i] = binary.charCodeAt(i);
+        function normalizeItems(rawItems) {
+            if (!Array.isArray(rawItems)) return [];
+            return rawItems.map((it, idx) => {
+                if (typeof it === "string") {
+                    return { clue: `Item ${idx + 1}`, answer: it, group: idx % 2 === 0 ? "Group A" : "Group B", options: [] };
                 }
-
-                const jsonStr = new TextDecoder().decode(bytes);
-                const parsed = JSON.parse(jsonStr);
-                if (parsed && Array.isArray(parsed.items) && parsed.items.length >= 2) {
-                    return parsed;
-                }
-                return null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function getLocalActivityById(id) {
-            try {
-                const list = JSON.parse(localStorage.getItem("eduplay_saved_activities") || "[]");
-                return list.find(item => String(item.id) === String(id)) || null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        async function fetchExactCloudActivity(id) {
-            if (!id || typeof SUPABASE_URL === "undefined" || typeof SUPABASE_ANON_KEY === "undefined") {
-                return null;
-            }
-
-            const endpoint = `${SUPABASE_URL}/rest/v1/activities?id=eq.${encodeURIComponent(id)}&select=*`;
-            const res = await fetch(endpoint, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_ANON_KEY,
-                    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-                }
+                const clue = it.clue || it.question || it.term || it.front || it.prompt || `Item ${idx + 1}`;
+                const answer = it.answer || it.word || it.definition || it.back || it.match || "";
+                const group = it.group || it.category || (idx % 2 === 0 ? "Group A" : "Group B");
+                const options = Array.isArray(it.options) ? it.options : [];
+                return { ...it, clue, answer, group, options };
             });
-
-            if (!res.ok) {
-                throw new Error(`HTTP ${res.status}`);
-            }
-
-            const rows = await res.json();
-            if (!Array.isArray(rows) || rows.length === 0) {
-                return null;
-            }
-
-            const r = rows[0];
-            return {
-                id: r.id,
-                title: r.title,
-                template: r.template,
-                lockMode: Boolean(r.lockMode),
-                items: Array.isArray(r.items) ? r.items : [],
-                createdAt: r.created_at
-            };
         }
 
-        async function loadActivity() {
+        function renderSwitcherButtons(activeTpl, isLocked) {
+            if (isLocked) {
+                switcherBar.style.display = "none";
+                return;
+            }
+            switcherBar.style.display = "flex";
+            switcherButtons.innerHTML = "";
+
+            const list = SWITCHABLE_TEMPLATES.includes(activeTpl)
+                ? SWITCHABLE_TEMPLATES
+                : [activeTpl, ...SWITCHABLE_TEMPLATES];
+
+            list.forEach(tpl => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = `switch-btn ${tpl === activeTpl ? "active" : ""}`;
+                btn.textContent = tpl;
+                btn.onclick = () => {
+                    currentTemplate = tpl;
+                    templateBadge.textContent = currentTemplate;
+                    renderSwitcherButtons(currentTemplate, false);
+                    renderGame(currentTemplate, normalizedItems);
+                };
+                switcherButtons.appendChild(btn);
+            });
+        }
+
+        function finishScreen(heading, subtitle) {
+            liveStats.textContent = "";
+            container.innerHTML = `
+                <div style="text-align:center;padding:32px 16px;">
+                    <h2 style="font-size:1.7rem;margin-bottom:8px;">${heading}</h2>
+                    <p style="font-size:1.15rem;color:#334155;margin-bottom:18px;">${subtitle}</p>
+                    <button type="button" class="btn-primary" onclick="renderGame(currentTemplate, normalizedItems)">Play Again</button>
+                </div>`;
+        }
+
+        async function initPlay() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get("id");
-            const hashActivity = decodeActivityFromHash();
-            const sourceNoteEl = document.getElementById("activity-source-note");
 
-            let loaded = null;
-            let sourceLabel = "";
+            if (!id) {
+                titleEl.textContent = "No Activity ID Provided";
+                container.innerHTML = `<p style="text-align:center;padding:24px;">Open a valid activity link or <a href="my-activities.html">browse saved activities</a>.</p>`;
+                return;
+            }
 
-            if (id) {
+            let activity = null;
+            if (typeof cloudFetchActivityById === "function") {
                 try {
-                    const cloudAct = await fetchExactCloudActivity(id);
-                    if (cloudAct && Array.isArray(cloudAct.items) && cloudAct.items.length >= 2) {
-                        loaded = cloudAct;
-                        sourceLabel = `☁️ Loaded from Cloud (ID: ${id})`;
-                    }
+                    activity = await cloudFetchActivityById(id);
                 } catch (err) {
-                    console.warn("Cloud fetch failed for id:", id, err);
-                }
-
-                if (!loaded && hashActivity && String(hashActivity.id) === String(id)) {
-                    loaded = hashActivity;
-                    sourceLabel = "🔗 Loaded from Link Data";
-                }
-
-                if (!loaded) {
-                    const localMatch = getLocalActivityById(id);
-                    if (localMatch && Array.isArray(localMatch.items) && localMatch.items.length >= 2) {
-                        loaded = localMatch;
-                        sourceLabel = "💾 Loaded from Local Cache";
-                    }
-                }
-
-                if (!loaded) {
-                    activeActivity = { id, title: "Activity Not Found", template: "Spin the wheel", items: [] };
-                    document.getElementById("activity-title-heading").textContent = "Activity Not Found";
-                    sourceNoteEl.textContent = `Could not find activity "${id}" in Cloud Database.`;
-                    document.getElementById("game-stage").innerHTML = `
-                        <div>
-                            <h2 style="margin-bottom:10px;">⚠️ Activity Not Found</h2>
-                            <p style="color:var(--text-muted); max-width:480px; margin:0 auto 20px;">
-                                This activity link may be incomplete or the activity was not saved to Supabase yet.
-                            </p>
-                            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-                                <a href="my-activities.html" class="btn btn-outline">📂 My Activities</a>
-                                <a href="create.html" class="btn btn-primary">+ Create Activity</a>
-                            </div>
-                        </div>
-                    `;
-                    return;
-                }
-            } else {
-                if (hashActivity) {
-                    loaded = hashActivity;
-                    sourceLabel = "🔗 Loaded from Link Data";
-                } else {
-                    const all = await cloudFetchAllActivities();
-                    if (all.length > 0) {
-                        loaded = all[0];
-                        sourceLabel = "☁️ Latest Activity";
-                    } else {
-                        loaded = fallbackActivity;
-                        sourceLabel = "✨ Demo Activity";
-                    }
+                    console.warn("Cloud fetch fallback:", err);
                 }
             }
 
-            activeActivity = loaded;
-            document.getElementById("activity-title-heading").textContent = activeActivity.title || "Untitled Activity";
-            sourceNoteEl.textContent = sourceLabel;
-            updateScore(0, true);
-
-            const preferred = activeActivity.template || "Spin the wheel";
-            isActivityLocked = Boolean(
-                activeActivity.lockMode ||
-                preferred === "Quiz" ||
-                preferred === "Gameshow quiz"
-            );
-
-            const switcherEl = document.querySelector(".switcher-bar");
-            if (switcherEl) {
-                switcherEl.style.display = isActivityLocked ? "none" : "flex";
+            if (!activity && typeof getLocalActivities === "function") {
+                const localList = getLocalActivities();
+                activity = localList.find(a => String(a.id) === String(id)) || null;
             }
 
-            const supportedModes = [
-                "Spin the wheel", "Quiz", "Gameshow quiz", "True or false",
-                "Flash cards", "Random cards", "Open the box", "Match up", "Find the match",
-                "Anagram", "Unjumble"
-            ];
-            currentMode = supportedModes.includes(preferred) ? preferred : "Spin the wheel";
-
-            switchMode(currentMode, true);
-        }
-
-        function normalizeModeName(mode) {
-            if (mode === "Gameshow quiz") return "Quiz";
-            if (mode === "Random cards") return "Flash cards";
-            if (mode === "Find the match") return "Match up";
-            return mode;
-        }
-
-        function switchMode(mode, initialLoad = false) {
-            if (!activeActivity || !Array.isArray(activeActivity.items) || activeActivity.items.length < 2) {
+            if (!activity) {
+                titleEl.textContent = "Activity Not Found";
+                container.innerHTML = `<p style="text-align:center;padding:24px;">Could not find activity <strong>${id}</strong>.</p>`;
                 return;
             }
 
-            if (!initialLoad && isActivityLocked && mode !== currentMode) {
+            currentActivity = activity;
+            currentTemplate = activity.template || "Quiz";
+            normalizedItems = normalizeItems(activity.items);
+
+            titleEl.textContent = activity.title || "Untitled Activity";
+            infoEl.textContent = `${normalizedItems.length} item(s)`;
+            templateBadge.textContent = currentTemplate;
+
+            const isLocked = Boolean(activity.lockMode);
+            if (isLocked) {
+                lockBadge.style.display = "inline-block";
+                lockBadge.classList.add("locked");
+            }
+
+            renderSwitcherButtons(currentTemplate, isLocked);
+            renderGame(currentTemplate, normalizedItems);
+        }
+
+        function renderGame(template, items) {
+            if (typeof activeCleanup === "function") {
+                activeCleanup();
+                activeCleanup = null;
+            }
+            liveStats.textContent = "";
+
+            if (!items || items.length === 0) {
+                container.innerHTML = `<p style="text-align:center;padding:24px;color:var(--muted);">No items found in this activity.</p>`;
                 return;
             }
 
-            currentMode = normalizeModeName(mode);
-            document.getElementById("activity-template-chip").textContent = isActivityLocked
-                ? `🔒 Locked Mode: ${currentMode}`
-                : `Mode: ${currentMode}`;
-
-            const btnMap = {
-                "Spin the wheel": "mode-btn-wheel",
-                "Quiz": "mode-btn-quiz",
-                "True or false": "mode-btn-tf",
-                "Flash cards": "mode-btn-flash",
-                "Open the box": "mode-btn-box",
-                "Match up": "mode-btn-match",
-                "Anagram": "mode-btn-anagram",
-                "Unjumble": "mode-btn-unjumble"
-            };
-
-            Object.values(btnMap).forEach(btnId => {
-                const el = document.getElementById(btnId);
-                if (el) el.classList.remove("active-mode");
-            });
-
-            if (btnMap[currentMode]) {
-                const activeBtn = document.getElementById(btnMap[currentMode]);
-                if (activeBtn) activeBtn.classList.add("active-mode");
+            switch (template) {
+                case "Quiz": renderQuiz(container, items); break;
+                case "True or false": renderTrueOrFalse(container, items); break;
+                case "Flash cards": renderFlashCards(container, items); break;
+                case "Match up": renderMatchUp(container, items); break;
+                case "Spin the wheel": renderSpinWheel(container, items); break;
+                case "Open the box": renderOpenTheBox(container, items); break;
+                case "Anagram":
+                case "Unjumble":
+                case "Spell the word": renderSpellTheWord(container, items); break;
+                case "Type the answer": renderTypeTheAnswer(container, items); break;
+                case "Matching pairs": renderMatchingPairs(container, items); break;
+                case "Hangman": renderHangman(container, items); break;
+                case "Wordsearch": renderWordsearch(container, items); break;
+                case "Crossword": renderCrossword(container, items); break;
+                case "Complete the sentence":
+                case "Missing word": renderCompleteSentence(container, items); break;
+                case "Flip tiles": renderFlipTiles(container, items); break;
+                case "Group sort": renderGroupSort(container, items); break;
+                case "Balloon pop": renderBalloonPop(container, items); break;
+                case "Whack-a-mole": renderWhackAMole(container, items); break;
+                case "Maze chase": renderMazeChase(container, items); break;
+                case "Airplane": renderAirplane(container, items); break;
+                case "Speed sorting": renderSpeedSorting(container, items); break;
+                case "Labelled diagram": renderLabelledDiagram(container, items); break;
+                case "Order / Sequence": renderOrderSequence(container, items); break;
+                case "Find the match": renderFindTheMatch(container, items); break;
+                default: renderQuiz(container, items); break;
             }
-
-            const stage = document.getElementById("game-stage");
-            if (currentMode === "Quiz") renderQuiz(stage);
-            else if (currentMode === "True or false") renderTrueOrFalse(stage);
-            else if (currentMode === "Flash cards") renderFlashcards(stage);
-            else if (currentMode === "Open the box") renderOpenBox(stage);
-            else if (currentMode === "Match up") renderMatchUp(stage);
-            else if (currentMode === "Anagram") renderAnagram(stage);
-            else if (currentMode === "Unjumble") renderUnjumble(stage);
-            else renderSpinWheel(stage);
         }
 
-        /* 1. SPIN THE WHEEL */
-        function renderSpinWheel(stage) {
-            const items = activeActivity.items;
-            stage.innerHTML = `
-                <div class="wheel-wrap">
-                    <div class="wheel-pointer"></div>
-                    <canvas id="wheel-canvas" width="320" height="320"></canvas>
-                </div>
-                <button type="button" class="btn btn-play" id="spin-action-btn" style="font-size:1.05rem; padding:12px 28px;" onclick="spinWheelNow()">
-                    🎡 Spin the Wheel
-                </button>
-                <div class="result-banner" id="wheel-result">
-                    <strong>Ready!</strong> Click "Spin the Wheel" to pick an item.
-                </div>
-            `;
+        /* ================= 1–12 CORE TEMPLATES ================= */
+        function renderQuiz(container, items) {
+            let idx = 0, score = 0;
+            function showQ() {
+                if (idx >= items.length) return finishScreen("🎉 Quiz Complete!", `Score: ${score} / ${items.length}`);
+                const it = items[idx];
+                const distractors = items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean);
+                const fallback = ["Option B", "Option C", "Option D"];
+                const pool = [...distractors, ...fallback].filter(x => String(x).toLowerCase() !== String(it.answer).toLowerCase());
+                const choices = it.options.length >= 2
+                    ? [...it.options]
+                    : [it.answer, ...pool.slice(0, 3)].sort(() => Math.random() - 0.5);
 
-            drawWheelCanvas(items);
-            let currentRotation = 0;
-
-            window.spinWheelNow = () => {
-                const spinBtn = document.getElementById("spin-action-btn");
-                const resultEl = document.getElementById("wheel-result");
-                spinBtn.disabled = true;
-
-                const sliceDeg = 360 / items.length;
-                const randomIndex = Math.floor(Math.random() * items.length);
-                const extraSpins = 5 * 360;
-                const targetCenterAngle = randomIndex * sliceDeg + sliceDeg / 2;
-                const offsetToPointer = (360 - targetCenterAngle + 360) % 360;
-
-                currentRotation += extraSpins + offsetToPointer;
-                const canvas = document.getElementById("wheel-canvas");
-                canvas.style.transform = `rotate(${currentRotation}deg)`;
-
-                resultEl.innerHTML = "⏳ Spinning...";
-
-                setTimeout(() => {
-                    const chosen = items[randomIndex];
-                    const label = chosen.prompt || chosen.answer || `Item ${randomIndex + 1}`;
-                    const sub = chosen.answer && chosen.prompt ? `<div style="margin-top:4px; color:var(--text-muted); font-size:0.9rem;">${escapeHtml(chosen.answer)}</div>` : "";
-                    resultEl.innerHTML = `🎉 Selected: <strong style="color:var(--edu-blue-dark);">${escapeHtml(label)}</strong>${sub}`;
-                    updateScore(10);
-                    spinBtn.disabled = false;
-                }, 4250);
-            };
-        }
-
-        function drawWheelCanvas(items) {
-            const canvas = document.getElementById("wheel-canvas");
-            if (!canvas) return;
-            const ctx = canvas.getContext("2d");
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-            const radius = cx - 6;
-            const colors = ["#4F46E5", "#10B981", "#F59E0B", "#0EA5E9", "#8B5CF6", "#EC4899", "#14B8A6", "#F97316"];
-            const arc = (2 * Math.PI) / items.length;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            items.forEach((item, i) => {
-                const startAngle = i * arc - Math.PI / 2;
-                const endAngle = startAngle + arc;
-
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.arc(cx, cy, radius, startAngle, endAngle);
-                ctx.closePath();
-                ctx.fillStyle = colors[i % colors.length];
-                ctx.fill();
-                ctx.lineWidth = 2;
-                ctx.strokeStyle = "#FFFFFF";
-                ctx.stroke();
-
-                ctx.save();
-                ctx.translate(cx, cy);
-                ctx.rotate(startAngle + arc / 2);
-                ctx.textAlign = "right";
-                ctx.fillStyle = "#FFFFFF";
-                ctx.font = "bold 13px Poppins, sans-serif";
-                const text = (item.prompt || item.answer || `Item ${i + 1}`).slice(0, 14);
-                ctx.fillText(text, radius - 14, 5);
-                ctx.restore();
-            });
-
-            ctx.beginPath();
-            ctx.arc(cx, cy, 20, 0, 2 * Math.PI);
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fill();
-            ctx.lineWidth = 3;
-            ctx.strokeStyle = "#1E293B";
-            ctx.stroke();
-        }
-
-        /* 2. QUIZ */
-        function renderQuiz(stage) {
-            const items = activeActivity.items;
-            let qIndex = 0;
-
-            function drawQuestion() {
-                if (qIndex >= items.length) {
-                    stage.innerHTML = `
-                        <div class="quiz-card">
-                            <h2>🏆 Quiz Completed!</h2>
-                            <p style="margin:12px 0 20px; color:var(--text-muted);">Final Score: <strong>${score}</strong></p>
-                            <button type="button" class="btn btn-primary" onclick="restartQuiz()">🔄 Play Again</button>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const current = items[qIndex];
-                const questionText = current.prompt || `Item ${qIndex + 1}`;
-                const correctAnswer = current.answer || current.prompt;
-
-                const distractors = items
-                    .filter((_, idx) => idx !== qIndex)
-                    .map(x => x.answer || x.prompt)
-                    .filter(val => val && val !== correctAnswer);
-
-                const choices = [correctAnswer];
-                while (choices.length < Math.min(4, items.length) && distractors.length > 0) {
-                    const pick = distractors.splice(Math.floor(Math.random() * distractors.length), 1)[0];
-                    if (!choices.includes(pick)) choices.push(pick);
-                }
-
-                choices.sort(() => Math.random() - 0.5);
-
-                stage.innerHTML = `
-                    <div class="quiz-card">
-                        <div style="font-size:0.85rem; font-weight:700; color:var(--edu-blue);">Question ${qIndex + 1} of ${items.length}</div>
-                        <div class="quiz-question">${escapeHtml(questionText)}</div>
-                        <div class="options-list">
-                            ${choices.map(choice => `
-                                <button type="button" class="opt-btn" onclick="checkQuizChoice(this, '${escapeAttr(choice)}', '${escapeAttr(correctAnswer)}')">
-                                    ${escapeHtml(choice)}
-                                </button>
-                            `).join("")}
-                        </div>
-                        <div style="margin-top:22px;">
-                            <button type="button" class="btn btn-play" id="next-q-btn" style="display:none;" onclick="advanceQuiz()">Next Question ➔</button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            window.checkQuizChoice = (btn, chosen, correct) => {
-                const buttons = stage.querySelectorAll(".opt-btn");
-                buttons.forEach(b => b.disabled = true);
-
-                if (chosen === correct) {
-                    btn.classList.add("correct");
-                    updateScore(20);
-                } else {
-                    btn.classList.add("wrong");
-                    buttons.forEach(b => {
-                        if (b.textContent.trim() === correct) b.classList.add("correct");
-                    });
-                }
-                document.getElementById("next-q-btn").style.display = "inline-flex";
-            };
-
-            window.advanceQuiz = () => {
-                qIndex++;
-                drawQuestion();
-            };
-
-            window.restartQuiz = () => {
-                qIndex = 0;
-                updateScore(0, true);
-                drawQuestion();
-            };
-
-            drawQuestion();
-        }
-
-        /* 3. TRUE OR FALSE */
-        function renderTrueOrFalse(stage) {
-            const items = activeActivity.items;
-            let idx = 0;
-
-            function makeStatement(itemIndex) {
-                const current = items[itemIndex];
-                const promptText = current.prompt || `Item ${itemIndex + 1}`;
-                const trueMatch = current.answer || current.prompt;
-                const isTrue = Math.random() >= 0.5;
-
-                if (isTrue) {
-                    return {
-                        statement: `${promptText} — ${trueMatch}`,
-                        expected: "True",
-                        explanation: `Correct match: ${trueMatch}`
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `
+                    <div style="max-width:620px;margin:0 auto;">
+                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Question ${idx + 1} of ${items.length}</div>
+                        <h2 style="margin-bottom:14px;">${it.clue}</h2>
+                        <div id="qOpts"></div>
+                    </div>`;
+                const optsBox = document.getElementById("qOpts");
+                choices.forEach(ch => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.textContent = ch;
+                    btn.onclick = () => {
+                        optsBox.querySelectorAll("button").forEach(b => b.disabled = true);
+                        if (String(ch).toLowerCase() === String(it.answer).toLowerCase()) {
+                            btn.classList.add("correct"); score++; sfxCorrect();
+                        } else {
+                            btn.classList.add("wrong"); sfxWrong();
+                        }
+                        setTimeout(() => { idx++; showQ(); }, 950);
                     };
-                }
-
-                const others = items.filter((_, i) => i !== itemIndex).map(x => x.answer || x.prompt).filter(Boolean);
-                const wrongMatch = others.length > 0 ? others[Math.floor(Math.random() * others.length)] : trueMatch;
-                const actuallyTrue = wrongMatch === trueMatch;
-
-                return {
-                    statement: `${promptText} — ${wrongMatch}`,
-                    expected: actuallyTrue ? "True" : "False",
-                    explanation: `Actual match: ${trueMatch}`
-                };
+                    optsBox.appendChild(btn);
+                });
             }
-
-            function drawTF() {
-                if (idx >= items.length) {
-                    stage.innerHTML = `
-                        <div class="quiz-card">
-                            <h2>🏆 True or False Completed!</h2>
-                            <p style="margin:12px 0 20px; color:var(--text-muted);">Final Score: <strong>${score}</strong></p>
-                            <button type="button" class="btn btn-primary" onclick="restartTF()">🔄 Play Again</button>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const q = makeStatement(idx);
-
-                stage.innerHTML = `
-                    <div class="quiz-card">
-                        <div style="font-size:0.85rem; font-weight:700; color:var(--edu-blue);">Statement ${idx + 1} of ${items.length}</div>
-                        <div class="quiz-question">${escapeHtml(q.statement)}</div>
-                        <div class="options-list">
-                            <button type="button" class="opt-btn" onclick="checkTF(this, 'True', '${escapeAttr(q.expected)}', '${escapeAttr(q.explanation)}')">✅ True</button>
-                            <button type="button" class="opt-btn" onclick="checkTF(this, 'False', '${escapeAttr(q.expected)}', '${escapeAttr(q.explanation)}')">❌ False</button>
-                        </div>
-                        <div class="feedback-text" id="tf-feedback"></div>
-                        <div style="margin-top:16px;">
-                            <button type="button" class="btn btn-play" id="next-tf-btn" style="display:none;" onclick="nextTF()">Next Statement ➔</button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            window.checkTF = (btn, chosen, expected, explanation) => {
-                stage.querySelectorAll(".opt-btn").forEach(b => b.disabled = true);
-                const fb = document.getElementById("tf-feedback");
-                if (chosen === expected) {
-                    btn.classList.add("correct");
-                    fb.style.color = "var(--play-green-dark)";
-                    fb.textContent = `✅ Correct! (${explanation})`;
-                    updateScore(15);
-                } else {
-                    btn.classList.add("wrong");
-                    fb.style.color = "var(--danger)";
-                    fb.textContent = `❌ Not quite — Answer is ${expected}. (${explanation})`;
-                }
-                document.getElementById("next-tf-btn").style.display = "inline-flex";
-            };
-
-            window.nextTF = () => {
-                idx++;
-                drawTF();
-            };
-
-            window.restartTF = () => {
-                idx = 0;
-                updateScore(0, true);
-                drawTF();
-            };
-
-            drawTF();
+            showQ();
         }
 
-        /* 4. FLASHCARDS */
-        function renderFlashcards(stage) {
-            const items = activeActivity.items;
-            let idx = 0;
-            let isFlipped = false;
-
-            function drawCard() {
-                const item = items[idx];
-                const front = item.prompt || `Card ${idx + 1}`;
-                const back = item.answer || "No back text provided";
-
-                stage.innerHTML = `
-                    <div style="margin-bottom:14px; font-size:0.88rem; font-weight:700; color:var(--text-muted);">
-                        Card ${idx + 1} of ${items.length} (Click card to flip)
-                    </div>
-                    <div class="flashcard-box ${isFlipped ? "flipped" : ""}" onclick="flipFlashcard()">
-                        <div class="card-side-tag">${isFlipped ? "Answer / Back" : "Prompt / Front"}</div>
-                        <div class="card-main-text">${escapeHtml(isFlipped ? back : front)}</div>
-                    </div>
-                    <div style="display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; justify-content:center;">
-                        <button type="button" class="btn btn-outline" onclick="prevFlashcard()">⬅ Previous</button>
-                        <button type="button" class="btn btn-primary" onclick="nextFlashcard()">Next Card ➔</button>
-                    </div>
-                `;
+        function renderTrueOrFalse(container, items) {
+            let idx = 0, score = 0;
+            function showTF() {
+                if (idx >= items.length) return finishScreen("🎉 True / False Complete!", `Score: ${score} / ${items.length}`);
+                const it = items[idx];
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `
+                    <div style="text-align:center;max-width:560px;margin:0 auto;padding:16px;">
+                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Statement ${idx + 1} of ${items.length}</div>
+                        <h2 style="margin-bottom:18px;">${it.clue}</h2>
+                        <div style="display:flex;gap:14px;justify-content:center;">
+                            <button class="btn-primary" id="btnTrue">True</button>
+                            <button class="btn-primary" style="background:#0f172a;" id="btnFalse">False</button>
+                        </div>
+                        <div id="tfMsg" style="margin-top:14px;font-weight:700;min-height:24px;"></div>
+                    </div>`;
+                const handlePick = (val) => {
+                    const expected = String(it.answer).toLowerCase() === "true";
+                    const msg = document.getElementById("tfMsg");
+                    if (val === expected) {
+                        score++; sfxCorrect(); msg.style.color = "var(--ok)"; msg.textContent = "✅ Correct!";
+                    } else {
+                        sfxWrong(); msg.style.color = "var(--bad)"; msg.textContent = `❌ Incorrect (${it.answer})`;
+                    }
+                    setTimeout(() => { idx++; showTF(); }, 950);
+                };
+                document.getElementById("btnTrue").onclick = () => handlePick(true);
+                document.getElementById("btnFalse").onclick = () => handlePick(false);
             }
+            showTF();
+        }
 
-            window.flipFlashcard = () => {
-                isFlipped = !isFlipped;
-                drawCard();
-            };
-
-            window.nextFlashcard = () => {
-                idx = (idx + 1) % items.length;
-                isFlipped = false;
-                updateScore(5);
-                drawCard();
-            };
-
-            window.prevFlashcard = () => {
-                idx = (idx - 1 + items.length) % items.length;
-                isFlipped = false;
-                drawCard();
-            };
-
+        function renderFlashCards(container, items) {
+            let idx = 0, flipped = false;
+            function drawCard() {
+                const it = items[idx];
+                liveStats.textContent = `Card ${idx + 1}/${items.length}`;
+                container.innerHTML = `
+                    <div style="max-width:560px;margin:0 auto;text-align:center;">
+                        <div style="color:var(--muted);font-weight:600;">Click card to flip (${flipped ? "Answer" : "Clue"})</div>
+                        <div class="flashcard ${flipped ? "back" : ""}" id="fcBox">${flipped ? it.answer : it.clue}</div>
+                        <div style="display:flex;gap:12px;justify-content:center;">
+                            <button class="btn-secondary" id="prevCard">← Prev</button>
+                            <button class="btn-primary" id="nextCard">Next →</button>
+                        </div>
+                    </div>`;
+                document.getElementById("fcBox").onclick = () => { playTone(540, 0.08); flipped = !flipped; drawCard(); };
+                document.getElementById("prevCard").onclick = () => { idx = (idx - 1 + items.length) % items.length; flipped = false; drawCard(); };
+                document.getElementById("nextCard").onclick = () => { idx = (idx + 1) % items.length; flipped = false; drawCard(); };
+            }
             drawCard();
         }
 
-        /* 5. OPEN THE BOX */
-        function renderOpenBox(stage) {
-            const items = activeActivity.items;
-            stage.innerHTML = `
-                <p style="margin-bottom:18px; color:var(--text-muted); font-size:0.92rem;">Click any box to reveal its content.</p>
-                <div class="boxes-grid">
-                    ${items.map((item, i) => `
-                        <div class="mystery-box" onclick="revealBox(this, ${i})">
-                            <div style="font-size:1.8rem; margin-bottom:6px;">📦</div>
-                            <div>Box ${i + 1}</div>
-                        </div>
-                    `).join("")}
-                </div>
-            `;
+        function renderMatchUp(container, items) {
+            const subset = items.slice(0, 8);
+            const lefts = subset.map((it, i) => ({ id: i, text: it.clue, matched: false }));
+            const rights = subset.map((it, i) => ({ id: i, text: it.answer, matched: false })).sort(() => Math.random() - 0.5);
+            let selLeft = null;
 
-            window.revealBox = (el, index) => {
-                if (el.classList.contains("opened")) return;
-                const item = items[index];
-                el.classList.add("opened");
-                el.innerHTML = `
-                    <div style="font-weight:800; color:var(--edu-blue-dark); margin-bottom:4px;">${escapeHtml(item.prompt || `Item ${index + 1}`)}</div>
-                    <div style="font-size:0.85rem; color:var(--text-dark);">${escapeHtml(item.answer || "")}</div>
-                `;
-                updateScore(10);
+            function drawMatch() {
+                const doneCount = lefts.filter(x => x.matched).length;
+                liveStats.textContent = `Matched: ${doneCount}/${subset.length}`;
+                if (lefts.every(x => x.matched)) return finishScreen("🎉 All Matched!", `Completed all ${subset.length} pairs.`);
+                container.innerHTML = `
+                    <p style="text-align:center;color:var(--muted);margin-bottom:10px;">Select left, then matching right.</p>
+                    <div class="match-grid">
+                        <div id="muLeftCol">${lefts.map(l => `<div class="match-item ${l.matched ? "matched" : ""} ${selLeft === l.id ? "selected" : ""}" data-id="${l.id}">${l.text}</div>`).join("")}</div>
+                        <div id="muRightCol">${rights.map(r => `<div class="match-item ${r.matched ? "matched" : ""}" data-id="${r.id}">${r.text}</div>`).join("")}</div>
+                    </div>`;
+                container.querySelectorAll("#muLeftCol .match-item").forEach(el => {
+                    el.onclick = () => {
+                        const id = Number(el.dataset.id);
+                        if (!lefts[id].matched) { selLeft = id; drawMatch(); }
+                    };
+                });
+                container.querySelectorAll("#muRightCol .match-item").forEach(el => {
+                    el.onclick = () => {
+                        const rId = Number(el.dataset.id);
+                        const targetR = rights.find(x => x.id === rId);
+                        if (selLeft === null || !targetR || targetR.matched) return;
+                        if (selLeft === rId) {
+                            lefts[selLeft].matched = true; targetR.matched = true; sfxCorrect();
+                        } else { sfxWrong(); }
+                        selLeft = null; drawMatch();
+                    };
+                });
+            }
+            drawMatch();
+        }
+
+        function renderSpinWheel(container, items) {
+            container.innerHTML = `
+                <div style="text-align:center;padding:24px;">
+                    <div id="wheelDisplay" style="font-size:1.45rem;font-weight:800;padding:28px;border-radius:16px;background:#eef2ff;color:#312e81;margin:16px auto;max-width:540px;">
+                        Click Spin to pick an item!
+                    </div>
+                    <button class="btn-primary" id="spinBtn">🎡 Spin</button>
+                </div>`;
+            document.getElementById("spinBtn").onclick = () => {
+                const disp = document.getElementById("wheelDisplay");
+                let ticks = 0;
+                const timer = setInterval(() => {
+                    const pick = items[ticks % items.length];
+                    playTone(400 + (ticks * 25), 0.05);
+                    disp.textContent = `${pick.clue} → ${pick.answer}`;
+                    ticks++;
+                    if (ticks > 16) {
+                        clearInterval(timer);
+                        const finalPick = items[Math.floor(Math.random() * items.length)];
+                        sfxCorrect();
+                        disp.innerHTML = `<div>${finalPick.clue}</div><div style="color:var(--ok);margin-top:8px;">Answer: ${finalPick.answer}</div>`;
+                    }
+                }, 80);
             };
         }
 
-        /* 6. MATCH UP */
-        function renderMatchUp(stage) {
-            const items = activeActivity.items;
-            let selectedLeftIndex = null;
-            let matchedCount = 0;
-
-            const rightPool = items.map((item, idx) => ({
-                text: item.answer || item.prompt || `Match ${idx + 1}`,
-                pairIndex: idx
-            })).sort(() => Math.random() - 0.5);
-
-            stage.innerHTML = `
-                <p style="margin-bottom:18px; color:var(--text-muted); font-size:0.92rem;">Select an item on the left, then click its matching pair on the right.</p>
-                <div class="match-grid">
-                    <div class="match-col">
-                        <h3>Items</h3>
-                        ${items.map((item, idx) => `
-                            <div class="match-item left-match" data-index="${idx}" onclick="selectLeftMatch(${idx})">
-                                ${escapeHtml(item.prompt || `Item ${idx + 1}`)}
+        function renderOpenTheBox(container, items) {
+            const opened = new Set();
+            function drawBoxes() {
+                liveStats.textContent = `Opened: ${opened.size}/${items.length}`;
+                container.innerHTML = `
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-top:10px;">
+                        ${items.map((it, i) => `
+                            <div class="mem-card ${opened.has(i) ? "flipped" : ""}" data-i="${i}" style="height:auto;min-height:110px;">
+                                ${opened.has(i) ? `<div><div style="font-size:0.85rem;color:var(--muted);">${it.clue}</div><div style="margin-top:6px;color:var(--primary);">${it.answer}</div></div>` : `📦 Box ${i + 1}`}
                             </div>
                         `).join("")}
-                    </div>
-                    <div class="match-col">
-                        <h3>Matches</h3>
-                        ${rightPool.map(r => `
-                            <div class="match-item right-match" data-pair="${r.pairIndex}" onclick="selectRightMatch(this, ${r.pairIndex})">
-                                ${escapeHtml(r.text)}
+                    </div>`;
+                container.querySelectorAll(".mem-card").forEach(el => {
+                    el.onclick = () => { playTone(580, 0.1); opened.add(Number(el.dataset.i)); drawBoxes(); };
+                });
+            }
+            drawBoxes();
+        }
+
+        function renderTypeTheAnswer(container, items) {
+            let idx = 0, score = 0;
+            function showQuestion() {
+                if (idx >= items.length) return finishScreen("🎉 Typing Complete!", `Score: ${score} / ${items.length}`);
+                const item = items[idx];
+                const answer = String(item.answer || "").trim();
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `
+                    <div style="text-align:center;max-width:560px;margin:0 auto;padding:16px;">
+                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Question ${idx + 1} of ${items.length}</div>
+                        <h2 style="font-size:1.5rem;margin-bottom:14px;">${item.clue}</h2>
+                        <input id="ttaInput" class="type-input-box" type="text" placeholder="Type your answer here..." autocomplete="off" />
+                        <div id="ttaFeedback" style="min-height:28px;font-weight:700;margin-bottom:12px;"></div>
+                        <div style="display:flex;gap:10px;justify-content:center;">
+                            <button id="ttaCheckBtn" class="btn-primary">Check Answer</button>
+                            <button id="ttaHintBtn" class="btn-secondary">💡 Hint</button>
+                        </div>
+                    </div>`;
+                const input = document.getElementById("ttaInput");
+                const feedback = document.getElementById("ttaFeedback");
+                input.focus();
+                document.getElementById("ttaHintBtn").onclick = () => {
+                    feedback.style.color = "var(--primary)";
+                    feedback.textContent = `Hint: Starts with "${answer.charAt(0).toUpperCase()}" (${answer.length} chars)`;
+                    input.focus();
+                };
+                const check = () => {
+                    const val = input.value.trim();
+                    if (!val) return;
+                    input.disabled = true;
+                    if (val.toLowerCase() === answer.toLowerCase()) {
+                        score++; sfxCorrect(); feedback.style.color = "var(--ok)"; feedback.textContent = `✅ Correct! (${answer})`;
+                        setTimeout(() => { idx++; showQuestion(); }, 950);
+                    } else {
+                        sfxWrong(); feedback.style.color = "var(--bad)"; feedback.textContent = `❌ Answer: ${answer}`;
+                        setTimeout(() => { idx++; showQuestion(); }, 1500);
+                    }
+                };
+                document.getElementById("ttaCheckBtn").onclick = check;
+                input.addEventListener("keydown", (e) => { if (e.key === "Enter") check(); });
+            }
+            showQuestion();
+        }
+
+        function renderSpellTheWord(container, items) {
+            let idx = 0, score = 0;
+            function showWord() {
+                if (idx >= items.length) return finishScreen("🏆 Spelling Complete!", `Score: ${score} / ${items.length}`);
+                const item = items[idx];
+                const target = String(item.answer || "").trim().toUpperCase().replace(/[^A-Z0-9 ]/g, "") || "WORD";
+                const letters = target.split("").map((ch, i) => ({ ch, id: i }));
+                const scrambled = [...letters].sort(() => Math.random() - 0.5);
+                let chosen = [];
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+
+                function renderState() {
+                    container.innerHTML = `
+                        <div style="text-align:center;max-width:600px;margin:0 auto;padding:16px;">
+                            <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Word ${idx + 1} of ${items.length}</div>
+                            <h2 style="font-size:1.45rem;">${item.clue}</h2>
+                            <div class="spell-slots">
+                                ${target.split("").map((_, i) => `<div class="spell-slot" data-slot="${i}">${chosen[i] ? chosen[i].ch : ""}</div>`).join("")}
                             </div>
-                        `).join("")}
-                    </div>
-                </div>
-            `;
-
-            window.selectLeftMatch = (idx) => {
-                const leftEl = stage.querySelector(`.left-match[data-index="${idx}"]`);
-                if (!leftEl || leftEl.classList.contains("matched")) return;
-
-                stage.querySelectorAll(".left-match").forEach(el => el.classList.remove("selected"));
-                leftEl.classList.add("selected");
-                selectedLeftIndex = idx;
-            };
-
-            window.selectRightMatch = (rightEl, pairIdx) => {
-                if (selectedLeftIndex === null || rightEl.classList.contains("matched")) return;
-                const leftEl = stage.querySelector(`.left-match[data-index="${selectedLeftIndex}"]`);
-                if (!leftEl) return;
-
-                if (selectedLeftIndex === pairIdx) {
-                    leftEl.classList.remove("selected");
-                    leftEl.classList.add("matched");
-                    rightEl.classList.add("matched");
-                    selectedLeftIndex = null;
-                    matchedCount++;
-                    updateScore(15);
-
-                    if (matchedCount === items.length) {
-                        setTimeout(() => {
-                            alert("🎉 Great job! All items matched!");
-                        }, 200);
-                    }
-                } else {
-                    rightEl.style.borderColor = "var(--danger)";
-                    setTimeout(() => {
-                        rightEl.style.borderColor = "";
-                    }, 450);
+                            <div id="spellMsg" style="min-height:26px;font-weight:700;"></div>
+                            <div class="spell-bank">
+                                ${scrambled.map(obj => {
+                                    const used = chosen.some(c => c.id === obj.id);
+                                    return `<button class="spell-tile" data-id="${obj.id}" ${used ? "disabled" : ""}>${obj.ch === " " ? "␣" : obj.ch}</button>`;
+                                }).join("")}
+                            </div>
+                            <div style="margin-top:16px;">
+                                <button id="spellClearBtn" class="btn-secondary">↺ Clear</button>
+                            </div>
+                        </div>`;
+                    container.querySelectorAll(".spell-tile").forEach(btn => {
+                        btn.onclick = () => {
+                            const found = scrambled.find(x => x.id === Number(btn.dataset.id));
+                            if (found && chosen.length < target.length) {
+                                playTone(500, 0.07); chosen.push(found); renderState();
+                                if (chosen.length === target.length) {
+                                    const attempt = chosen.map(c => c.ch).join("");
+                                    const msg = document.getElementById("spellMsg");
+                                    if (attempt === target) {
+                                        score++; sfxCorrect(); msg.style.color = "var(--ok)"; msg.textContent = "✅ Perfect!";
+                                        setTimeout(() => { idx++; showWord(); }, 950);
+                                    } else {
+                                        sfxWrong(); msg.style.color = "var(--bad)"; msg.textContent = "❌ Try again! Tap a slot to remove.";
+                                    }
+                                }
+                            }
+                        };
+                    });
+                    container.querySelectorAll(".spell-slot").forEach(slot => {
+                        slot.onclick = () => {
+                            const sIdx = Number(slot.dataset.slot);
+                            if (chosen[sIdx]) { chosen.splice(sIdx, 1); renderState(); }
+                        };
+                    });
+                    document.getElementById("spellClearBtn").onclick = () => { chosen = []; renderState(); };
                 }
-            };
+                renderState();
+            }
+            showWord();
         }
 
-        /* 7. ANAGRAM */
-        function scrambleLetters(word) {
-            const clean = String(word || "").trim();
-            if (clean.length <= 1) return clean;
-            const chars = clean.split("");
-            let attempt = "";
-            let guard = 0;
-            do {
-                attempt = [...chars].sort(() => Math.random() - 0.5).join("");
-                guard++;
-            } while (attempt.toLowerCase() === clean.toLowerCase() && guard < 12);
-            return attempt;
+        function renderMatchingPairs(container, items) {
+            const subset = items.slice(0, 8);
+            let cards = [];
+            subset.forEach((item, idx) => {
+                cards.push({ pairId: idx, text: item.clue, flipped: false, matched: false });
+                cards.push({ pairId: idx, text: item.answer, flipped: false, matched: false });
+            });
+            cards.sort(() => Math.random() - 0.5);
+            let flippedIndices = [], lockBoard = false, moves = 0;
+
+            function drawBoard() {
+                const matchedPairs = cards.filter(c => c.matched).length / 2;
+                liveStats.textContent = `Pairs: ${matchedPairs}/${subset.length} | Moves: ${moves}`;
+                if (cards.every(c => c.matched)) return finishScreen("🎉 All Pairs Matched!", `Completed in ${moves} moves.`);
+                container.innerHTML = `
+                    <div class="memory-grid">
+                        ${cards.map((c, i) => `
+                            <div class="mem-card ${c.flipped ? "flipped" : ""} ${c.matched ? "matched" : ""}" data-idx="${i}">
+                                ${c.flipped || c.matched ? c.text : "❓"}
+                            </div>`).join("")}
+                    </div>`;
+                container.querySelectorAll(".mem-card").forEach(el => {
+                    el.onclick = () => {
+                        const i = Number(el.dataset.idx);
+                        if (lockBoard || cards[i].flipped || cards[i].matched) return;
+                        playTone(460, 0.08); cards[i].flipped = true; flippedIndices.push(i); drawBoard();
+                        if (flippedIndices.length === 2) {
+                            moves++; lockBoard = true;
+                            const [a, b] = flippedIndices;
+                            if (cards[a].pairId === cards[b].pairId) {
+                                cards[a].matched = true; cards[b].matched = true; flippedIndices = []; lockBoard = false;
+                                sfxCorrect(); setTimeout(drawBoard, 320);
+                            } else {
+                                sfxWrong();
+                                setTimeout(() => {
+                                    cards[a].flipped = false; cards[b].flipped = false; flippedIndices = []; lockBoard = false; drawBoard();
+                                }, 850);
+                            }
+                        }
+                    };
+                });
+            }
+            drawBoard();
         }
 
-        function renderAnagram(stage) {
-            const items = activeActivity.items;
-            let idx = 0;
+        function renderHangman(container, items) {
+            let idx = 0, score = 0;
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            function startRound() {
+                if (idx >= items.length) return finishScreen("🎯 Hangman Finished!", `Words Solved: ${score} / ${items.length}`);
+                const item = items[idx];
+                const word = String(item.answer || "").trim().toUpperCase().replace(/[^A-Z ]/g, "") || "PUZZLE";
+                const guessed = new Set();
+                let wrongCount = 0; const maxWrong = 6;
+                liveStats.textContent = `Solved: ${score}/${items.length}`;
 
-            function drawAnagram() {
-                if (idx >= items.length) {
-                    stage.innerHTML = `
-                        <div class="word-game-box">
-                            <h2>🏆 Anagram Challenge Complete!</h2>
-                            <p style="margin:12px 0 20px; color:var(--text-muted);">Final Score: <strong>${score}</strong></p>
-                            <button type="button" class="btn btn-primary" onclick="restartAnagram()">🔄 Play Again</button>
-                        </div>
-                    `;
-                    return;
+                function getSvg(w) {
+                    return `<svg width="135" height="135" viewBox="0 0 140 140" style="stroke:#1e293b;stroke-width:3.5;fill:none;stroke-linecap:round;">
+                        <line x1="15" y1="130" x2="95" y2="130" /><line x1="35" y1="130" x2="35" y2="15" />
+                        <line x1="35" y1="15" x2="95" y2="15" /><line x1="95" y1="15" x2="95" y2="32" />
+                        ${w >= 1 ? '<circle cx="95" cy="44" r="12" />' : ''}${w >= 2 ? '<line x1="95" y1="56" x2="95" y2="92" />' : ''}
+                        ${w >= 3 ? '<line x1="95" y1="65" x2="77" y2="82" />' : ''}${w >= 4 ? '<line x1="95" y1="65" x2="113" y2="82" />' : ''}
+                        ${w >= 5 ? '<line x1="95" y1="92" x2="80" y2="115" />' : ''}${w >= 6 ? '<line x1="95" y1="92" x2="110" y2="115" />' : ''}
+                    </svg>`;
                 }
 
-                const current = items[idx];
-                const clue = current.prompt || `Clue ${idx + 1}`;
-                const targetWord = (current.answer || current.prompt || "WORD").trim();
-                const scrambled = scrambleLetters(targetWord);
+                function renderRound() {
+                    const won = word.split("").every(ch => ch === " " || guessed.has(ch));
+                    const lost = wrongCount >= maxWrong;
+                    container.innerHTML = `
+                        <div class="hangman-wrap">
+                            <div style="color:var(--muted);font-weight:600;">Word ${idx + 1} of ${items.length} | Lives: ${maxWrong - wrongCount}</div>
+                            <h3 style="text-align:center;">${item.clue}</h3>
+                            ${getSvg(wrongCount)}
+                            <div class="hm-word">
+                                ${word.split("").map(ch => ch === " " ? `<div class="hm-letter space"></div>` : `<div class="hm-letter">${guessed.has(ch) || lost ? ch : ""}</div>`).join("")}
+                            </div>
+                            <div style="font-weight:700;min-height:24px;color:${won ? "var(--ok)" : "var(--bad)"}">${won ? "✅ Solved!" : (lost ? `❌ Word: ${word}` : "")}</div>
+                            <div class="hm-keyboard">
+                                ${alphabet.map(l => {
+                                    const g = guessed.has(l);
+                                    const cls = g ? (word.includes(l) ? "correct" : "wrong") : "";
+                                    return `<button class="hm-key ${cls}" data-l="${l}" ${g || won || lost ? "disabled" : ""}>${l}</button>`;
+                                }).join("")}
+                            </div>
+                        </div>`;
+                    if (won) { score++; sfxCorrect(); return setTimeout(() => { idx++; startRound(); }, 1050); }
+                    if (lost) { sfxWrong(); return setTimeout(() => { idx++; startRound(); }, 1500); }
+                    container.querySelectorAll(".hm-key").forEach(btn => {
+                        btn.onclick = () => {
+                            const l = btn.dataset.l; guessed.add(l);
+                            if (word.includes(l)) playTone(600, 0.08); else { wrongCount++; sfxWrong(); }
+                            renderRound();
+                        };
+                    });
+                }
+                renderRound();
+            }
+            startRound();
+        }
 
-                stage.innerHTML = `
-                    <div class="word-game-box">
-                        <div style="font-size:0.85rem; font-weight:700; color:var(--edu-blue);">Word ${idx + 1} of ${items.length}</div>
-                        <p style="margin-top:8px; color:var(--text-muted); font-size:0.95rem;">Clue: <strong>${escapeHtml(clue)}</strong></p>
-                        <div class="scrambled-display">${escapeHtml(scrambled.toUpperCase())}</div>
-                        <div class="word-input-row">
-                            <input type="text" id="anagram-input" class="word-input" placeholder="Type the unscrambled word..." onkeydown="if(event.key==='Enter') submitAnagram()">
-                            <button type="button" class="btn btn-play" onclick="submitAnagram()">Check</button>
-                            <button type="button" class="btn btn-outline" onclick="skipAnagram()">Skip</button>
-                        </div>
-                        <div class="feedback-text" id="anagram-feedback"></div>
-                    </div>
-                `;
-                document.getElementById("anagram-input")?.focus();
+        /* ================= 13–26 EXTENDED & ARCADE TEMPLATES ================= */
+        function renderWordsearch(container, items) {
+            const size = 10;
+            const words = items.map(it => String(it.answer || "").toUpperCase().replace(/[^A-Z]/g, ""))
+                .filter(w => w.length >= 2 && w.length <= size).slice(0, 6);
+            if (!words.length) return renderSpellTheWord(container, items);
 
-                window.submitAnagram = () => {
-                    const guess = (document.getElementById("anagram-input")?.value || "").trim();
-                    const fb = document.getElementById("anagram-feedback");
-                    if (!guess) return;
+            const grid = Array.from({ length: size }, () => Array(size).fill(""));
+            const foundSet = new Set();
+            const foundCells = new Set();
 
-                    if (guess.toLowerCase() === targetWord.toLowerCase()) {
-                        fb.style.color = "var(--play-green-dark)";
-                        fb.textContent = `✅ Correct! "${targetWord}"`;
-                        updateScore(20);
-                        setTimeout(() => { idx++; drawAnagram(); }, 850);
-                    } else {
-                        fb.style.color = "var(--danger)";
-                        fb.textContent = "❌ Try again! Rearrange the letters.";
-                    }
-                };
+            words.forEach((w, idx) => {
+                const horiz = idx % 2 === 0;
+                const r = horiz ? (idx * 2) % size : Math.floor(Math.random() * (size - w.length));
+                const c = horiz ? Math.floor(Math.random() * (size - w.length)) : (idx * 2) % size;
+                for (let k = 0; k < w.length; k++) {
+                    const rr = horiz ? r : r + k;
+                    const cc = horiz ? c + k : c;
+                    if (rr < size && cc < size) grid[rr][cc] = w[k];
+                }
+            });
 
-                window.skipAnagram = () => {
-                    const fb = document.getElementById("anagram-feedback");
-                    fb.style.color = "var(--text-muted)";
-                    fb.textContent = `Answer: ${targetWord}`;
-                    setTimeout(() => { idx++; drawAnagram(); }, 1000);
-                };
+            const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    if (!grid[r][c]) grid[r][c] = alpha[Math.floor(Math.random() * alpha.length)];
+                }
             }
 
-            window.restartAnagram = () => {
-                idx = 0;
-                updateScore(0, true);
-                drawAnagram();
-            };
-
-            drawAnagram();
-        }
-
-        /* 8. UNJUMBLE */
-        function renderUnjumble(stage) {
-            const items = activeActivity.items;
-            let idx = 0;
-
-            function drawUnjumble() {
-                if (idx >= items.length) {
-                    stage.innerHTML = `
-                        <div class="word-game-box">
-                            <h2>🏆 Unjumble Completed!</h2>
-                            <p style="margin:12px 0 20px; color:var(--text-muted);">Final Score: <strong>${score}</strong></p>
-                            <button type="button" class="btn btn-primary" onclick="restartUnjumble()">🔄 Play Again</button>
+            let picked = [];
+            function draw() {
+                liveStats.textContent = `Found: ${foundSet.size}/${words.length}`;
+                if (foundSet.size === words.length) return finishScreen("🔍 Wordsearch Complete!", `Found all ${words.length} words!`);
+                container.innerHTML = `
+                    <div style="text-align:center;">
+                        <p style="color:var(--muted);margin-bottom:6px;">Click letters in order to spell each word, then tap Check Selection.</p>
+                        <div class="ws-grid" style="grid-template-columns:repeat(${size},34px);">
+                            ${grid.map((row, r) => row.map((ch, c) => {
+                                const key = `${r},${c}`;
+                                const isSel = picked.some(p => p.key === key);
+                                const isFound = foundCells.has(key);
+                                return `<button class="ws-cell ${isFound ? "found" : ""} ${isSel ? "selected" : ""}" data-key="${key}" data-ch="${ch}">${ch}</button>`;
+                            }).join("")).join("")}
                         </div>
-                    `;
-                    return;
-                }
-
-                const current = items[idx];
-                const hint = current.prompt || `Item ${idx + 1}`;
-                const targetPhrase = (current.answer || current.prompt || "").trim();
-                const words = targetPhrase.split(/\s+/).filter(Boolean);
-
-                let jumbledText = "";
-                if (words.length >= 2) {
-                    let guard = 0;
-                    do {
-                        jumbledText = [...words].sort(() => Math.random() - 0.5).join(" / ");
-                        guard++;
-                    } while (jumbledText.toLowerCase() === targetPhrase.toLowerCase() && guard < 12);
-                } else {
-                    jumbledText = scrambleLetters(targetPhrase);
-                }
-
-                stage.innerHTML = `
-                    <div class="word-game-box">
-                        <div style="font-size:0.85rem; font-weight:700; color:var(--edu-blue);">Challenge ${idx + 1} of ${items.length}</div>
-                        <p style="margin-top:8px; color:var(--text-muted); font-size:0.95rem;">Prompt: <strong>${escapeHtml(hint)}</strong></p>
-                        <div class="scrambled-display" style="letter-spacing:1.5px; font-size:1.3rem;">${escapeHtml(jumbledText)}</div>
-                        <div class="word-input-row">
-                            <input type="text" id="unjumble-input" class="word-input" style="min-width:260px;" placeholder="Type in the right order..." onkeydown="if(event.key==='Enter') submitUnjumble()">
-                            <button type="button" class="btn btn-play" onclick="submitUnjumble()">Check</button>
-                            <button type="button" class="btn btn-outline" onclick="skipUnjumble()">Skip</button>
+                        <div style="margin:10px 0;display:flex;gap:8px;justify-content:center;">
+                            <button class="btn-primary" id="wsCheckBtn">Check Word (${picked.map(p => p.ch).join("") || "..."})</button>
+                            <button class="btn-secondary" id="wsClearBtn">Clear</button>
                         </div>
-                        <div class="feedback-text" id="unjumble-feedback"></div>
-                    </div>
-                `;
-                document.getElementById("unjumble-input")?.focus();
-
-                window.submitUnjumble = () => {
-                    const guess = (document.getElementById("unjumble-input")?.value || "").trim().replace(/\s+/g, " ");
-                    const expectedClean = targetPhrase.replace(/\s+/g, " ");
-                    const fb = document.getElementById("unjumble-feedback");
-                    if (!guess) return;
-
-                    if (guess.toLowerCase() === expectedClean.toLowerCase()) {
-                        fb.style.color = "var(--play-green-dark)";
-                        fb.textContent = `✅ Spot on! "${expectedClean}"`;
-                        updateScore(20);
-                        setTimeout(() => { idx++; drawUnjumble(); }, 850);
-                    } else {
-                        fb.style.color = "var(--danger)";
-                        fb.textContent = "❌ Not quite right — check the order and try again.";
-                    }
-                };
-
-                window.skipUnjumble = () => {
-                    const fb = document.getElementById("unjumble-feedback");
-                    fb.style.color = "var(--text-muted)";
-                    fb.textContent = `Correct order: ${targetPhrase}`;
-                    setTimeout(() => { idx++; drawUnjumble(); }, 1000);
+                        <div class="ws-words">
+                            ${words.map(w => `<span class="ws-tag ${foundSet.has(w) ? "done" : ""}">${w}</span>`).join("")}
+                        </div>
+                    </div>`;
+                container.querySelectorAll(".ws-cell").forEach(cell => {
+                    cell.onclick = () => {
+                        const key = cell.dataset.key;
+                        if (picked.some(p => p.key === key)) {
+                            picked = picked.filter(p => p.key !== key);
+                        } else {
+                            picked.push({ key, ch: cell.dataset.ch });
+                        }
+                        playTone(480, 0.06); draw();
+                    };
+                });
+                document.getElementById("wsClearBtn").onclick = () => { picked = []; draw(); };
+                document.getElementById("wsCheckBtn").onclick = () => {
+                    const str = picked.map(p => p.ch).join("");
+                    const rev = str.split("").reverse().join("");
+                    const matchWord = words.find(w => w === str || w === rev);
+                    if (matchWord && !foundSet.has(matchWord)) {
+                        foundSet.add(matchWord);
+                        picked.forEach(p => foundCells.add(p.key));
+                        sfxCorrect();
+                    } else { sfxWrong(); }
+                    picked = []; draw();
                 };
             }
+            draw();
+        }
 
-            window.restartUnjumble = () => {
-                idx = 0;
-                updateScore(0, true);
-                drawUnjumble();
+        function renderCrossword(container, items) {
+            const entries = items.slice(0, 5).map((it, i) => ({
+                num: i + 1,
+                clue: it.clue,
+                ans: String(it.answer || "WORD").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 8) || "WORD",
+                row: i * 2,
+                col: 1
+            }));
+            const rows = Math.max(8, entries.length * 2 + 1);
+            const cols = 10;
+            const solution = Array.from({ length: rows }, () => Array(cols).fill(""));
+            entries.forEach(e => {
+                for (let k = 0; k < e.ans.length; k++) {
+                    if (e.col + k < cols) solution[e.row][e.col + k] = e.ans[k];
+                }
+            });
+
+            container.innerHTML = `
+                <div style="text-align:center;">
+                    <div class="cw-grid" style="grid-template-columns:repeat(${cols},36px);">
+                        ${solution.map((row, r) => row.map((ch, c) => ch
+                            ? `<input class="cw-cell" maxlength="1" data-r="${r}" data-c="${c}" />`
+                            : `<div class="cw-cell blocked"></div>`
+                        ).join("")).join("")}
+                    </div>
+                    <div style="margin:12px 0;"><button class="btn-primary" id="cwCheck">Check Crossword</button></div>
+                    <div style="text-align:left;max-width:560px;margin:12px auto;background:#f8fafc;padding:14px;border-radius:12px;">
+                        ${entries.map(e => `<div style="margin:6px 0;"><strong>${e.num}.</strong> ${e.clue} <em>(${e.ans.length} letters)</em></div>`).join("")}
+                    </div>
+                </div>`;
+            document.getElementById("cwCheck").onclick = () => {
+                let rightCount = 0, total = 0;
+                container.querySelectorAll("input.cw-cell").forEach(inp => {
+                    total++;
+                    const exp = solution[Number(inp.dataset.r)][Number(inp.dataset.c)];
+                    if (inp.value.trim().toUpperCase() === exp) {
+                        inp.classList.add("right"); rightCount++;
+                    } else { inp.classList.remove("right"); }
+                });
+                if (rightCount === total) sfxCorrect(); else sfxWrong();
+                liveStats.textContent = `Correct: ${rightCount}/${total}`;
             };
-
-            drawUnjumble();
         }
 
-        function escapeHtml(str) {
-            return String(str)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;");
+        function renderCompleteSentence(container, items) {
+            let idx = 0, score = 0;
+            function show() {
+                if (idx >= items.length) return finishScreen("✍️ Sentences Complete!", `Score: ${score} / ${items.length}`);
+                const it = items[idx];
+                const sentence = String(it.clue).includes("___") ? it.clue : `${it.clue} — ____`;
+                const answer = String(it.answer || "").trim();
+                const choices = [answer, ...items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean).slice(0, 3)];
+                while (choices.length < 4) choices.push(`Choice ${choices.length + 1}`);
+                choices.sort(() => Math.random() - 0.5);
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+
+                container.innerHTML = `
+                    <div style="max-width:620px;margin:0 auto;">
+                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Item ${idx + 1} of ${items.length}</div>
+                        <h2 style="margin-bottom:16px;line-height:1.4;">${sentence.replace(/_{2,}/g, `<span style="color:var(--primary);text-decoration:underline;">_____</span>`)}</h2>
+                        <div id="csChoices"></div>
+                    </div>`;
+                const box = document.getElementById("csChoices");
+                choices.forEach(ch => {
+                    const b = document.createElement("button");
+                    b.className = "option-btn"; b.textContent = ch;
+                    b.onclick = () => {
+                        box.querySelectorAll("button").forEach(x => x.disabled = true);
+                        if (String(ch).toLowerCase() === answer.toLowerCase()) { b.classList.add("correct"); score++; sfxCorrect(); }
+                        else { b.classList.add("wrong"); sfxWrong(); }
+                        setTimeout(() => { idx++; show(); }, 950);
+                    };
+                    box.appendChild(b);
+                });
+            }
+            show();
         }
 
-        function escapeAttr(str) {
-            return String(str)
-                .replace(/&/g, "&amp;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#39;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;");
+        function renderFlipTiles(container, items) {
+            const revealed = new Set();
+            function draw() {
+                liveStats.textContent = `Flipped: ${revealed.size}/${items.length}`;
+                container.innerHTML = `
+                    <div class="memory-grid">
+                        ${items.map((it, i) => `
+                            <div class="mem-card ${revealed.has(i) ? "flipped" : ""}" data-i="${i}">
+                                ${revealed.has(i) ? `<span>${it.answer}</span>` : `<span>${it.clue}</span>`}
+                            </div>`).join("")}
+                    </div>`;
+                container.querySelectorAll(".mem-card").forEach(el => {
+                    el.onclick = () => { playTone(520, 0.08); revealed.add(Number(el.dataset.i)); draw(); };
+                });
+            }
+            draw();
         }
 
-        loadActivity();
+        function renderGroupSort(container, items) {
+            const groups = [...new Set(items.map(it => it.group || "Group A"))];
+            if (groups.length < 2) groups.push("Group B");
+            const placed = {};
+            let selectedIdx = null;
+            let score = 0;
+
+            function draw() {
+                const totalPlaced = Object.keys(placed).length;
+                liveStats.textContent = `Sorted: ${totalPlaced}/${items.length}`;
+                container.innerHTML = `
+                    <div style="text-align:center;">
+                        <p style="color:var(--muted);margin-bottom:10px;">Tap an item below, then tap the category box it belongs to.</p>
+                        <div>
+                            ${items.map((it, i) => placed[i] ? "" : `<button class="chip-btn ${selectedIdx === i ? "picked" : ""}" data-i="${i}">${it.clue || it.answer}</button>`).join("")}
+                        </div>
+                        <div class="sort-cols">
+                            ${groups.map(g => `
+                                <div class="sort-zone" data-group="${g}">
+                                    <h3>${g}</h3>
+                                    ${Object.entries(placed).filter(([, grp]) => grp === g).map(([i]) => {
+                                        const item = items[Number(i)];
+                                        const ok = (item.group || "Group A") === g;
+                                        return `<span class="chip-btn" style="background:${ok ? "var(--ok-bg)" : "var(--bad-bg)"};">${item.clue || item.answer}</span>`;
+                                    }).join("")}
+                                </div>`).join("")}
+                        </div>
+                    </div>`;
+                container.querySelectorAll(".chip-btn[data-i]").forEach(btn => {
+                    btn.onclick = () => { selectedIdx = Number(btn.dataset.i); draw(); };
+                });
+                container.querySelectorAll(".sort-zone").forEach(zone => {
+                    zone.onclick = () => {
+                        if (selectedIdx === null) return;
+                        const grp = zone.dataset.group;
+                        placed[selectedIdx] = grp;
+                        if ((items[selectedIdx].group || "Group A") === grp) { score++; sfxCorrect(); } else { sfxWrong(); }
+                        selectedIdx = null; draw();
+                        if (Object.keys(placed).length === items.length) {
+                            setTimeout(() => finishScreen("🗂️ Group Sort Complete!", `Correctly sorted: ${score} / ${items.length}`), 600);
+                        }
+                    };
+                });
+            }
+            draw();
+        }
+
+        function renderSpeedSorting(container, items) {
+            renderGroupSort(container, items);
+        }
+
+        function renderLabelledDiagram(container, items) {
+            let idx = 0, score = 0;
+            function show() {
+                if (idx >= items.length) return finishScreen("🏷️ Diagram Complete!", `Score: ${score} / ${items.length}`);
+                const it = items[idx];
+                const choices = [it.answer, ...items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean).slice(0, 3)];
+                while (choices.length < 4) choices.push(`Label ${choices.length + 1}`);
+                choices.sort(() => Math.random() - 0.5);
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+
+                container.innerHTML = `
+                    <div style="text-align:center;max-width:620px;margin:0 auto;">
+                        <svg width="260" height="140" viewBox="0 0 260 140" style="margin:0 auto 12px;display:block;">
+                            <rect x="30" y="20" width="200" height="100" rx="16" fill="#eef2ff" stroke="#4f46e5" stroke-width="3" />
+                            <circle cx="130" cy="70" r="24" fill="#4f46e5" />
+                            <text x="130" y="76" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">#${idx + 1}</text>
+                        </svg>
+                        <h3 style="margin-bottom:14px;">${it.clue}</h3>
+                        <div id="ldChoices"></div>
+                    </div>`;
+                const box = document.getElementById("ldChoices");
+                choices.forEach(ch => {
+                    const b = document.createElement("button");
+                    b.className = "option-btn"; b.textContent = ch;
+                    b.onclick = () => {
+                        box.querySelectorAll("button").forEach(x => x.disabled = true);
+                        if (String(ch).toLowerCase() === String(it.answer).toLowerCase()) { b.classList.add("correct"); score++; sfxCorrect(); }
+                        else { b.classList.add("wrong"); sfxWrong(); }
+                        setTimeout(() => { idx++; show(); }, 950);
+                    };
+                    box.appendChild(b);
+                });
+            }
+            show();
+        }
+
+        function renderOrderSequence(container, items) {
+            const expectedOrder = items.map((it, i) => ({
+                origIdx: i,
+                label: it.answer || it.clue || `Step ${i + 1}`
+            }));
+            let currentList = [...expectedOrder].sort(() => Math.random() - 0.5);
+            if (currentList.length > 1 && currentList.every((x, i) => x.origIdx === i)) {
+                currentList.reverse();
+            }
+
+            function draw() {
+                liveStats.textContent = `${currentList.length} Steps`;
+                container.innerHTML = `
+                    <div style="max-width:600px;margin:0 auto;">
+                        <p style="text-align:center;color:var(--muted);margin-bottom:12px;">Move items up or down into the correct sequence, then check order.</p>
+                        <div id="orderList">
+                            ${currentList.map((entry, idx) => `
+                                <div class="order-row">
+                                    <span>${idx + 1}. ${entry.label}</span>
+                                    <div style="display:flex;gap:6px;">
+                                        <button type="button" class="btn-secondary" data-dir="up" data-idx="${idx}" ${idx === 0 ? "disabled" : ""}>▲</button>
+                                        <button type="button" class="btn-secondary" data-dir="down" data-idx="${idx}" ${idx === currentList.length - 1 ? "disabled" : ""}>▼</button>
+                                    </div>
+                                </div>
+                            `).join("")}
+                        </div>
+                        <div id="orderMsg" style="text-align:center;font-weight:700;min-height:26px;margin-top:10px;"></div>
+                        <div style="text-align:center;margin-top:8px;">
+                            <button type="button" class="btn-primary" id="orderCheckBtn">Check Sequence</button>
+                        </div>
+                    </div>`;
+
+                container.querySelectorAll("[data-dir]").forEach(btn => {
+                    btn.onclick = () => {
+                        const i = Number(btn.dataset.idx);
+                        const dir = btn.dataset.dir;
+                        const swapWith = dir === "up" ? i - 1 : i + 1;
+                        if (swapWith < 0 || swapWith >= currentList.length) return;
+                        const tmp = currentList[i];
+                        currentList[i] = currentList[swapWith];
+                        currentList[swapWith] = tmp;
+                        playTone(460, 0.06);
+                        draw();
+                    };
+                });
+
+                document.getElementById("orderCheckBtn").onclick = () => {
+                    const isCorrect = currentList.every((entry, idx) => entry.origIdx === idx);
+                    const msg = document.getElementById("orderMsg");
+                    if (isCorrect) {
+                        sfxCorrect();
+                        msg.style.color = "var(--ok)";
+                        msg.textContent = "✅ Correct sequence!";
+                        setTimeout(() => finishScreen("🔢 Sequence Complete!", `Ordered all ${currentList.length} items accurately.`), 800);
+                    } else {
+                        sfxWrong();
+                        msg.style.color = "var(--bad)";
+                        msg.textContent = "❌ Not quite in order yet. Adjust and try again!";
+                    }
+                };
+            }
+            draw();
+        }
+
+        function renderFindTheMatch(container, items) {
+            let idx = 0, score = 0;
+            function showRound() {
+                if (idx >= items.length) return finishScreen("🎯 Find the Match Complete!", `Score: ${score} / ${items.length}`);
+                const it = items[idx];
+                const distractors = items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean);
+                const fallback = ["Match A", "Match B", "Match C"];
+                const pool = [...distractors, ...fallback].filter(x => String(x).toLowerCase() !== String(it.answer).toLowerCase());
+                const candidates = [it.answer, ...pool.slice(0, 3)].sort(() => Math.random() - 0.5);
+
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `
+                    <div style="text-align:center;max-width:620px;margin:0 auto;">
+                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Round ${idx + 1} of ${items.length}</div>
+                        <h2 style="margin-bottom:16px;">Find the match for: <span style="color:var(--primary);">${it.clue}</span></h2>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;" id="ftmGrid"></div>
+                    </div>`;
+                const grid = document.getElementById("ftmGrid");
+                candidates.forEach(cand => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.style.textAlign = "center";
+                    btn.textContent = cand;
+                    btn.onclick = () => {
+                        grid.querySelectorAll("button").forEach(b => b.disabled = true);
+                        if (String(cand).toLowerCase() === String(it.answer).toLowerCase()) {
+                            btn.classList.add("correct"); score++; sfxCorrect();
+                        } else {
+                            btn.classList.add("wrong"); sfxWrong();
+                        }
+                        setTimeout(() => { idx++; showRound(); }, 950);
+                    };
+                    grid.appendChild(btn);
+                });
+            }
+            showRound();
+        }
+
+        /* ================= CANVAS ARCADE GAMES ================= */
+        function renderBalloonPop(container, items) {
+            let idx = 0, score = 0;
+            function round() {
+                if (idx >= items.length) return finishScreen("🎈 Balloon Pop Complete!", `Score: ${score} / ${items.length}`);
+                const target = items[idx];
+                const pool = [target.answer, ...items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean).slice(0, 3)];
+                while (pool.length < 4) pool.push(`Choice ${pool.length + 1}`);
+                const balloons = pool.sort(() => Math.random() - 0.5).map((txt, i) => ({
+                    txt, x: 90 + i * 155, y: 270 + (i % 2) * 20, r: 44, speed: 0.7 + i * 0.15, popped: false
+                }));
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `<div style="text-align:center;"><h3 style="margin-bottom:8px;">Pop the balloon for: <span style="color:var(--primary);">${target.clue}</span></h3><canvas id="bpCanvas" class="arcade-canvas" width="680" height="340"></canvas></div>`;
+                const canvas = document.getElementById("bpCanvas");
+                const ctx = canvas.getContext("2d");
+                let rafId = null;
+
+                function onClick(e) {
+                    const rect = canvas.getBoundingClientRect();
+                    const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+                    const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+                    balloons.forEach(b => {
+                        if (!b.popped && Math.hypot(mx - b.x, my - b.y) <= b.r + 6) {
+                            b.popped = true;
+                            if (String(b.txt).toLowerCase() === String(target.answer).toLowerCase()) {
+                                score++; sfxCorrect(); cancelAnimationFrame(rafId); canvas.removeEventListener("click", onClick);
+                                setTimeout(() => { idx++; round(); }, 500);
+                            } else { sfxWrong(); }
+                        }
+                    });
+                }
+                canvas.addEventListener("click", onClick);
+
+                function loop() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    balloons.forEach(b => {
+                        if (b.popped) return;
+                        b.y -= b.speed;
+                        if (b.y < 55) b.y = 285;
+                        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                        ctx.fillStyle = "#6366f1"; ctx.fill();
+                        ctx.fillStyle = "#fff"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
+                        ctx.fillText(String(b.txt).slice(0, 14), b.x, b.y + 4);
+                    });
+                    rafId = requestAnimationFrame(loop);
+                }
+                loop();
+                activeCleanup = () => { cancelAnimationFrame(rafId); canvas.removeEventListener("click", onClick); };
+            }
+            round();
+        }
+
+        function renderWhackAMole(container, items) {
+            let idx = 0, score = 0;
+            function round() {
+                if (idx >= items.length) return finishScreen("🔨 Whack-a-Mole Complete!", `Score: ${score} / ${items.length}`);
+                const target = items[idx];
+                const pool = [target.answer, ...items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean).slice(0, 5)];
+                while (pool.length < 6) pool.push(`Mole ${pool.length + 1}`);
+                const holes = pool.sort(() => Math.random() - 0.5).slice(0, 6);
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `
+                    <div style="text-align:center;">
+                        <h3 style="margin-bottom:12px;">Tap the match for: <span style="color:var(--primary);">${target.clue}</span></h3>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:520px;margin:0 auto;">
+                            ${holes.map(h => `<button class="option-btn" style="text-align:center;padding:20px;" data-ans="${h}">🐹 ${h}</button>`).join("")}
+                        </div>
+                    </div>`;
+                container.querySelectorAll("[data-ans]").forEach(btn => {
+                    btn.onclick = () => {
+                        if (String(btn.dataset.ans).toLowerCase() === String(target.answer).toLowerCase()) {
+                            score++; sfxCorrect(); idx++; round();
+                        } else { sfxWrong(); btn.classList.add("wrong"); }
+                    };
+                });
+            }
+            round();
+        }
+
+        function renderMazeChase(container, items) {
+            let idx = 0, score = 0;
+            function round() {
+                if (idx >= items.length) return finishScreen("🧩 Maze Chase Complete!", `Score: ${score} / ${items.length}`);
+                const target = items[idx];
+                const targets = [
+                    { label: target.answer, correct: true, x: 520, y: 70 },
+                    { label: items[(idx + 1) % items.length].answer || "Wrong", correct: false, x: 520, y: 240 }
+                ];
+                const player = { x: 70, y: 155, r: 16 };
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `<div style="text-align:center;"><h3 style="margin-bottom:8px;">Guide to: <span style="color:var(--primary);">${target.clue}</span> (Arrow keys / WASD)</h3><canvas id="mzCanvas" class="arcade-canvas" width="640" height="310"></canvas></div>`;
+                const canvas = document.getElementById("mzCanvas");
+                const ctx = canvas.getContext("2d");
+                const keys = {};
+                let rafId = null;
+
+                function onKeyDown(e) { keys[e.key.toLowerCase()] = true; }
+                function onKeyUp(e) { keys[e.key.toLowerCase()] = false; }
+                window.addEventListener("keydown", onKeyDown);
+                window.addEventListener("keyup", onKeyUp);
+
+                function loop() {
+                    if (keys["arrowup"] || keys["w"]) player.y -= 3.2;
+                    if (keys["arrowdown"] || keys["s"]) player.y += 3.2;
+                    if (keys["arrowleft"] || keys["a"]) player.x -= 3.2;
+                    if (keys["arrowright"] || keys["d"]) player.x += 3.2;
+                    player.x = Math.max(20, Math.min(canvas.width - 20, player.x));
+                    player.y = Math.max(20, Math.min(canvas.height - 20, player.y));
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    targets.forEach(t => {
+                        ctx.fillStyle = "#1e293b"; ctx.fillRect(t.x - 55, t.y - 24, 110, 48);
+                        ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2; ctx.strokeRect(t.x - 55, t.y - 24, 110, 48);
+                        ctx.fillStyle = "#fff"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
+                        ctx.fillText(String(t.label).slice(0, 14), t.x, t.y + 5);
+                        if (Math.abs(player.x - t.x) < 50 && Math.abs(player.y - t.y) < 30) {
+                            cancelAnimationFrame(rafId);
+                            if (t.correct) { score++; sfxCorrect(); } else { sfxWrong(); }
+                            idx++; round();
+                        }
+                    });
+
+                    ctx.beginPath(); ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+                    ctx.fillStyle = "#22c55e"; ctx.fill();
+                    rafId = requestAnimationFrame(loop);
+                }
+                loop();
+                activeCleanup = () => {
+                    cancelAnimationFrame(rafId);
+                    window.removeEventListener("keydown", onKeyDown);
+                    window.removeEventListener("keyup", onKeyUp);
+                };
+            }
+            round();
+        }
+
+        function renderAirplane(container, items) {
+            renderMazeChase(container, items);
+        }
+
+        initPlay();
     </script>
 </body>
 </html>
