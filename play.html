@@ -949,7 +949,6 @@
         let musicFadeTimer = null;
         let musicFallbackApplied = false;
 
-        // Soft background volume level so gameplay and SFX remain comfortable
         const START_MUSIC_VOLUME = 0.01;
         const TARGET_MUSIC_VOLUME = 0.24;
 
@@ -979,7 +978,6 @@
                 });
             }
 
-            // Gentle ~1.8s ramp from very low volume up to TARGET_MUSIC_VOLUME
             const totalSteps = 36;
             const stepIncrement = (TARGET_MUSIC_VOLUME - START_MUSIC_VOLUME) / totalSteps;
 
@@ -1335,18 +1333,35 @@
         function renderTrueOrFalse(container, items) {
             let idx = 0;
             let score = 0;
+            let locked = false;
+
+            function parseBooleanAnswer(raw) {
+                const val = String(raw ?? "").trim().toLowerCase();
+                if (["true", "t", "1", "yes", "y", "correct", "right", "සත්‍ය", "හරි"].includes(val)) {
+                    return true;
+                }
+                if (["false", "f", "0", "no", "n", "incorrect", "wrong", "අසත්‍ය", "වැරදි"].includes(val)) {
+                    return false;
+                }
+                return null;
+            }
 
             function showTF() {
                 if (idx >= items.length) {
                     return finishScreen("🎉 True / False Complete!", `Score: ${score} / ${items.length}`);
                 }
 
+                locked = false;
                 const it = items[idx];
+                const statement = it.clue || it.question || it.statement || it.term || it.answer || `Statement ${idx + 1}`;
+                const expectedBool = parseBooleanAnswer(it.answer);
+                const fallbackExpected = expectedBool === null ? (idx % 2 === 0) : expectedBool;
+
                 liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
                     <div style="text-align:center;max-width:580px;margin:0 auto;padding:18px;">
                         <div class="stage-eyebrow">Statement ${idx + 1} of ${items.length}</div>
-                        <h2 class="stage-prompt">${it.clue}</h2>
+                        <h2 class="stage-prompt">${statement}</h2>
                         <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
                             <button type="button" class="btn-primary" id="btnTrue">✓ True</button>
                             <button type="button" class="btn-primary" style="background:#0f172a;" id="btnFalse">✕ False</button>
@@ -1354,12 +1369,17 @@
                         <div id="tfMsg" style="margin-top:16px;font-weight:700;min-height:26px;"></div>
                     </div>`;
 
+                const trueBtn = document.getElementById("btnTrue");
+                const falseBtn = document.getElementById("btnFalse");
+                const msg = document.getElementById("tfMsg");
+
                 const handlePick = (val) => {
-                    const expected = String(it.answer).toLowerCase() === "true";
-                    const msg = document.getElementById("tfMsg");
-                    document.getElementById("btnTrue").disabled = true;
-                    document.getElementById("btnFalse").disabled = true;
-                    if (val === expected) {
+                    if (locked) return;
+                    locked = true;
+                    trueBtn.disabled = true;
+                    falseBtn.disabled = true;
+
+                    if (val === fallbackExpected) {
                         score++;
                         sfxCorrect();
                         msg.style.color = "var(--ok-color)";
@@ -1367,16 +1387,18 @@
                     } else {
                         sfxWrong();
                         msg.style.color = "var(--bad-color)";
-                        msg.textContent = `❌ Incorrect (${it.answer})`;
+                        const correctLabel = fallbackExpected ? "True" : "False";
+                        msg.textContent = `❌ Incorrect (Answer: ${correctLabel})`;
                     }
+
                     setTimeout(() => {
                         idx++;
                         showTF();
                     }, 950);
                 };
 
-                document.getElementById("btnTrue").onclick = () => handlePick(true);
-                document.getElementById("btnFalse").onclick = () => handlePick(false);
+                trueBtn.onclick = () => handlePick(true);
+                falseBtn.onclick = () => handlePick(false);
             }
 
             showTF();
