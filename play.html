@@ -3,319 +3,862 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EduPlay Studio — Play Activity (26 Templates)</title>
+    <title>EduPlay Studio — Interactive Play Arena (26 Templates)</title>
     <style>
         :root {
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --ink: #0f172a;
-            --muted: #64748b;
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
-            --ok: #16a34a;
+            --bg-primary: #eef2f6;
+            --bg-secondary: #e2e8f0;
+            --surface-card: #ffffff;
+            --surface-elevated: #f8fafc;
+            --surface-muted: #f1f5f9;
+            --ink-primary: #0f172a;
+            --ink-secondary: #334155;
+            --ink-muted: #64748b;
+            --accent-indigo: #4f46e5;
+            --accent-indigo-dark: #4338ca;
+            --accent-indigo-soft: #eef2ff;
+            --accent-teal: #0f766e;
+            --accent-teal-bright: #14b8a6;
+            --accent-amber: #d97706;
+            --ok-color: #16a34a;
             --ok-bg: #dcfce7;
-            --bad: #dc2626;
+            --ok-border: #22c55e;
+            --bad-color: #dc2626;
             --bad-bg: #fee2e2;
-            --border: #e2e8f0;
+            --bad-border: #ef4444;
+            --border-subtle: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 10px 25px rgba(15, 23, 42, 0.07);
+            --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 22px;
+            --transition-fast: 0.14s ease;
+            --transition-smooth: 0.24s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Segoe UI", system-ui, -apple-system, sans-serif; }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background: var(--bg);
-            color: var(--ink);
+            background: linear-gradient(180deg, #f1f5f9 0%, #e6edf5 100%);
+            color: var(--ink-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
-        header {
-            background: var(--ink);
+
+        /* ================= TOP NAVIGATION HEADER ================= */
+        header.top-bar {
+            background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
             color: #ffffff;
-            padding: 14px 24px;
+            padding: 14px 26px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.16);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .brand { font-size: 1.2rem; font-weight: 800; letter-spacing: 0.3px; }
-        .activity-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-sub {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #94a3b8;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 3px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .activity-meta {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
         .badge {
             background: rgba(255, 255, 255, 0.14);
+            color: #f8fafc;
             padding: 5px 12px;
             border-radius: 999px;
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(4px);
         }
-        .badge.locked { background: var(--bad); color: #fff; }
-        .nav-link { color: #cbd5e1; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
-        .nav-link:hover { color: #ffffff; }
 
-        main {
+        .badge.template-pill {
+            background: rgba(79, 70, 229, 0.32);
+            border: 1px solid rgba(165, 180, 252, 0.35);
+            color: #e0e7ff;
+        }
+
+        .badge.locked {
+            background: var(--bad-color);
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(220, 38, 38, 0.35);
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.09);
+        }
+
+        /* ================= MAIN CONTAINER & CARDS ================= */
+        main.arena-shell {
             flex: 1;
-            max-width: 980px;
+            max-width: 1020px;
             width: 100%;
-            margin: 24px auto;
-            padding: 0 16px;
+            margin: 26px auto 38px;
+            padding: 0 18px;
         }
+
         .card {
-            background: var(--card);
-            border-radius: 18px;
-            padding: 24px;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+            background: var(--surface-card);
+            border-radius: var(--radius-xl);
+            padding: 26px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(226, 232, 240, 0.9);
         }
+
         .title-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--border);
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
             flex-wrap: wrap;
         }
+
+        .activity-title {
+            font-size: 1.55rem;
+            font-weight: 800;
+            color: var(--ink-primary);
+            letter-spacing: -0.015em;
+        }
+
+        .activity-info {
+            color: var(--ink-muted);
+            font-size: 0.9rem;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .live-stats-panel {
+            font-weight: 800;
+            font-size: 0.96rem;
+            color: var(--accent-indigo);
+            background: var(--accent-indigo-soft);
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: 1px solid #c7d2fe;
+            white-space: nowrap;
+        }
+
+        .live-stats-panel:empty {
+            display: none;
+        }
+
+        /* ================= BUTTONS ================= */
         .btn-primary {
-            background: var(--primary);
+            background: var(--accent-indigo);
             color: #ffffff;
             border: none;
             padding: 10px 18px;
-            border-radius: 10px;
+            border-radius: var(--radius-md);
             font-weight: 700;
+            font-size: 0.94rem;
             cursor: pointer;
-            transition: 0.15s;
+            transition: var(--transition-fast);
+            box-shadow: 0 3px 10px rgba(79, 70, 229, 0.22);
         }
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-secondary {
-            background: #f8fafc;
-            color: var(--ink);
-            border: 1px solid #cbd5e1;
-            padding: 9px 15px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.15s;
-        }
-        .btn-secondary:hover { background: #eef2ff; border-color: var(--primary); }
-        .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
 
-        /* --- Template Switcher --- */
+        .btn-primary:hover {
+            background: var(--accent-indigo-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface-elevated);
+            color: var(--ink-primary);
+            border: 1px solid var(--border-strong);
+            padding: 9px 15px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        header .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f8fafc;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        header .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        header .btn-secondary.audio-active {
+            background: rgba(34, 197, 94, 0.22);
+            border-color: rgba(74, 222, 128, 0.55);
+            color: #dcfce7;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--accent-indigo-soft);
+            border-color: var(--accent-indigo);
+            color: var(--accent-indigo);
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* ================= TEMPLATE SWITCHER BAR ================= */
         .switcher-bar {
             display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            padding: 12px;
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            margin-bottom: 18px;
+            flex-direction: column;
+            gap: 8px;
+            padding: 14px;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
         }
+
         .switcher-label {
             width: 100%;
             font-size: 0.78rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: var(--muted);
-            margin-bottom: 2px;
+            letter-spacing: 0.65px;
+            color: var(--ink-muted);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
         }
+
+        .switcher-buttons-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            width: 100%;
+        }
+
         .switch-btn {
-            padding: 6px 11px;
+            padding: 6px 12px;
             border-radius: 9px;
-            border: 1px solid #cbd5e1;
-            background: #ffffff;
-            color: #334155;
+            border: 1px solid var(--border-strong);
+            background: var(--surface-card);
+            color: var(--ink-secondary);
             font-size: 0.82rem;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.15s;
+            transition: var(--transition-fast);
         }
-        .switch-btn:hover { border-color: var(--primary); color: var(--primary); background: #eef2ff; }
-        .switch-btn.active { background: var(--primary); color: #ffffff; border-color: var(--primary); }
 
-        /* --- Shared Game Styles --- */
+        .switch-btn:hover {
+            border-color: var(--accent-indigo);
+            color: var(--accent-indigo);
+            background: var(--accent-indigo-soft);
+        }
+
+        .switch-btn.active {
+            background: var(--accent-indigo);
+            color: #ffffff;
+            border-color: var(--accent-indigo);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+        }
+
+        /* ================= SHARED GAME STAGE & COMPONENTS ================= */
+        .game-stage {
+            min-height: 260px;
+        }
+
+        .stage-eyebrow {
+            color: var(--ink-muted);
+            font-size: 0.86rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stage-prompt {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--ink-primary);
+            margin-bottom: 16px;
+            line-height: 1.38;
+        }
+
         .option-btn {
             display: block;
             width: 100%;
             text-align: left;
-            padding: 12px 16px;
-            margin: 8px 0;
-            border-radius: 10px;
-            border: 2px solid #cbd5e1;
-            background: #f8fafc;
+            padding: 13px 17px;
+            margin: 9px 0;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-strong);
+            background: var(--surface-elevated);
+            color: var(--ink-primary);
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            transition: var(--transition-fast);
         }
-        .option-btn:hover { border-color: var(--primary); background: #eef2ff; }
-        .option-btn.correct { background: var(--ok-bg); border-color: var(--ok); color: #166534; }
-        .option-btn.wrong { background: var(--bad-bg); border-color: var(--bad); color: #991b1b; }
 
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent-indigo);
+            background: var(--accent-indigo-soft);
+            transform: translateX(2px);
+        }
+
+        .option-btn.correct {
+            background: var(--ok-bg);
+            border-color: var(--ok-color);
+            color: #166534;
+        }
+
+        .option-btn.wrong {
+            background: var(--bad-bg);
+            border-color: var(--bad-color);
+            color: #991b1b;
+        }
+
+        /* Flashcards */
         .flashcard {
-            min-height: 190px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
-            color: #fff;
+            min-height: 205px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 28px;
             text-align: center;
-            font-size: 1.4rem;
+            font-size: 1.45rem;
             font-weight: 700;
             cursor: pointer;
             margin: 16px 0;
             user-select: none;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
         }
-        .flashcard.back { background: linear-gradient(135deg, #0f766e, #14b8a6); }
 
+        .flashcard.back {
+            background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-teal-bright) 100%);
+        }
+
+        /* Match Up */
         .match-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 14px;
             margin-top: 14px;
         }
+
+        @media (max-width: 600px) {
+            .match-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .match-item {
-            padding: 14px;
-            border-radius: 12px;
-            border: 2px solid #cbd5e1;
-            background: #f8fafc;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-strong);
+            background: var(--surface-elevated);
             font-weight: 600;
             cursor: pointer;
             text-align: center;
+            transition: var(--transition-fast);
         }
-        .match-item.selected { border-color: var(--primary); background: #e0e7ff; }
-        .match-item.matched { border-color: var(--ok); background: var(--ok-bg); color: #166534; opacity: 0.75; }
 
+        .match-item:hover:not(.matched) {
+            border-color: var(--accent-indigo);
+            background: var(--accent-indigo-soft);
+        }
+
+        .match-item.selected {
+            border-color: var(--accent-indigo);
+            background: #e0e7ff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .match-item.matched {
+            border-color: var(--ok-color);
+            background: var(--ok-bg);
+            color: #166534;
+            opacity: 0.78;
+            cursor: default;
+        }
+
+        /* Type The Answer */
         .type-input-box {
             width: 100%;
-            max-width: 460px;
+            max-width: 470px;
             padding: 14px 18px;
             font-size: 1.2rem;
             font-weight: 600;
             text-align: center;
-            border-radius: 12px;
-            border: 2px solid #cbd5e1;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-strong);
             outline: none;
-            transition: 0.2s;
+            transition: var(--transition-fast);
             margin: 14px auto;
             display: block;
+            background: var(--surface-card);
+            color: var(--ink-primary);
         }
-        .type-input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); }
 
-        .spell-slots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 18px 0; }
+        .type-input-box:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.16);
+        }
+
+        /* Spell / Anagram / Unjumble */
+        .spell-slots {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 18px 0;
+        }
+
         .spell-slot {
-            width: 42px; height: 48px; border-bottom: 3px solid var(--primary); background: #f8fafc;
-            border-radius: 8px 8px 0 0; display: flex; align-items: center; justify-content: center;
-            font-size: 1.35rem; font-weight: 800; color: var(--ink); cursor: pointer; user-select: none;
+            width: 42px;
+            height: 48px;
+            border-bottom: 3px solid var(--accent-indigo);
+            background: var(--surface-elevated);
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--ink-primary);
+            cursor: pointer;
+            user-select: none;
         }
-        .spell-bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 14px; }
-        .spell-tile {
-            width: 44px; height: 44px; border-radius: 10px; background: var(--primary); color: #fff;
-            font-weight: 700; font-size: 1.15rem; border: none; cursor: pointer; box-shadow: 0 3px 0 var(--primary-dark);
-        }
-        .spell-tile:disabled { opacity: 0.28; cursor: not-allowed; box-shadow: none; }
 
+        .spell-bank {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .spell-tile {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--accent-indigo);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.15rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--accent-indigo-dark);
+            transition: var(--transition-fast);
+        }
+
+        .spell-tile:hover:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .spell-tile:disabled {
+            opacity: 0.28;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Memory / Flip Tiles / Open The Box */
         .memory-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
             gap: 12px;
-            max-width: 740px;
+            max-width: 760px;
             margin: 16px auto;
         }
+
         .mem-card {
-            height: 95px; border-radius: 14px; background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: #fff; display: flex; align-items: center; justify-content: center; text-align: center;
-            padding: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; user-select: none;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25); transition: 0.2s;
+            min-height: 100px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 0.96rem;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
+            transition: var(--transition-smooth);
         }
-        .mem-card.flipped { background: #ffffff; color: var(--ink); border: 2px solid var(--primary); }
-        .mem-card.matched { background: var(--ok-bg); color: #166534; border: 2px solid #22c55e; cursor: default; opacity: 0.85; }
 
-        .hangman-wrap { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-        .hm-word { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px 0; }
+        .mem-card:hover:not(.matched) {
+            transform: translateY(-2px);
+        }
+
+        .mem-card.flipped {
+            background: var(--surface-card);
+            color: var(--ink-primary);
+            border: 2px solid var(--accent-indigo);
+        }
+
+        .mem-card.matched {
+            background: var(--ok-bg);
+            color: #166534;
+            border: 2px solid var(--ok-border);
+            cursor: default;
+            opacity: 0.88;
+        }
+
+        /* Hangman */
+        .hangman-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .hm-word {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
         .hm-letter {
-            min-width: 32px; height: 40px; border-bottom: 3px solid #334155; font-size: 1.4rem;
-            font-weight: 800; display: flex; align-items: center; justify-content: center;
+            min-width: 32px;
+            height: 40px;
+            border-bottom: 3px solid var(--ink-secondary);
+            font-size: 1.4rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .hm-letter.space { border-bottom: none; width: 18px; }
-        .hm-keyboard { display: grid; grid-template-columns: repeat(9, minmax(30px, 1fr)); gap: 6px; max-width: 480px; width: 100%; }
-        .hm-key { padding: 10px 0; border-radius: 8px; border: 1px solid #cbd5e1; background: #f1f5f9; font-weight: 700; cursor: pointer; }
-        .hm-key.correct { background: #22c55e; color: #fff; border-color: var(--ok); }
-        .hm-key.wrong { background: #ef4444; color: #fff; border-color: var(--bad); opacity: 0.65; }
 
-        /* --- Wordsearch & Crossword --- */
-        .ws-grid { display: inline-grid; gap: 3px; background: #cbd5e1; padding: 6px; border-radius: 10px; margin: 12px auto; }
+        .hm-letter.space {
+            border-bottom: none;
+            width: 18px;
+        }
+
+        .hm-keyboard {
+            display: grid;
+            grid-template-columns: repeat(9, minmax(30px, 1fr));
+            gap: 6px;
+            max-width: 490px;
+            width: 100%;
+        }
+
+        .hm-key {
+            padding: 10px 0;
+            border-radius: 8px;
+            border: 1px solid var(--border-strong);
+            background: var(--surface-muted);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .hm-key:hover:not(:disabled) {
+            border-color: var(--accent-indigo);
+            background: var(--accent-indigo-soft);
+        }
+
+        .hm-key.correct {
+            background: var(--ok-border);
+            color: #ffffff;
+            border-color: var(--ok-color);
+        }
+
+        .hm-key.wrong {
+            background: var(--bad-border);
+            color: #ffffff;
+            border-color: var(--bad-color);
+            opacity: 0.65;
+        }
+
+        /* Wordsearch & Crossword */
+        .ws-grid {
+            display: inline-grid;
+            gap: 3px;
+            background: var(--border-strong);
+            padding: 6px;
+            border-radius: 12px;
+            margin: 12px auto;
+        }
+
         .ws-cell {
-            width: 34px; height: 34px; background: #fff; border: none; border-radius: 6px;
-            font-weight: 800; font-size: 0.95rem; cursor: pointer; color: var(--ink);
+            width: 34px;
+            height: 34px;
+            background: var(--surface-card);
+            border: none;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: var(--ink-primary);
+            transition: var(--transition-fast);
         }
-        .ws-cell.selected { background: #fde68a; }
-        .ws-cell.found { background: var(--ok-bg); color: #166534; }
-        .ws-words { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
-        .ws-tag { padding: 5px 11px; border-radius: 999px; background: #e2e8f0; font-weight: 700; font-size: 0.85rem; }
-        .ws-tag.done { background: var(--ok-bg); color: #166534; text-decoration: line-through; }
 
-        .cw-grid { display: inline-grid; gap: 3px; background: #334155; padding: 6px; border-radius: 10px; margin: 12px auto; }
+        .ws-cell.selected {
+            background: #fde68a;
+        }
+
+        .ws-cell.found {
+            background: var(--ok-bg);
+            color: #166534;
+        }
+
+        .ws-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .ws-tag {
+            padding: 5px 12px;
+            border-radius: 999px;
+            background: var(--bg-secondary);
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .ws-tag.done {
+            background: var(--ok-bg);
+            color: #166534;
+            text-decoration: line-through;
+        }
+
+        .cw-grid {
+            display: inline-grid;
+            gap: 3px;
+            background: var(--ink-secondary);
+            padding: 6px;
+            border-radius: 12px;
+            margin: 12px auto;
+        }
+
         .cw-cell {
-            width: 36px; height: 36px; text-align: center; font-weight: 800; font-size: 1rem;
-            text-transform: uppercase; border: none; border-radius: 4px; background: #fff;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 4px;
+            background: var(--surface-card);
         }
-        .cw-cell.blocked { background: #1e293b; pointer-events: none; }
-        .cw-cell.right { background: var(--ok-bg); color: #166534; }
 
-        /* --- Group Sort & Order --- */
-        .sort-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 14px; }
+        .cw-cell.blocked {
+            background: #1e293b;
+            pointer-events: none;
+        }
+
+        .cw-cell.right {
+            background: var(--ok-bg);
+            color: #166534;
+        }
+
+        /* Group Sort & Order Sequence */
+        .sort-cols {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+
         .sort-zone {
-            min-height: 160px; border: 2px dashed #94a3b8; border-radius: 14px; padding: 12px;
-            background: #f8fafc;
+            min-height: 165px;
+            border: 2px dashed #94a3b8;
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            background: var(--surface-elevated);
+            transition: var(--transition-fast);
         }
-        .sort-zone h3 { font-size: 1rem; margin-bottom: 10px; color: var(--primary); text-align: center; }
+
+        .sort-zone:hover {
+            border-color: var(--accent-indigo);
+        }
+
+        .sort-zone h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--accent-indigo);
+            text-align: center;
+        }
+
         .chip-btn {
-            display: inline-block; margin: 5px; padding: 8px 14px; border-radius: 999px;
-            border: 2px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer;
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 2px solid var(--border-strong);
+            background: var(--surface-card);
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-fast);
         }
-        .chip-btn.picked { border-color: var(--primary); background: #eef2ff; color: var(--primary); }
+
+        .chip-btn.picked {
+            border-color: var(--accent-indigo);
+            background: var(--accent-indigo-soft);
+            color: var(--accent-indigo);
+        }
 
         .order-row {
-            display: flex; align-items: center; justify-content: space-between; gap: 10px;
-            padding: 12px 16px; margin: 8px 0; border-radius: 12px;
-            border: 2px solid #cbd5e1; background: #f8fafc; font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-strong);
+            background: var(--surface-elevated);
+            font-weight: 700;
         }
 
-        /* --- Canvas Arcade Games --- */
+        /* Canvas Arcade Games */
         canvas.arcade-canvas {
             display: block;
             margin: 12px auto;
-            border-radius: 14px;
-            border: 2px solid #cbd5e1;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-strong);
             background: #0f172a;
             max-width: 100%;
             touch-action: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .control-pad {
+            display: flex;
+            gap: 9px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .finish-box {
+            text-align: center;
+            padding: 36px 18px;
+        }
+
+        .finish-heading {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .finish-subtitle {
+            font-size: 1.15rem;
+            color: var(--ink-secondary);
+            margin-bottom: 20px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="brand">🎮 EduPlay Studio</div>
+    <header class="top-bar">
+        <div class="brand-group">
+            <div class="brand-logo">🎮 EduPlay Studio</div>
+            <span class="brand-sub">26 Templates</span>
+        </div>
         <div class="activity-meta">
-            <span id="templateBadge" class="badge">Loading...</span>
+            <span id="templateBadge" class="badge template-pill">Loading...</span>
             <span id="lockBadge" class="badge" style="display:none;">🔒 Mode Locked</span>
-            <button type="button" class="btn-secondary" id="soundToggleBtn" style="padding:5px 11px;font-size:0.82rem;">🔊 Sound: ON</button>
+            <button type="button" class="btn-secondary audio-active" id="soundToggleBtn" style="padding:5px 11px;font-size:0.82rem;">🔊 Sound: ON</button>
+            <button type="button" class="btn-secondary" id="musicToggleBtn" style="padding:5px 11px;font-size:0.82rem;">🎵 Music: OFF</button>
             <a href="create.html" class="nav-link">+ Create</a>
             <a href="my-activities.html" class="nav-link">My Activities</a>
         </div>
     </header>
 
-    <main>
+    <main class="arena-shell">
         <div class="card">
             <div class="title-row">
                 <div>
-                    <h1 id="activityTitle" style="font-size:1.5rem;">Loading Activity...</h1>
-                    <p id="activityInfo" style="color:var(--muted);font-size:0.9rem;margin-top:4px;"></p>
+                    <h1 id="activityTitle" class="activity-title">Loading Activity...</h1>
+                    <p id="activityInfo" class="activity-info"></p>
                 </div>
-                <div id="liveStats" style="font-weight:700;color:var(--primary);"></div>
+                <div id="liveStats" class="live-stats-panel"></div>
             </div>
 
             <div id="switcherBar" class="switcher-bar" style="display:none;">
@@ -323,17 +866,18 @@
                     <span>Switch Game Template</span>
                     <span style="font-weight:700;text-transform:none;">All 26 Templates Ready</span>
                 </div>
-                <div id="switcherButtons" style="display:flex;flex-wrap:wrap;gap:7px;width:100%;"></div>
+                <div id="switcherButtons" class="switcher-buttons-wrap"></div>
             </div>
 
-            <div id="gameContainer">
-                <p style="text-align:center;color:var(--muted);padding:30px;">Loading game data...</p>
+            <div id="gameContainer" class="game-stage">
+                <p style="text-align:center;color:var(--ink-muted);padding:34px;">Loading game data...</p>
             </div>
         </div>
     </main>
 
     <script src="supabase-config.js"></script>
     <script>
+        /* ================= DOM REFERENCES ================= */
         const container = document.getElementById("gameContainer");
         const titleEl = document.getElementById("activityTitle");
         const infoEl = document.getElementById("activityInfo");
@@ -343,20 +887,33 @@
         const switcherBar = document.getElementById("switcherBar");
         const switcherButtons = document.getElementById("switcherButtons");
         const soundToggleBtn = document.getElementById("soundToggleBtn");
+        const musicToggleBtn = document.getElementById("musicToggleBtn");
 
         let soundEnabled = true;
         let activeCleanup = null;
 
+        /* ================= SOUND EFFECTS (WEB AUDIO API) ================= */
+        function getAudioContext() {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return null;
+            if (!getAudioContext._ctx) {
+                getAudioContext._ctx = new AudioCtx();
+            }
+            if (getAudioContext._ctx.state === "suspended") {
+                getAudioContext._ctx.resume().catch(() => {});
+            }
+            return getAudioContext._ctx;
+        }
+
         function playTone(freq = 520, duration = 0.12, type = "sine") {
             if (!soundEnabled) return;
             try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (!AudioCtx) return;
-                const ctx = new AudioCtx();
+                const ctx = getAudioContext();
+                if (!ctx) return;
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = type;
-                osc.frequency.value = freq;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
                 gain.gain.setValueAtTime(0.08, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
                 osc.connect(gain);
@@ -366,15 +923,119 @@
             } catch (_) {}
         }
 
-        function sfxCorrect() { playTone(660, 0.14, "triangle"); setTimeout(() => playTone(880, 0.16, "triangle"), 90); }
-        function sfxWrong() { playTone(220, 0.22, "sawtooth"); }
+        function sfxCorrect() {
+            playTone(660, 0.14, "triangle");
+            setTimeout(() => playTone(880, 0.17, "triangle"), 95);
+        }
+
+        function sfxWrong() {
+            playTone(220, 0.22, "sawtooth");
+        }
 
         soundToggleBtn.onclick = () => {
             soundEnabled = !soundEnabled;
             soundToggleBtn.textContent = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+            soundToggleBtn.classList.toggle("audio-active", soundEnabled);
+            if (soundEnabled) playTone(580, 0.08, "sine");
         };
 
-        /* ================= ALL 26 TEMPLATES ================= */
+        /* ================= BACKGROUND MUSIC (SOFT FADE-IN / FADE-OUT) ================= */
+        const bgMusic = new Audio("images/1.mp3");
+        bgMusic.loop = true;
+        bgMusic.preload = "auto";
+        bgMusic.volume = 0;
+
+        let musicEnabled = false;
+        let musicFadeTimer = null;
+        let musicFallbackApplied = false;
+
+        // Soft background volume level so gameplay and SFX remain comfortable
+        const START_MUSIC_VOLUME = 0.01;
+        const TARGET_MUSIC_VOLUME = 0.24;
+
+        bgMusic.addEventListener("error", () => {
+            if (!musicFallbackApplied) {
+                musicFallbackApplied = true;
+                bgMusic.src = "images/1mp3";
+                bgMusic.load();
+            }
+        });
+
+        function clearMusicFade() {
+            if (musicFadeTimer !== null) {
+                clearInterval(musicFadeTimer);
+                musicFadeTimer = null;
+            }
+        }
+
+        function fadeInMusic() {
+            clearMusicFade();
+            bgMusic.volume = START_MUSIC_VOLUME;
+
+            const playPromise = bgMusic.play();
+            if (playPromise && typeof playPromise.catch === "function") {
+                playPromise.catch((err) => {
+                    console.warn("Background music playback error:", err);
+                });
+            }
+
+            // Gentle ~1.8s ramp from very low volume up to TARGET_MUSIC_VOLUME
+            const totalSteps = 36;
+            const stepIncrement = (TARGET_MUSIC_VOLUME - START_MUSIC_VOLUME) / totalSteps;
+
+            musicFadeTimer = setInterval(() => {
+                const nextVol = bgMusic.volume + stepIncrement;
+                if (nextVol < TARGET_MUSIC_VOLUME) {
+                    bgMusic.volume = Math.min(TARGET_MUSIC_VOLUME, Number(nextVol.toFixed(4)));
+                } else {
+                    bgMusic.volume = TARGET_MUSIC_VOLUME;
+                    clearMusicFade();
+                }
+            }, 50);
+        }
+
+        function fadeOutMusic() {
+            clearMusicFade();
+            const currentVol = bgMusic.volume;
+            if (currentVol <= 0.005) {
+                bgMusic.volume = 0;
+                bgMusic.pause();
+                return;
+            }
+
+            const totalSteps = 16;
+            const stepDecrement = currentVol / totalSteps;
+
+            musicFadeTimer = setInterval(() => {
+                const nextVol = bgMusic.volume - stepDecrement;
+                if (nextVol > 0.008) {
+                    bgMusic.volume = Math.max(0, Number(nextVol.toFixed(4)));
+                } else {
+                    bgMusic.volume = 0;
+                    bgMusic.pause();
+                    clearMusicFade();
+                }
+            }, 50);
+        }
+
+        musicToggleBtn.onclick = () => {
+            musicEnabled = !musicEnabled;
+            musicToggleBtn.classList.toggle("audio-active", musicEnabled);
+            if (musicEnabled) {
+                musicToggleBtn.textContent = "🎵 Music: ON";
+                fadeInMusic();
+            } else {
+                musicToggleBtn.textContent = "🎵 Music: OFF";
+                fadeOutMusic();
+            }
+        };
+
+        window.addEventListener("beforeunload", () => {
+            clearMusicFade();
+            bgMusic.pause();
+        });
+
+        /* ================= ALL 26 TEMPLATES REGISTRY ================= */
         const SWITCHABLE_TEMPLATES = [
             "Quiz",
             "True or false",
@@ -412,7 +1073,12 @@
             if (!Array.isArray(rawItems)) return [];
             return rawItems.map((it, idx) => {
                 if (typeof it === "string") {
-                    return { clue: `Item ${idx + 1}`, answer: it, group: idx % 2 === 0 ? "Group A" : "Group B", options: [] };
+                    return {
+                        clue: `Item ${idx + 1}`,
+                        answer: it,
+                        group: idx % 2 === 0 ? "Group A" : "Group B",
+                        options: []
+                    };
                 }
                 const clue = it.clue || it.question || it.term || it.front || it.prompt || `Item ${idx + 1}`;
                 const answer = it.answer || it.word || it.definition || it.back || it.match || "";
@@ -456,20 +1122,21 @@
             }
             liveStats.textContent = "";
             container.innerHTML = `
-                <div style="text-align:center;padding:32px 16px;">
-                    <h2 style="font-size:1.7rem;margin-bottom:8px;">${heading}</h2>
-                    <p style="font-size:1.15rem;color:#334155;margin-bottom:18px;">${subtitle}</p>
+                <div class="finish-box">
+                    <h2 class="finish-heading">${heading}</h2>
+                    <p class="finish-subtitle">${subtitle}</p>
                     <button type="button" class="btn-primary" onclick="renderGame(currentTemplate, normalizedItems)">Play Again</button>
                 </div>`;
         }
 
+        /* ================= INITIALIZATION & DATA LOADING ================= */
         async function initPlay() {
             const params = new URLSearchParams(window.location.search);
             const id = params.get("id");
 
             if (!id) {
                 titleEl.textContent = "No Activity ID Provided";
-                container.innerHTML = `<p style="text-align:center;padding:24px;">Open a valid activity link or <a href="my-activities.html">browse saved activities</a>.</p>`;
+                container.innerHTML = `<p style="text-align:center;padding:28px;color:var(--ink-secondary);">Open a valid activity link or <a href="my-activities.html" style="color:var(--accent-indigo);font-weight:700;">browse saved activities</a>.</p>`;
                 return;
             }
 
@@ -489,7 +1156,7 @@
 
             if (!activity) {
                 titleEl.textContent = "Activity Not Found";
-                container.innerHTML = `<p style="text-align:center;padding:24px;">Could not find activity <strong>${id}</strong>.</p>`;
+                container.innerHTML = `<p style="text-align:center;padding:28px;color:var(--ink-secondary);">Could not find activity <strong>${id}</strong>.</p>`;
                 return;
             }
 
@@ -498,12 +1165,12 @@
             normalizedItems = normalizeItems(activity.items);
 
             titleEl.textContent = activity.title || "Untitled Activity";
-            infoEl.textContent = `${normalizedItems.length} item(s)`;
+            infoEl.textContent = `${normalizedItems.length} item(s) • Interactive Mode`;
             templateBadge.textContent = currentTemplate;
 
             const isLocked = Boolean(activity.lockMode);
             if (isLocked) {
-                lockBadge.style.display = "inline-block";
+                lockBadge.style.display = "inline-flex";
                 lockBadge.classList.add("locked");
             }
 
@@ -511,6 +1178,7 @@
             renderGame(currentTemplate, normalizedItems);
         }
 
+        /* ================= TEMPLATE ROUTER ================= */
         function renderGame(template, items) {
             if (typeof activeCleanup === "function") {
                 activeCleanup();
@@ -519,264 +1187,441 @@
             liveStats.textContent = "";
 
             if (!items || items.length === 0) {
-                container.innerHTML = `<p style="text-align:center;padding:24px;color:var(--muted);">No items found in this activity.</p>`;
+                container.innerHTML = `<p style="text-align:center;padding:28px;color:var(--ink-muted);">No items found in this activity.</p>`;
                 return;
             }
 
             switch (template) {
-                case "Quiz": renderQuiz(container, items); break;
-                case "True or false": renderTrueOrFalse(container, items); break;
-                case "Flash cards": renderFlashCards(container, items); break;
-                case "Match up": renderMatchUp(container, items); break;
-                case "Spin the wheel": renderSpinWheel(container, items); break;
-                case "Open the box": renderOpenTheBox(container, items); break;
+                case "Quiz":
+                    renderQuiz(container, items);
+                    break;
+                case "True or false":
+                    renderTrueOrFalse(container, items);
+                    break;
+                case "Flash cards":
+                    renderFlashCards(container, items);
+                    break;
+                case "Match up":
+                    renderMatchUp(container, items);
+                    break;
+                case "Spin the wheel":
+                    renderSpinWheel(container, items);
+                    break;
+                case "Open the box":
+                    renderOpenTheBox(container, items);
+                    break;
                 case "Anagram":
                 case "Unjumble":
-                case "Spell the word": renderSpellTheWord(container, items); break;
-                case "Type the answer": renderTypeTheAnswer(container, items); break;
-                case "Matching pairs": renderMatchingPairs(container, items); break;
-                case "Hangman": renderHangman(container, items); break;
-                case "Wordsearch": renderWordsearch(container, items); break;
-                case "Crossword": renderCrossword(container, items); break;
-                case "Complete the sentence": renderCompleteSentence(container, items); break;
-                case "Missing word": renderMissingWord(container, items); break;
-                case "Flip tiles": renderFlipTiles(container, items); break;
-                case "Group sort": renderGroupSort(container, items); break;
-                case "Balloon pop": renderBalloonPop(container, items); break;
-                case "Whack-a-mole": renderWhackAMole(container, items); break;
-                case "Maze chase": renderMazeChase(container, items); break;
-                case "Airplane": renderAirplane(container, items); break;
-                case "Speed sorting": renderSpeedSorting(container, items); break;
-                case "Labelled diagram": renderLabelledDiagram(container, items); break;
-                case "Order / Sequence": renderOrderSequence(container, items); break;
-                case "Find the match": renderFindTheMatch(container, items); break;
-                default: renderQuiz(container, items); break;
+                case "Spell the word":
+                    renderSpellTheWord(container, items, template);
+                    break;
+                case "Type the answer":
+                    renderTypeTheAnswer(container, items);
+                    break;
+                case "Matching pairs":
+                    renderMatchingPairs(container, items);
+                    break;
+                case "Hangman":
+                    renderHangman(container, items);
+                    break;
+                case "Wordsearch":
+                    renderWordsearch(container, items);
+                    break;
+                case "Crossword":
+                    renderCrossword(container, items);
+                    break;
+                case "Complete the sentence":
+                    renderCompleteSentence(container, items);
+                    break;
+                case "Missing word":
+                    renderMissingWord(container, items);
+                    break;
+                case "Flip tiles":
+                    renderFlipTiles(container, items);
+                    break;
+                case "Group sort":
+                    renderGroupSort(container, items);
+                    break;
+                case "Balloon pop":
+                    renderBalloonPop(container, items);
+                    break;
+                case "Whack-a-mole":
+                    renderWhackAMole(container, items);
+                    break;
+                case "Maze chase":
+                    renderMazeChase(container, items);
+                    break;
+                case "Airplane":
+                    renderAirplane(container, items);
+                    break;
+                case "Speed sorting":
+                    renderSpeedSorting(container, items);
+                    break;
+                case "Labelled diagram":
+                    renderLabelledDiagram(container, items);
+                    break;
+                case "Order / Sequence":
+                    renderOrderSequence(container, items);
+                    break;
+                case "Find the match":
+                    renderFindTheMatch(container, items);
+                    break;
+                default:
+                    renderQuiz(container, items);
+                    break;
             }
         }
 
-        /* ================= 1–12 CORE TEMPLATES ================= */
+        /* ================= 1. QUIZ ================= */
         function renderQuiz(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function showQ() {
-                if (idx >= items.length) return finishScreen("🎉 Quiz Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🎉 Quiz Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const it = items[idx];
-                const distractors = items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean);
+                const distractors = items
+                    .filter((_, i) => i !== idx)
+                    .map(x => x.answer)
+                    .filter(Boolean);
                 const fallback = ["Option B", "Option C", "Option D"];
-                const pool = [...distractors, ...fallback].filter(x => String(x).toLowerCase() !== String(it.answer).toLowerCase());
+                const pool = [...distractors, ...fallback].filter(
+                    x => String(x).toLowerCase() !== String(it.answer).toLowerCase()
+                );
                 const choices = it.options.length >= 2
                     ? [...it.options]
                     : [it.answer, ...pool.slice(0, 3)].sort(() => Math.random() - 0.5);
 
                 liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
-                    <div style="max-width:620px;margin:0 auto;">
-                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Question ${idx + 1} of ${items.length}</div>
-                        <h2 style="margin-bottom:14px;">${it.clue}</h2>
+                    <div style="max-width:640px;margin:0 auto;">
+                        <div class="stage-eyebrow">Question ${idx + 1} of ${items.length}</div>
+                        <h2 class="stage-prompt">${it.clue}</h2>
                         <div id="qOpts"></div>
                     </div>`;
+
                 const optsBox = document.getElementById("qOpts");
                 choices.forEach(ch => {
                     const btn = document.createElement("button");
+                    btn.type = "button";
                     btn.className = "option-btn";
                     btn.textContent = ch;
                     btn.onclick = () => {
-                        optsBox.querySelectorAll("button").forEach(b => b.disabled = true);
+                        optsBox.querySelectorAll("button").forEach(b => (b.disabled = true));
                         if (String(ch).toLowerCase() === String(it.answer).toLowerCase()) {
-                            btn.classList.add("correct"); score++; sfxCorrect();
+                            btn.classList.add("correct");
+                            score++;
+                            sfxCorrect();
                         } else {
-                            btn.classList.add("wrong"); sfxWrong();
+                            btn.classList.add("wrong");
+                            sfxWrong();
                         }
-                        setTimeout(() => { idx++; showQ(); }, 950);
+                        setTimeout(() => {
+                            idx++;
+                            showQ();
+                        }, 950);
                     };
                     optsBox.appendChild(btn);
                 });
             }
+
             showQ();
         }
 
+        /* ================= 2. TRUE OR FALSE ================= */
         function renderTrueOrFalse(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function showTF() {
-                if (idx >= items.length) return finishScreen("🎉 True / False Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🎉 True / False Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const it = items[idx];
                 liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
-                    <div style="text-align:center;max-width:560px;margin:0 auto;padding:16px;">
-                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Statement ${idx + 1} of ${items.length}</div>
-                        <h2 style="margin-bottom:18px;">${it.clue}</h2>
-                        <div style="display:flex;gap:14px;justify-content:center;">
-                            <button class="btn-primary" id="btnTrue">True</button>
-                            <button class="btn-primary" style="background:#0f172a;" id="btnFalse">False</button>
+                    <div style="text-align:center;max-width:580px;margin:0 auto;padding:18px;">
+                        <div class="stage-eyebrow">Statement ${idx + 1} of ${items.length}</div>
+                        <h2 class="stage-prompt">${it.clue}</h2>
+                        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+                            <button type="button" class="btn-primary" id="btnTrue">✓ True</button>
+                            <button type="button" class="btn-primary" style="background:#0f172a;" id="btnFalse">✕ False</button>
                         </div>
-                        <div id="tfMsg" style="margin-top:14px;font-weight:700;min-height:24px;"></div>
+                        <div id="tfMsg" style="margin-top:16px;font-weight:700;min-height:26px;"></div>
                     </div>`;
+
                 const handlePick = (val) => {
                     const expected = String(it.answer).toLowerCase() === "true";
                     const msg = document.getElementById("tfMsg");
+                    document.getElementById("btnTrue").disabled = true;
+                    document.getElementById("btnFalse").disabled = true;
                     if (val === expected) {
-                        score++; sfxCorrect(); msg.style.color = "var(--ok)"; msg.textContent = "✅ Correct!";
+                        score++;
+                        sfxCorrect();
+                        msg.style.color = "var(--ok-color)";
+                        msg.textContent = "✅ Correct!";
                     } else {
-                        sfxWrong(); msg.style.color = "var(--bad)"; msg.textContent = `❌ Incorrect (${it.answer})`;
+                        sfxWrong();
+                        msg.style.color = "var(--bad-color)";
+                        msg.textContent = `❌ Incorrect (${it.answer})`;
                     }
-                    setTimeout(() => { idx++; showTF(); }, 950);
+                    setTimeout(() => {
+                        idx++;
+                        showTF();
+                    }, 950);
                 };
+
                 document.getElementById("btnTrue").onclick = () => handlePick(true);
                 document.getElementById("btnFalse").onclick = () => handlePick(false);
             }
+
             showTF();
         }
 
+        /* ================= 3. FLASH CARDS ================= */
         function renderFlashCards(container, items) {
-            let idx = 0, flipped = false;
+            let idx = 0;
+            let flipped = false;
+
             function drawCard() {
                 const it = items[idx];
                 liveStats.textContent = `Card ${idx + 1}/${items.length}`;
                 container.innerHTML = `
-                    <div style="max-width:560px;margin:0 auto;text-align:center;">
-                        <div style="color:var(--muted);font-weight:600;">Click card to flip (${flipped ? "Answer" : "Clue"})</div>
+                    <div style="max-width:580px;margin:0 auto;text-align:center;">
+                        <div class="stage-eyebrow">Click card to flip (${flipped ? "Answer Side" : "Clue Side"})</div>
                         <div class="flashcard ${flipped ? "back" : ""}" id="fcBox">${flipped ? it.answer : it.clue}</div>
                         <div style="display:flex;gap:12px;justify-content:center;">
-                            <button class="btn-secondary" id="prevCard">← Prev</button>
-                            <button class="btn-primary" id="nextCard">Next →</button>
+                            <button type="button" class="btn-secondary" id="prevCard">← Prev</button>
+                            <button type="button" class="btn-primary" id="nextCard">Next →</button>
                         </div>
                     </div>`;
-                document.getElementById("fcBox").onclick = () => { playTone(540, 0.08); flipped = !flipped; drawCard(); };
-                document.getElementById("prevCard").onclick = () => { idx = (idx - 1 + items.length) % items.length; flipped = false; drawCard(); };
-                document.getElementById("nextCard").onclick = () => { idx = (idx + 1) % items.length; flipped = false; drawCard(); };
+
+                document.getElementById("fcBox").onclick = () => {
+                    playTone(540, 0.08);
+                    flipped = !flipped;
+                    drawCard();
+                };
+                document.getElementById("prevCard").onclick = () => {
+                    idx = (idx - 1 + items.length) % items.length;
+                    flipped = false;
+                    drawCard();
+                };
+                document.getElementById("nextCard").onclick = () => {
+                    idx = (idx + 1) % items.length;
+                    flipped = false;
+                    drawCard();
+                };
             }
+
             drawCard();
         }
 
+        /* ================= 4. MATCH UP ================= */
         function renderMatchUp(container, items) {
             const subset = items.slice(0, 8);
             const lefts = subset.map((it, i) => ({ id: i, text: it.clue, matched: false }));
-            const rights = subset.map((it, i) => ({ id: i, text: it.answer, matched: false })).sort(() => Math.random() - 0.5);
+            const rights = subset
+                .map((it, i) => ({ id: i, text: it.answer, matched: false }))
+                .sort(() => Math.random() - 0.5);
             let selLeft = null;
 
             function drawMatch() {
                 const doneCount = lefts.filter(x => x.matched).length;
                 liveStats.textContent = `Matched: ${doneCount}/${subset.length}`;
-                if (lefts.every(x => x.matched)) return finishScreen("🎉 All Matched!", `Completed all ${subset.length} pairs.`);
+                if (lefts.every(x => x.matched)) {
+                    return finishScreen("🎉 All Matched!", `Completed all ${subset.length} pairs.`);
+                }
+
                 container.innerHTML = `
-                    <p style="text-align:center;color:var(--muted);margin-bottom:10px;">Select left, then matching right.</p>
+                    <p style="text-align:center;color:var(--ink-muted);margin-bottom:10px;font-weight:600;">Select an item on the left, then click its matching answer on the right.</p>
                     <div class="match-grid">
                         <div id="muLeftCol">${lefts.map(l => `<div class="match-item ${l.matched ? "matched" : ""} ${selLeft === l.id ? "selected" : ""}" data-id="${l.id}">${l.text}</div>`).join("")}</div>
                         <div id="muRightCol">${rights.map(r => `<div class="match-item ${r.matched ? "matched" : ""}" data-id="${r.id}">${r.text}</div>`).join("")}</div>
                     </div>`;
+
                 container.querySelectorAll("#muLeftCol .match-item").forEach(el => {
                     el.onclick = () => {
                         const id = Number(el.dataset.id);
-                        if (!lefts[id].matched) { selLeft = id; drawMatch(); }
+                        if (!lefts[id].matched) {
+                            playTone(460, 0.06);
+                            selLeft = id;
+                            drawMatch();
+                        }
                     };
                 });
+
                 container.querySelectorAll("#muRightCol .match-item").forEach(el => {
                     el.onclick = () => {
                         const rId = Number(el.dataset.id);
                         const targetR = rights.find(x => x.id === rId);
                         if (selLeft === null || !targetR || targetR.matched) return;
                         if (selLeft === rId) {
-                            lefts[selLeft].matched = true; targetR.matched = true; sfxCorrect();
-                        } else { sfxWrong(); }
-                        selLeft = null; drawMatch();
+                            lefts[selLeft].matched = true;
+                            targetR.matched = true;
+                            sfxCorrect();
+                        } else {
+                            sfxWrong();
+                        }
+                        selLeft = null;
+                        drawMatch();
                     };
                 });
             }
+
             drawMatch();
         }
 
+        /* ================= 5. SPIN THE WHEEL ================= */
         function renderSpinWheel(container, items) {
+            let spinInterval = null;
+            activeCleanup = () => {
+                if (spinInterval) clearInterval(spinInterval);
+            };
+
             container.innerHTML = `
                 <div style="text-align:center;padding:24px;">
-                    <div id="wheelDisplay" style="font-size:1.45rem;font-weight:800;padding:28px;border-radius:16px;background:#eef2ff;color:#312e81;margin:16px auto;max-width:540px;">
+                    <div id="wheelDisplay" style="font-size:1.45rem;font-weight:800;padding:30px;border-radius:16px;background:var(--accent-indigo-soft);color:#312e81;margin:16px auto;max-width:560px;border:2px solid #c7d2fe;">
                         Click Spin to pick an item!
                     </div>
-                    <button class="btn-primary" id="spinBtn">🎡 Spin</button>
+                    <button type="button" class="btn-primary" id="spinBtn">🎡 Spin Wheel</button>
                 </div>`;
+
             document.getElementById("spinBtn").onclick = () => {
                 const disp = document.getElementById("wheelDisplay");
+                const btn = document.getElementById("spinBtn");
+                btn.disabled = true;
                 let ticks = 0;
-                const timer = setInterval(() => {
+
+                if (spinInterval) clearInterval(spinInterval);
+                spinInterval = setInterval(() => {
                     const pick = items[ticks % items.length];
-                    playTone(400 + (ticks * 25), 0.05);
+                    playTone(400 + ticks * 24, 0.05);
                     disp.textContent = `${pick.clue} → ${pick.answer}`;
                     ticks++;
                     if (ticks > 16) {
-                        clearInterval(timer);
+                        clearInterval(spinInterval);
+                        spinInterval = null;
                         const finalPick = items[Math.floor(Math.random() * items.length)];
                         sfxCorrect();
-                        disp.innerHTML = `<div>${finalPick.clue}</div><div style="color:var(--ok);margin-top:8px;">Answer: ${finalPick.answer}</div>`;
+                        disp.innerHTML = `<div>${finalPick.clue}</div><div style="color:var(--ok-color);margin-top:8px;">Answer: ${finalPick.answer}</div>`;
+                        btn.disabled = false;
                     }
                 }, 80);
             };
         }
 
+        /* ================= 6. OPEN THE BOX ================= */
         function renderOpenTheBox(container, items) {
             const opened = new Set();
+
             function drawBoxes() {
                 liveStats.textContent = `Opened: ${opened.size}/${items.length}`;
                 container.innerHTML = `
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-top:10px;">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:10px;">
                         ${items.map((it, i) => `
-                            <div class="mem-card ${opened.has(i) ? "flipped" : ""}" data-i="${i}" style="height:auto;min-height:110px;">
-                                ${opened.has(i) ? `<div><div style="font-size:0.85rem;color:var(--muted);">${it.clue}</div><div style="margin-top:6px;color:var(--primary);">${it.answer}</div></div>` : `📦 Box ${i + 1}`}
+                            <div class="mem-card ${opened.has(i) ? "flipped" : ""}" data-i="${i}" style="height:auto;min-height:115px;">
+                                ${opened.has(i)
+                                    ? `<div><div style="font-size:0.84rem;color:var(--ink-muted);">${it.clue}</div><div style="margin-top:6px;color:var(--accent-indigo);font-size:1.05rem;">${it.answer}</div></div>`
+                                    : `📦 Box ${i + 1}`}
                             </div>
                         `).join("")}
                     </div>`;
+
                 container.querySelectorAll(".mem-card").forEach(el => {
-                    el.onclick = () => { playTone(580, 0.1); opened.add(Number(el.dataset.i)); drawBoxes(); };
+                    el.onclick = () => {
+                        playTone(580, 0.1);
+                        opened.add(Number(el.dataset.i));
+                        drawBoxes();
+                    };
                 });
             }
+
             drawBoxes();
         }
 
+        /* ================= 7. TYPE THE ANSWER ================= */
         function renderTypeTheAnswer(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function showQuestion() {
-                if (idx >= items.length) return finishScreen("🎉 Typing Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🎉 Typing Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const item = items[idx];
                 const answer = String(item.answer || "").trim();
                 liveStats.textContent = `Score: ${score}/${items.length}`;
+
                 container.innerHTML = `
-                    <div style="text-align:center;max-width:560px;margin:0 auto;padding:16px;">
-                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Question ${idx + 1} of ${items.length}</div>
-                        <h2 style="font-size:1.5rem;margin-bottom:14px;">${item.clue}</h2>
+                    <div style="text-align:center;max-width:580px;margin:0 auto;padding:16px;">
+                        <div class="stage-eyebrow">Question ${idx + 1} of ${items.length}</div>
+                        <h2 class="stage-prompt">${item.clue}</h2>
                         <input id="ttaInput" class="type-input-box" type="text" placeholder="Type your answer here..." autocomplete="off" />
                         <div id="ttaFeedback" style="min-height:28px;font-weight:700;margin-bottom:12px;"></div>
                         <div style="display:flex;gap:10px;justify-content:center;">
-                            <button id="ttaCheckBtn" class="btn-primary">Check Answer</button>
-                            <button id="ttaHintBtn" class="btn-secondary">💡 Hint</button>
+                            <button type="button" id="ttaCheckBtn" class="btn-primary">Check Answer</button>
+                            <button type="button" id="ttaHintBtn" class="btn-secondary">💡 Hint</button>
                         </div>
                     </div>`;
+
                 const input = document.getElementById("ttaInput");
                 const feedback = document.getElementById("ttaFeedback");
                 input.focus();
+
                 document.getElementById("ttaHintBtn").onclick = () => {
-                    feedback.style.color = "var(--primary)";
+                    feedback.style.color = "var(--accent-indigo)";
                     feedback.textContent = `Hint: Starts with "${answer.charAt(0).toUpperCase()}" (${answer.length} chars)`;
                     input.focus();
                 };
+
                 const check = () => {
                     const val = input.value.trim();
                     if (!val) return;
                     input.disabled = true;
                     if (val.toLowerCase() === answer.toLowerCase()) {
-                        score++; sfxCorrect(); feedback.style.color = "var(--ok)"; feedback.textContent = `✅ Correct! (${answer})`;
-                        setTimeout(() => { idx++; showQuestion(); }, 950);
+                        score++;
+                        sfxCorrect();
+                        feedback.style.color = "var(--ok-color)";
+                        feedback.textContent = `✅ Correct! (${answer})`;
+                        setTimeout(() => {
+                            idx++;
+                            showQuestion();
+                        }, 950);
                     } else {
-                        sfxWrong(); feedback.style.color = "var(--bad)"; feedback.textContent = `❌ Answer: ${answer}`;
-                        setTimeout(() => { idx++; showQuestion(); }, 1500);
+                        sfxWrong();
+                        feedback.style.color = "var(--bad-color)";
+                        feedback.textContent = `❌ Answer: ${answer}`;
+                        setTimeout(() => {
+                            idx++;
+                            showQuestion();
+                        }, 1500);
                     }
                 };
+
                 document.getElementById("ttaCheckBtn").onclick = check;
-                input.addEventListener("keydown", (e) => { if (e.key === "Enter") check(); });
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") check();
+                });
             }
+
             showQuestion();
         }
 
-        function renderSpellTheWord(container, items) {
-            let idx = 0, score = 0;
+        /* ================= 8. SPELL / ANAGRAM / UNJUMBLE ================= */
+        function renderSpellTheWord(container, items, modeLabel = "Spell the word") {
+            let idx = 0;
+            let score = 0;
+
             function showWord() {
-                if (idx >= items.length) return finishScreen("🏆 Spelling Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen(`🏆 ${modeLabel} Complete!`, `Score: ${score} / ${items.length}`);
+                }
+
                 const item = items[idx];
                 const target = String(item.answer || "").trim().toUpperCase().replace(/[^A-Z0-9 ]/g, "") || "WORD";
                 const letters = target.split("").map((ch, i) => ({ ch, id: i }));
@@ -786,9 +1631,9 @@
 
                 function renderState() {
                     container.innerHTML = `
-                        <div style="text-align:center;max-width:600px;margin:0 auto;padding:16px;">
-                            <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Word ${idx + 1} of ${items.length}</div>
-                            <h2 style="font-size:1.45rem;">${item.clue}</h2>
+                        <div style="text-align:center;max-width:620px;margin:0 auto;padding:16px;">
+                            <div class="stage-eyebrow">${modeLabel} • Word ${idx + 1} of ${items.length}</div>
+                            <h2 class="stage-prompt">${item.clue}</h2>
                             <div class="spell-slots">
                                 ${target.split("").map((_, i) => `<div class="spell-slot" data-slot="${i}">${chosen[i] ? chosen[i].ch : ""}</div>`).join("")}
                             </div>
@@ -796,58 +1641,86 @@
                             <div class="spell-bank">
                                 ${scrambled.map(obj => {
                                     const used = chosen.some(c => c.id === obj.id);
-                                    return `<button class="spell-tile" data-id="${obj.id}" ${used ? "disabled" : ""}>${obj.ch === " " ? "␣" : obj.ch}</button>`;
+                                    return `<button type="button" class="spell-tile" data-id="${obj.id}" ${used ? "disabled" : ""}>${obj.ch === " " ? "␣" : obj.ch}</button>`;
                                 }).join("")}
                             </div>
                             <div style="margin-top:16px;">
-                                <button id="spellClearBtn" class="btn-secondary">↺ Clear</button>
+                                <button type="button" id="spellClearBtn" class="btn-secondary">↺ Clear</button>
                             </div>
                         </div>`;
+
                     container.querySelectorAll(".spell-tile").forEach(btn => {
                         btn.onclick = () => {
                             const found = scrambled.find(x => x.id === Number(btn.dataset.id));
                             if (found && chosen.length < target.length) {
-                                playTone(500, 0.07); chosen.push(found); renderState();
+                                playTone(500, 0.07);
+                                chosen.push(found);
+                                renderState();
                                 if (chosen.length === target.length) {
                                     const attempt = chosen.map(c => c.ch).join("");
                                     const msg = document.getElementById("spellMsg");
                                     if (attempt === target) {
-                                        score++; sfxCorrect(); msg.style.color = "var(--ok)"; msg.textContent = "✅ Perfect!";
-                                        setTimeout(() => { idx++; showWord(); }, 950);
+                                        score++;
+                                        sfxCorrect();
+                                        msg.style.color = "var(--ok-color)";
+                                        msg.textContent = "✅ Perfect!";
+                                        setTimeout(() => {
+                                            idx++;
+                                            showWord();
+                                        }, 950);
                                     } else {
-                                        sfxWrong(); msg.style.color = "var(--bad)"; msg.textContent = "❌ Try again! Tap a slot to remove.";
+                                        sfxWrong();
+                                        msg.style.color = "var(--bad-color)";
+                                        msg.textContent = "❌ Try again! Tap a slot to remove.";
                                     }
                                 }
                             }
                         };
                     });
+
                     container.querySelectorAll(".spell-slot").forEach(slot => {
                         slot.onclick = () => {
                             const sIdx = Number(slot.dataset.slot);
-                            if (chosen[sIdx]) { chosen.splice(sIdx, 1); renderState(); }
+                            if (chosen[sIdx]) {
+                                chosen.splice(sIdx, 1);
+                                renderState();
+                            }
                         };
                     });
-                    document.getElementById("spellClearBtn").onclick = () => { chosen = []; renderState(); };
+
+                    document.getElementById("spellClearBtn").onclick = () => {
+                        chosen = [];
+                        renderState();
+                    };
                 }
+
                 renderState();
             }
+
             showWord();
         }
 
+        /* ================= 9. MATCHING PAIRS ================= */
         function renderMatchingPairs(container, items) {
             const subset = items.slice(0, 8);
-            let cards = [];
+            const cards = [];
             subset.forEach((item, idx) => {
                 cards.push({ pairId: idx, text: item.clue, flipped: false, matched: false });
                 cards.push({ pairId: idx, text: item.answer, flipped: false, matched: false });
             });
             cards.sort(() => Math.random() - 0.5);
-            let flippedIndices = [], lockBoard = false, moves = 0;
+
+            let flippedIndices = [];
+            let lockBoard = false;
+            let moves = 0;
 
             function drawBoard() {
                 const matchedPairs = cards.filter(c => c.matched).length / 2;
                 liveStats.textContent = `Pairs: ${matchedPairs}/${subset.length} | Moves: ${moves}`;
-                if (cards.every(c => c.matched)) return finishScreen("🎉 All Pairs Matched!", `Completed in ${moves} moves.`);
+                if (cards.every(c => c.matched)) {
+                    return finishScreen("🎉 All Pairs Matched!", `Completed in ${moves} moves.`);
+                }
+
                 container.innerHTML = `
                     <div class="memory-grid">
                         ${cards.map((c, i) => `
@@ -855,48 +1728,75 @@
                                 ${c.flipped || c.matched ? c.text : "❓"}
                             </div>`).join("")}
                     </div>`;
+
                 container.querySelectorAll(".mem-card").forEach(el => {
                     el.onclick = () => {
                         const i = Number(el.dataset.idx);
                         if (lockBoard || cards[i].flipped || cards[i].matched) return;
-                        playTone(460, 0.08); cards[i].flipped = true; flippedIndices.push(i); drawBoard();
+                        playTone(460, 0.08);
+                        cards[i].flipped = true;
+                        flippedIndices.push(i);
+                        drawBoard();
+
                         if (flippedIndices.length === 2) {
-                            moves++; lockBoard = true;
+                            moves++;
+                            lockBoard = true;
                             const [a, b] = flippedIndices;
                             if (cards[a].pairId === cards[b].pairId) {
-                                cards[a].matched = true; cards[b].matched = true; flippedIndices = []; lockBoard = false;
-                                sfxCorrect(); setTimeout(drawBoard, 320);
+                                cards[a].matched = true;
+                                cards[b].matched = true;
+                                flippedIndices = [];
+                                lockBoard = false;
+                                sfxCorrect();
+                                setTimeout(drawBoard, 320);
                             } else {
                                 sfxWrong();
                                 setTimeout(() => {
-                                    cards[a].flipped = false; cards[b].flipped = false; flippedIndices = []; lockBoard = false; drawBoard();
+                                    cards[a].flipped = false;
+                                    cards[b].flipped = false;
+                                    flippedIndices = [];
+                                    lockBoard = false;
+                                    drawBoard();
                                 }, 850);
                             }
                         }
                     };
                 });
             }
+
             drawBoard();
         }
 
+        /* ================= 10. HANGMAN ================= */
         function renderHangman(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
             const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
             function startRound() {
-                if (idx >= items.length) return finishScreen("🎯 Hangman Finished!", `Words Solved: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🎯 Hangman Finished!", `Words Solved: ${score} / ${items.length}`);
+                }
+
                 const item = items[idx];
                 const word = String(item.answer || "").trim().toUpperCase().replace(/[^A-Z ]/g, "") || "PUZZLE";
                 const guessed = new Set();
-                let wrongCount = 0; const maxWrong = 6;
+                let wrongCount = 0;
+                const maxWrong = 6;
                 liveStats.textContent = `Solved: ${score}/${items.length}`;
 
                 function getSvg(w) {
                     return `<svg width="135" height="135" viewBox="0 0 140 140" style="stroke:#1e293b;stroke-width:3.5;fill:none;stroke-linecap:round;">
-                        <line x1="15" y1="130" x2="95" y2="130" /><line x1="35" y1="130" x2="35" y2="15" />
-                        <line x1="35" y1="15" x2="95" y2="15" /><line x1="95" y1="15" x2="95" y2="32" />
-                        ${w >= 1 ? '<circle cx="95" cy="44" r="12" />' : ''}${w >= 2 ? '<line x1="95" y1="56" x2="95" y2="92" />' : ''}
-                        ${w >= 3 ? '<line x1="95" y1="65" x2="77" y2="82" />' : ''}${w >= 4 ? '<line x1="95" y1="65" x2="113" y2="82" />' : ''}
-                        ${w >= 5 ? '<line x1="95" y1="92" x2="80" y2="115" />' : ''}${w >= 6 ? '<line x1="95" y1="92" x2="110" y2="115" />' : ''}
+                        <line x1="15" y1="130" x2="95" y2="130" />
+                        <line x1="35" y1="130" x2="35" y2="15" />
+                        <line x1="35" y1="15" x2="95" y2="15" />
+                        <line x1="95" y1="15" x2="95" y2="32" />
+                        ${w >= 1 ? '<circle cx="95" cy="44" r="12" />' : ""}
+                        ${w >= 2 ? '<line x1="95" y1="56" x2="95" y2="92" />' : ""}
+                        ${w >= 3 ? '<line x1="95" y1="65" x2="77" y2="82" />' : ""}
+                        ${w >= 4 ? '<line x1="95" y1="65" x2="113" y2="82" />' : ""}
+                        ${w >= 5 ? '<line x1="95" y1="92" x2="80" y2="115" />' : ""}
+                        ${w >= 6 ? '<line x1="95" y1="92" x2="110" y2="115" />' : ""}
                     </svg>`;
                 }
 
@@ -905,42 +1805,73 @@
                     const lost = wrongCount >= maxWrong;
                     container.innerHTML = `
                         <div class="hangman-wrap">
-                            <div style="color:var(--muted);font-weight:600;">Word ${idx + 1} of ${items.length} | Lives: ${maxWrong - wrongCount}</div>
-                            <h3 style="text-align:center;">${item.clue}</h3>
+                            <div class="stage-eyebrow">Word ${idx + 1} of ${items.length} • Lives Left: ${maxWrong - wrongCount}</div>
+                            <h3 style="text-align:center;font-size:1.25rem;">${item.clue}</h3>
                             ${getSvg(wrongCount)}
                             <div class="hm-word">
-                                ${word.split("").map(ch => ch === " " ? `<div class="hm-letter space"></div>` : `<div class="hm-letter">${guessed.has(ch) || lost ? ch : ""}</div>`).join("")}
+                                ${word.split("").map(ch => ch === " "
+                                    ? `<div class="hm-letter space"></div>`
+                                    : `<div class="hm-letter">${guessed.has(ch) || lost ? ch : ""}</div>`
+                                ).join("")}
                             </div>
-                            <div style="font-weight:700;min-height:24px;color:${won ? "var(--ok)" : "var(--bad)"}">${won ? "✅ Solved!" : (lost ? `❌ Word: ${word}` : "")}</div>
+                            <div style="font-weight:700;min-height:24px;color:${won ? "var(--ok-color)" : "var(--bad-color)"}">
+                                ${won ? "✅ Solved!" : (lost ? `❌ Word: ${word}` : "")}
+                            </div>
                             <div class="hm-keyboard">
                                 ${alphabet.map(l => {
                                     const g = guessed.has(l);
                                     const cls = g ? (word.includes(l) ? "correct" : "wrong") : "";
-                                    return `<button class="hm-key ${cls}" data-l="${l}" ${g || won || lost ? "disabled" : ""}>${l}</button>`;
+                                    return `<button type="button" class="hm-key ${cls}" data-l="${l}" ${g || won || lost ? "disabled" : ""}>${l}</button>`;
                                 }).join("")}
                             </div>
                         </div>`;
-                    if (won) { score++; sfxCorrect(); return setTimeout(() => { idx++; startRound(); }, 1050); }
-                    if (lost) { sfxWrong(); return setTimeout(() => { idx++; startRound(); }, 1500); }
+
+                    if (won) {
+                        score++;
+                        sfxCorrect();
+                        return setTimeout(() => {
+                            idx++;
+                            startRound();
+                        }, 1050);
+                    }
+                    if (lost) {
+                        sfxWrong();
+                        return setTimeout(() => {
+                            idx++;
+                            startRound();
+                        }, 1500);
+                    }
+
                     container.querySelectorAll(".hm-key").forEach(btn => {
                         btn.onclick = () => {
-                            const l = btn.dataset.l; guessed.add(l);
-                            if (word.includes(l)) playTone(600, 0.08); else { wrongCount++; sfxWrong(); }
+                            const l = btn.dataset.l;
+                            guessed.add(l);
+                            if (word.includes(l)) {
+                                playTone(600, 0.08);
+                            } else {
+                                wrongCount++;
+                                sfxWrong();
+                            }
                             renderRound();
                         };
                     });
                 }
+
                 renderRound();
             }
+
             startRound();
         }
 
-        /* ================= 13–18 PUZZLE, SORT & DIAGRAM TEMPLATES ================= */
+        /* ================= 11. WORDSEARCH ================= */
         function renderWordsearch(container, items) {
             const size = 10;
-            const words = items.map(it => String(it.answer || "").toUpperCase().replace(/[^A-Z]/g, ""))
-                .filter(w => w.length >= 2 && w.length <= size).slice(0, 6);
-            if (!words.length) return renderSpellTheWord(container, items);
+            const words = items
+                .map(it => String(it.answer || "").toUpperCase().replace(/[^A-Z]/g, ""))
+                .filter(w => w.length >= 2 && w.length <= size)
+                .slice(0, 6);
+
+            if (!words.length) return renderSpellTheWord(container, items, "Wordsearch Fallback");
 
             const grid = Array.from({ length: size }, () => Array(size).fill(""));
             const foundSet = new Set();
@@ -965,28 +1896,33 @@
             }
 
             let picked = [];
+
             function draw() {
                 liveStats.textContent = `Found: ${foundSet.size}/${words.length}`;
-                if (foundSet.size === words.length) return finishScreen("🔍 Wordsearch Complete!", `Found all ${words.length} words!`);
+                if (foundSet.size === words.length) {
+                    return finishScreen("🔍 Wordsearch Complete!", `Found all ${words.length} words!`);
+                }
+
                 container.innerHTML = `
                     <div style="text-align:center;">
-                        <p style="color:var(--muted);margin-bottom:6px;">Click letters in order to spell each word, then tap Check Selection.</p>
+                        <p style="color:var(--ink-muted);margin-bottom:6px;font-weight:600;">Click letters in order to spell each word, then tap Check Word.</p>
                         <div class="ws-grid" style="grid-template-columns:repeat(${size},34px);">
                             ${grid.map((row, r) => row.map((ch, c) => {
                                 const key = `${r},${c}`;
                                 const isSel = picked.some(p => p.key === key);
                                 const isFound = foundCells.has(key);
-                                return `<button class="ws-cell ${isFound ? "found" : ""} ${isSel ? "selected" : ""}" data-key="${key}" data-ch="${ch}">${ch}</button>`;
+                                return `<button type="button" class="ws-cell ${isFound ? "found" : ""} ${isSel ? "selected" : ""}" data-key="${key}" data-ch="${ch}">${ch}</button>`;
                             }).join("")).join("")}
                         </div>
-                        <div style="margin:10px 0;display:flex;gap:8px;justify-content:center;">
-                            <button class="btn-primary" id="wsCheckBtn">Check Word (${picked.map(p => p.ch).join("") || "..."})</button>
-                            <button class="btn-secondary" id="wsClearBtn">Clear</button>
+                        <div style="margin:10px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+                            <button type="button" class="btn-primary" id="wsCheckBtn">Check Word (${picked.map(p => p.ch).join("") || "..."})</button>
+                            <button type="button" class="btn-secondary" id="wsClearBtn">Clear</button>
                         </div>
                         <div class="ws-words">
                             ${words.map(w => `<span class="ws-tag ${foundSet.has(w) ? "done" : ""}">${w}</span>`).join("")}
                         </div>
                     </div>`;
+
                 container.querySelectorAll(".ws-cell").forEach(cell => {
                     cell.onclick = () => {
                         const key = cell.dataset.key;
@@ -995,10 +1931,16 @@
                         } else {
                             picked.push({ key, ch: cell.dataset.ch });
                         }
-                        playTone(480, 0.06); draw();
+                        playTone(480, 0.06);
+                        draw();
                     };
                 });
-                document.getElementById("wsClearBtn").onclick = () => { picked = []; draw(); };
+
+                document.getElementById("wsClearBtn").onclick = () => {
+                    picked = [];
+                    draw();
+                };
+
                 document.getElementById("wsCheckBtn").onclick = () => {
                     const str = picked.map(p => p.ch).join("");
                     const rev = str.split("").reverse().join("");
@@ -1007,13 +1949,18 @@
                         foundSet.add(matchWord);
                         picked.forEach(p => foundCells.add(p.key));
                         sfxCorrect();
-                    } else { sfxWrong(); }
-                    picked = []; draw();
+                    } else {
+                        sfxWrong();
+                    }
+                    picked = [];
+                    draw();
                 };
             }
+
             draw();
         }
 
+        /* ================= 12. CROSSWORD ================= */
         function renderCrossword(container, items) {
             const entries = items.slice(0, 5).map((it, i) => ({
                 num: i + 1,
@@ -1022,6 +1969,7 @@
                 row: i * 2,
                 col: 1
             }));
+
             const rows = Math.max(8, entries.length * 2 + 1);
             const cols = 10;
             const solution = Array.from({ length: rows }, () => Array(cols).fill(""));
@@ -1039,104 +1987,147 @@
                             : `<div class="cw-cell blocked"></div>`
                         ).join("")).join("")}
                     </div>
-                    <div style="margin:12px 0;"><button class="btn-primary" id="cwCheck">Check Crossword</button></div>
-                    <div style="text-align:left;max-width:560px;margin:12px auto;background:#f8fafc;padding:14px;border-radius:12px;">
+                    <div style="margin:12px 0;"><button type="button" class="btn-primary" id="cwCheck">Check Crossword</button></div>
+                    <div style="text-align:left;max-width:580px;margin:12px auto;background:var(--surface-elevated);padding:16px;border-radius:12px;border:1px solid var(--border-subtle);">
                         ${entries.map(e => `<div style="margin:6px 0;"><strong>${e.num}.</strong> ${e.clue} <em>(${e.ans.length} letters)</em></div>`).join("")}
                     </div>
                 </div>`;
+
             document.getElementById("cwCheck").onclick = () => {
-                let rightCount = 0, total = 0;
+                let rightCount = 0;
+                let total = 0;
                 container.querySelectorAll("input.cw-cell").forEach(inp => {
                     total++;
                     const exp = solution[Number(inp.dataset.r)][Number(inp.dataset.c)];
                     if (inp.value.trim().toUpperCase() === exp) {
-                        inp.classList.add("right"); rightCount++;
-                    } else { inp.classList.remove("right"); }
+                        inp.classList.add("right");
+                        rightCount++;
+                    } else {
+                        inp.classList.remove("right");
+                    }
                 });
-                if (rightCount === total) sfxCorrect(); else sfxWrong();
+                if (rightCount === total) sfxCorrect();
+                else sfxWrong();
                 liveStats.textContent = `Correct: ${rightCount}/${total}`;
             };
         }
 
+        /* ================= 13. COMPLETE THE SENTENCE ================= */
         function renderCompleteSentence(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function show() {
-                if (idx >= items.length) return finishScreen("✍️ Sentences Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("✍️ Sentences Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const it = items[idx];
                 const sentence = String(it.clue).includes("___") ? it.clue : `${it.clue} — ____`;
                 const answer = String(it.answer || "").trim();
                 const choices = [answer, ...items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean).slice(0, 3)];
                 while (choices.length < 4) choices.push(`Choice ${choices.length + 1}`);
                 choices.sort(() => Math.random() - 0.5);
-                liveStats.textContent = `Score: ${score}/${items.length}`;
 
+                liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
-                    <div style="max-width:620px;margin:0 auto;">
-                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Sentence ${idx + 1} of ${items.length}</div>
-                        <h2 style="margin-bottom:16px;line-height:1.4;">${sentence.replace(/_{2,}/g, `<span style="color:var(--primary);text-decoration:underline;">_____</span>`)}</h2>
+                    <div style="max-width:640px;margin:0 auto;">
+                        <div class="stage-eyebrow">Sentence ${idx + 1} of ${items.length}</div>
+                        <h2 class="stage-prompt">${sentence.replace(/_{2,}/g, `<span style="color:var(--accent-indigo);text-decoration:underline;">_____</span>`)}</h2>
                         <div id="csChoices"></div>
                     </div>`;
+
                 const box = document.getElementById("csChoices");
                 choices.forEach(ch => {
                     const b = document.createElement("button");
-                    b.className = "option-btn"; b.textContent = ch;
+                    b.type = "button";
+                    b.className = "option-btn";
+                    b.textContent = ch;
                     b.onclick = () => {
-                        box.querySelectorAll("button").forEach(x => x.disabled = true);
-                        if (String(ch).toLowerCase() === answer.toLowerCase()) { b.classList.add("correct"); score++; sfxCorrect(); }
-                        else { b.classList.add("wrong"); sfxWrong(); }
-                        setTimeout(() => { idx++; show(); }, 950);
+                        box.querySelectorAll("button").forEach(x => (x.disabled = true));
+                        if (String(ch).toLowerCase() === answer.toLowerCase()) {
+                            b.classList.add("correct");
+                            score++;
+                            sfxCorrect();
+                        } else {
+                            b.classList.add("wrong");
+                            sfxWrong();
+                        }
+                        setTimeout(() => {
+                            idx++;
+                            show();
+                        }, 950);
                     };
                     box.appendChild(b);
                 });
             }
+
             show();
         }
 
+        /* ================= 14. MISSING WORD ================= */
         function renderMissingWord(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function show() {
-                if (idx >= items.length) return finishScreen("🔤 Missing Word Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🔤 Missing Word Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const it = items[idx];
                 const answer = String(it.answer || "").trim();
                 const rawPrompt = String(it.clue || "Complete the missing word");
                 const displayPrompt = rawPrompt.includes("___")
-                    ? rawPrompt.replace(/_{2,}/g, `<strong style="color:var(--primary);">[ ? ]</strong>`)
-                    : `${rawPrompt} <strong style="color:var(--primary);">[ ? ]</strong>`;
+                    ? rawPrompt.replace(/_{2,}/g, `<strong style="color:var(--accent-indigo);">[ ? ]</strong>`)
+                    : `${rawPrompt} <strong style="color:var(--accent-indigo);">[ ? ]</strong>`;
 
                 const distractors = items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean);
-                const pool = [...distractors, "Word A", "Word B", "Word C"]
-                    .filter(w => String(w).toLowerCase() !== answer.toLowerCase());
+                const pool = [...distractors, "Word A", "Word B", "Word C"].filter(
+                    w => String(w).toLowerCase() !== answer.toLowerCase()
+                );
                 const choices = [answer, ...pool.slice(0, 3)].sort(() => Math.random() - 0.5);
 
                 liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
-                    <div style="max-width:620px;margin:0 auto;">
-                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Missing Word ${idx + 1} of ${items.length}</div>
-                        <h2 style="margin-bottom:16px;line-height:1.45;">${displayPrompt}</h2>
+                    <div style="max-width:640px;margin:0 auto;">
+                        <div class="stage-eyebrow">Missing Word ${idx + 1} of ${items.length}</div>
+                        <h2 class="stage-prompt">${displayPrompt}</h2>
                         <div id="mwChoices"></div>
                     </div>`;
+
                 const box = document.getElementById("mwChoices");
                 choices.forEach(ch => {
                     const btn = document.createElement("button");
+                    btn.type = "button";
                     btn.className = "option-btn";
                     btn.textContent = ch;
                     btn.onclick = () => {
-                        box.querySelectorAll("button").forEach(b => b.disabled = true);
+                        box.querySelectorAll("button").forEach(b => (b.disabled = true));
                         if (String(ch).toLowerCase() === answer.toLowerCase()) {
-                            btn.classList.add("correct"); score++; sfxCorrect();
+                            btn.classList.add("correct");
+                            score++;
+                            sfxCorrect();
                         } else {
-                            btn.classList.add("wrong"); sfxWrong();
+                            btn.classList.add("wrong");
+                            sfxWrong();
                         }
-                        setTimeout(() => { idx++; show(); }, 950);
+                        setTimeout(() => {
+                            idx++;
+                            show();
+                        }, 950);
                     };
                     box.appendChild(btn);
                 });
             }
+
             show();
         }
 
+        /* ================= 15. FLIP TILES ================= */
         function renderFlipTiles(container, items) {
             const revealed = new Set();
+
             function draw() {
                 liveStats.textContent = `Flipped: ${revealed.size}/${items.length}`;
                 container.innerHTML = `
@@ -1146,16 +2137,24 @@
                                 ${revealed.has(i) ? `<span>${it.answer}</span>` : `<span>${it.clue}</span>`}
                             </div>`).join("")}
                     </div>`;
+
                 container.querySelectorAll(".mem-card").forEach(el => {
-                    el.onclick = () => { playTone(520, 0.08); revealed.add(Number(el.dataset.i)); draw(); };
+                    el.onclick = () => {
+                        playTone(520, 0.08);
+                        revealed.add(Number(el.dataset.i));
+                        draw();
+                    };
                 });
             }
+
             draw();
         }
 
+        /* ================= 16. GROUP SORT ================= */
         function renderGroupSort(container, items) {
             const groups = [...new Set(items.map(it => it.group || "Group A"))];
             if (groups.length < 2) groups.push("Group B");
+
             const placed = {};
             let selectedIdx = null;
             let score = 0;
@@ -1165,9 +2164,12 @@
                 liveStats.textContent = `Sorted: ${totalPlaced}/${items.length}`;
                 container.innerHTML = `
                     <div style="text-align:center;">
-                        <p style="color:var(--muted);margin-bottom:10px;">Tap an item below, then tap the category box it belongs to.</p>
+                        <p style="color:var(--ink-muted);margin-bottom:10px;font-weight:600;">Tap an item below, then tap the category box it belongs to.</p>
                         <div>
-                            ${items.map((it, i) => placed[i] ? "" : `<button class="chip-btn ${selectedIdx === i ? "picked" : ""}" data-i="${i}">${it.clue || it.answer}</button>`).join("")}
+                            ${items.map((it, i) => placed[i]
+                                ? ""
+                                : `<button type="button" class="chip-btn ${selectedIdx === i ? "picked" : ""}" data-i="${i}">${it.clue || it.answer}</button>`
+                            ).join("")}
                         </div>
                         <div class="sort-cols">
                             ${groups.map(g => `
@@ -1181,30 +2183,46 @@
                                 </div>`).join("")}
                         </div>
                     </div>`;
+
                 container.querySelectorAll(".chip-btn[data-i]").forEach(btn => {
-                    btn.onclick = () => { selectedIdx = Number(btn.dataset.i); draw(); };
+                    btn.onclick = () => {
+                        playTone(470, 0.06);
+                        selectedIdx = Number(btn.dataset.i);
+                        draw();
+                    };
                 });
+
                 container.querySelectorAll(".sort-zone").forEach(zone => {
                     zone.onclick = () => {
                         if (selectedIdx === null) return;
                         const grp = zone.dataset.group;
                         placed[selectedIdx] = grp;
-                        if ((items[selectedIdx].group || "Group A") === grp) { score++; sfxCorrect(); } else { sfxWrong(); }
-                        selectedIdx = null; draw();
+                        if ((items[selectedIdx].group || "Group A") === grp) {
+                            score++;
+                            sfxCorrect();
+                        } else {
+                            sfxWrong();
+                        }
+                        selectedIdx = null;
+                        draw();
                         if (Object.keys(placed).length === items.length) {
                             setTimeout(() => finishScreen("🗂️ Group Sort Complete!", `Correctly sorted: ${score} / ${items.length}`), 600);
                         }
                     };
                 });
             }
+
             draw();
         }
 
+        /* ================= 17. SPEED SORTING ================= */
         function renderSpeedSorting(container, items) {
             const groups = [...new Set(items.map(it => it.group || "Group A"))];
             if (groups.length < 2) groups.push("Group B");
 
-            let idx = 0, score = 0, timeLeft = 30;
+            let idx = 0;
+            let score = 0;
+            let timeLeft = 30;
             liveStats.textContent = `Score: 0 | Time: ${timeLeft}s`;
 
             const timer = setInterval(() => {
@@ -1215,18 +2233,19 @@
                     finishScreen("⏱️ Time's Up! (Speed Sorting)", `Sorted ${score} items in 30 seconds.`);
                 }
             }, 1000);
+
             activeCleanup = () => clearInterval(timer);
 
             function showItem() {
                 if (timeLeft <= 0) return;
                 const current = items[idx % items.length];
                 container.innerHTML = `
-                    <div style="text-align:center;max-width:580px;margin:0 auto;padding:12px;">
-                        <div style="font-size:0.9rem;color:var(--muted);margin-bottom:8px;">⚡ Fast Category Rush</div>
-                        <div style="font-size:1.5rem;font-weight:800;padding:22px;border-radius:14px;background:#eef2ff;color:var(--ink);margin-bottom:16px;">
+                    <div style="text-align:center;max-width:600px;margin:0 auto;padding:12px;">
+                        <div class="stage-eyebrow">⚡ Fast Category Rush</div>
+                        <div style="font-size:1.5rem;font-weight:800;padding:24px;border-radius:14px;background:var(--accent-indigo-soft);color:var(--ink-primary);margin-bottom:18px;border:1px solid #c7d2fe;">
                             ${current.clue || current.answer}
                         </div>
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;">
                             ${groups.map(g => `<button type="button" class="btn-primary" data-grp="${g}">${g}</button>`).join("")}
                         </div>
                     </div>`;
@@ -1235,51 +2254,78 @@
                     btn.onclick = () => {
                         const picked = btn.dataset.grp;
                         const expected = current.group || "Group A";
-                        if (picked === expected) { score++; sfxCorrect(); } else { sfxWrong(); }
+                        if (picked === expected) {
+                            score++;
+                            sfxCorrect();
+                        } else {
+                            sfxWrong();
+                        }
                         idx++;
                         showItem();
                     };
                 });
             }
+
             showItem();
         }
 
+        /* ================= 18. LABELLED DIAGRAM ================= */
         function renderLabelledDiagram(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function show() {
-                if (idx >= items.length) return finishScreen("🏷️ Diagram Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🏷️ Diagram Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const it = items[idx];
                 const choices = [it.answer, ...items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean).slice(0, 3)];
                 while (choices.length < 4) choices.push(`Label ${choices.length + 1}`);
                 choices.sort(() => Math.random() - 0.5);
-                liveStats.textContent = `Score: ${score}/${items.length}`;
 
+                liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
-                    <div style="text-align:center;max-width:620px;margin:0 auto;">
-                        <svg width="260" height="140" viewBox="0 0 260 140" style="margin:0 auto 12px;display:block;">
-                            <rect x="30" y="20" width="200" height="100" rx="16" fill="#eef2ff" stroke="#4f46e5" stroke-width="3" />
-                            <circle cx="130" cy="70" r="24" fill="#4f46e5" />
-                            <text x="130" y="76" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">#${idx + 1}</text>
+                    <div style="text-align:center;max-width:640px;margin:0 auto;">
+                        <svg width="270" height="145" viewBox="0 0 270 145" style="margin:0 auto 12px;display:block;">
+                            <rect x="30" y="20" width="210" height="105" rx="16" fill="#eef2ff" stroke="#4f46e5" stroke-width="3" />
+                            <line x1="135" y1="20" x2="135" y2="46" stroke="#4f46e5" stroke-width="2.5" stroke-dasharray="4 3" />
+                            <circle cx="135" cy="74" r="26" fill="#4f46e5" />
+                            <text x="135" y="80" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">#${idx + 1}</text>
                         </svg>
-                        <h3 style="margin-bottom:14px;">${it.clue}</h3>
+                        <h3 style="margin-bottom:14px;font-size:1.25rem;">${it.clue}</h3>
                         <div id="ldChoices"></div>
                     </div>`;
+
                 const box = document.getElementById("ldChoices");
                 choices.forEach(ch => {
                     const b = document.createElement("button");
-                    b.className = "option-btn"; b.textContent = ch;
+                    b.type = "button";
+                    b.className = "option-btn";
+                    b.textContent = ch;
                     b.onclick = () => {
-                        box.querySelectorAll("button").forEach(x => x.disabled = true);
-                        if (String(ch).toLowerCase() === String(it.answer).toLowerCase()) { b.classList.add("correct"); score++; sfxCorrect(); }
-                        else { b.classList.add("wrong"); sfxWrong(); }
-                        setTimeout(() => { idx++; show(); }, 950);
+                        box.querySelectorAll("button").forEach(x => (x.disabled = true));
+                        if (String(ch).toLowerCase() === String(it.answer).toLowerCase()) {
+                            b.classList.add("correct");
+                            score++;
+                            sfxCorrect();
+                        } else {
+                            b.classList.add("wrong");
+                            sfxWrong();
+                        }
+                        setTimeout(() => {
+                            idx++;
+                            show();
+                        }, 950);
                     };
                     box.appendChild(b);
                 });
             }
+
             show();
         }
 
+        /* ================= 19. ORDER / SEQUENCE ================= */
         function renderOrderSequence(container, items) {
             const expectedOrder = items.map((it, i) => ({
                 origIdx: i,
@@ -1293,8 +2339,8 @@
             function draw() {
                 liveStats.textContent = `${currentList.length} Steps`;
                 container.innerHTML = `
-                    <div style="max-width:600px;margin:0 auto;">
-                        <p style="text-align:center;color:var(--muted);margin-bottom:12px;">Move items up or down into the correct sequence, then check order.</p>
+                    <div style="max-width:620px;margin:0 auto;">
+                        <p style="text-align:center;color:var(--ink-muted);margin-bottom:12px;font-weight:600;">Move items up or down into the correct sequence, then check order.</p>
                         <div id="orderList">
                             ${currentList.map((entry, idx) => `
                                 <div class="order-row">
@@ -1331,70 +2377,104 @@
                     const msg = document.getElementById("orderMsg");
                     if (isCorrect) {
                         sfxCorrect();
-                        msg.style.color = "var(--ok)";
+                        msg.style.color = "var(--ok-color)";
                         msg.textContent = "✅ Correct sequence!";
                         setTimeout(() => finishScreen("🔢 Sequence Complete!", `Ordered all ${currentList.length} items accurately.`), 800);
                     } else {
                         sfxWrong();
-                        msg.style.color = "var(--bad)";
+                        msg.style.color = "var(--bad-color)";
                         msg.textContent = "❌ Not quite in order yet. Adjust and try again!";
                     }
                 };
             }
+
             draw();
         }
 
+        /* ================= 20. FIND THE MATCH ================= */
         function renderFindTheMatch(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function showRound() {
-                if (idx >= items.length) return finishScreen("🎯 Find the Match Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🎯 Find the Match Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const it = items[idx];
                 const distractors = items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean);
                 const fallback = ["Match A", "Match B", "Match C"];
-                const pool = [...distractors, ...fallback].filter(x => String(x).toLowerCase() !== String(it.answer).toLowerCase());
+                const pool = [...distractors, ...fallback].filter(
+                    x => String(x).toLowerCase() !== String(it.answer).toLowerCase()
+                );
                 const candidates = [it.answer, ...pool.slice(0, 3)].sort(() => Math.random() - 0.5);
 
                 liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
-                    <div style="text-align:center;max-width:620px;margin:0 auto;">
-                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Round ${idx + 1} of ${items.length}</div>
-                        <h2 style="margin-bottom:16px;">Find the match for: <span style="color:var(--primary);">${it.clue}</span></h2>
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;" id="ftmGrid"></div>
+                    <div style="text-align:center;max-width:640px;margin:0 auto;">
+                        <div class="stage-eyebrow">Round ${idx + 1} of ${items.length}</div>
+                        <h2 class="stage-prompt">Find the match for: <span style="color:var(--accent-indigo);">${it.clue}</span></h2>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;" id="ftmGrid"></div>
                     </div>`;
+
                 const grid = document.getElementById("ftmGrid");
                 candidates.forEach(cand => {
                     const btn = document.createElement("button");
+                    btn.type = "button";
                     btn.className = "option-btn";
                     btn.style.textAlign = "center";
                     btn.textContent = cand;
                     btn.onclick = () => {
-                        grid.querySelectorAll("button").forEach(b => b.disabled = true);
+                        grid.querySelectorAll("button").forEach(b => (b.disabled = true));
                         if (String(cand).toLowerCase() === String(it.answer).toLowerCase()) {
-                            btn.classList.add("correct"); score++; sfxCorrect();
+                            btn.classList.add("correct");
+                            score++;
+                            sfxCorrect();
                         } else {
-                            btn.classList.add("wrong"); sfxWrong();
+                            btn.classList.add("wrong");
+                            sfxWrong();
                         }
-                        setTimeout(() => { idx++; showRound(); }, 950);
+                        setTimeout(() => {
+                            idx++;
+                            showRound();
+                        }, 950);
                     };
                     grid.appendChild(btn);
                 });
             }
+
             showRound();
         }
 
-        /* ================= CANVAS ARCADE GAMES ================= */
+        /* ================= 21. BALLOON POP ================= */
         function renderBalloonPop(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function round() {
-                if (idx >= items.length) return finishScreen("🎈 Balloon Pop Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🎈 Balloon Pop Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const target = items[idx];
                 const pool = [target.answer, ...items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean).slice(0, 3)];
                 while (pool.length < 4) pool.push(`Choice ${pool.length + 1}`);
                 const balloons = pool.sort(() => Math.random() - 0.5).map((txt, i) => ({
-                    txt, x: 90 + i * 155, y: 270 + (i % 2) * 20, r: 44, speed: 0.7 + i * 0.15, popped: false
+                    txt,
+                    x: 90 + i * 155,
+                    y: 270 + (i % 2) * 20,
+                    r: 44,
+                    speed: 0.7 + i * 0.15,
+                    popped: false
                 }));
+
                 liveStats.textContent = `Score: ${score}/${items.length}`;
-                container.innerHTML = `<div style="text-align:center;"><h3 style="margin-bottom:8px;">Pop the balloon for: <span style="color:var(--primary);">${target.clue}</span></h3><canvas id="bpCanvas" class="arcade-canvas" width="680" height="340"></canvas></div>`;
+                container.innerHTML = `
+                    <div style="text-align:center;">
+                        <h3 style="margin-bottom:8px;font-size:1.25rem;">Pop the balloon for: <span style="color:var(--accent-indigo);">${target.clue}</span></h3>
+                        <canvas id="bpCanvas" class="arcade-canvas" width="680" height="340"></canvas>
+                    </div>`;
+
                 const canvas = document.getElementById("bpCanvas");
                 const ctx = canvas.getContext("2d");
                 let rafId = null;
@@ -1410,12 +2490,21 @@
                             b.popped = true;
                             if (String(b.txt).toLowerCase() === String(target.answer).toLowerCase()) {
                                 resolved = true;
-                                score++; sfxCorrect(); cancelAnimationFrame(rafId); canvas.removeEventListener("click", onClick);
-                                setTimeout(() => { idx++; round(); }, 500);
-                            } else { sfxWrong(); }
+                                score++;
+                                sfxCorrect();
+                                cancelAnimationFrame(rafId);
+                                canvas.removeEventListener("click", onClick);
+                                setTimeout(() => {
+                                    idx++;
+                                    round();
+                                }, 500);
+                            } else {
+                                sfxWrong();
+                            }
                         }
                     });
                 }
+
                 canvas.addEventListener("click", onClick);
 
                 function loop() {
@@ -1425,48 +2514,75 @@
                         if (b.popped) return;
                         b.y -= b.speed;
                         if (b.y < 55) b.y = 285;
-                        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-                        ctx.fillStyle = "#6366f1"; ctx.fill();
-                        ctx.fillStyle = "#fff"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
+                        ctx.beginPath();
+                        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                        ctx.fillStyle = "#6366f1";
+                        ctx.fill();
+                        ctx.fillStyle = "#ffffff";
+                        ctx.font = "bold 13px sans-serif";
+                        ctx.textAlign = "center";
                         ctx.fillText(String(b.txt).slice(0, 14), b.x, b.y + 4);
                     });
                     rafId = requestAnimationFrame(loop);
                 }
+
                 loop();
-                activeCleanup = () => { resolved = true; cancelAnimationFrame(rafId); canvas.removeEventListener("click", onClick); };
+                activeCleanup = () => {
+                    resolved = true;
+                    cancelAnimationFrame(rafId);
+                    canvas.removeEventListener("click", onClick);
+                };
             }
+
             round();
         }
 
+        /* ================= 22. WHACK-A-MOLE ================= */
         function renderWhackAMole(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
+
             function round() {
-                if (idx >= items.length) return finishScreen("🔨 Whack-a-Mole Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🔨 Whack-a-Mole Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const target = items[idx];
                 const pool = [target.answer, ...items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean).slice(0, 5)];
                 while (pool.length < 6) pool.push(`Mole ${pool.length + 1}`);
                 const holes = pool.sort(() => Math.random() - 0.5).slice(0, 6);
+
                 liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
                     <div style="text-align:center;">
-                        <h3 style="margin-bottom:12px;">Tap the match for: <span style="color:var(--primary);">${target.clue}</span></h3>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:520px;margin:0 auto;">
-                            ${holes.map(h => `<button class="option-btn" style="text-align:center;padding:20px;" data-ans="${h}">🐹 ${h}</button>`).join("")}
+                        <h3 style="margin-bottom:12px;font-size:1.25rem;">Tap the match for: <span style="color:var(--accent-indigo);">${target.clue}</span></h3>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:540px;margin:0 auto;">
+                            ${holes.map(h => `<button type="button" class="option-btn" style="text-align:center;padding:20px;" data-ans="${h}">🐹 ${h}</button>`).join("")}
                         </div>
                     </div>`;
+
                 container.querySelectorAll("[data-ans]").forEach(btn => {
                     btn.onclick = () => {
                         if (String(btn.dataset.ans).toLowerCase() === String(target.answer).toLowerCase()) {
-                            score++; sfxCorrect(); idx++; round();
-                        } else { sfxWrong(); btn.classList.add("wrong"); }
+                            score++;
+                            sfxCorrect();
+                            idx++;
+                            round();
+                        } else {
+                            sfxWrong();
+                            btn.classList.add("wrong");
+                        }
                     };
                 });
             }
+
             round();
         }
 
+        /* ================= 23. MAZE CHASE ================= */
         function renderMazeChase(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
 
             function round() {
                 if (idx >= items.length) {
@@ -1476,7 +2592,9 @@
                 const target = items[idx];
                 const wrongAns = items[(idx + 1) % items.length]?.answer || "Wrong";
 
-                const cols = 20, rows = 10, cell = 32;
+                const cols = 20;
+                const rows = 10;
+                const cell = 32;
                 const maze = [
                     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
                     [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1],
@@ -1501,10 +2619,10 @@
 
                 container.innerHTML = `
                     <div style="text-align:center;">
-                        <h3 style="margin-bottom:6px;">Maze Goal: <span style="color:var(--primary);">${target.clue}</span></h3>
-                        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">Navigate through the maze to reach the matching answer portal.</p>
+                        <h3 style="margin-bottom:6px;font-size:1.25rem;">Maze Goal: <span style="color:var(--accent-indigo);">${target.clue}</span></h3>
+                        <p style="font-size:0.86rem;color:var(--ink-muted);margin-bottom:8px;">Navigate through the maze to reach the matching answer portal.</p>
                         <canvas id="mzCanvas" class="arcade-canvas" width="${cols * cell}" height="${rows * cell}"></canvas>
-                        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
+                        <div class="control-pad">
                             <button type="button" class="btn-secondary" data-move="up">▲ Up</button>
                             <button type="button" class="btn-secondary" data-move="down">▼ Down</button>
                             <button type="button" class="btn-secondary" data-move="left">◀ Left</button>
@@ -1534,10 +2652,15 @@
                 }
 
                 const onKeyDown = (e) => {
-                    if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+                    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
+                        e.preventDefault();
+                    }
                     keys[e.key.toLowerCase()] = true;
                 };
-                const onKeyUp = (e) => { keys[e.key.toLowerCase()] = false; };
+                const onKeyUp = (e) => {
+                    keys[e.key.toLowerCase()] = false;
+                };
+
                 window.addEventListener("keydown", onKeyDown);
                 window.addEventListener("keyup", onKeyUp);
 
@@ -1550,7 +2673,8 @@
                 function loop() {
                     if (resolved) return;
 
-                    let dx = 0, dy = 0;
+                    let dx = 0;
+                    let dy = 0;
                     if (keys["arrowup"] || keys["w"] || keys["up"]) dy -= player.speed;
                     if (keys["arrowdown"] || keys["s"] || keys["down"]) dy += player.speed;
                     if (keys["arrowleft"] || keys["a"] || keys["left"]) dx -= player.speed;
@@ -1592,8 +2716,16 @@
                         if (Math.hypot(player.x - px, player.y - py) < player.r + 10) {
                             resolved = true;
                             cancelAnimationFrame(rafId);
-                            if (p.correct) { score++; sfxCorrect(); } else { sfxWrong(); }
-                            setTimeout(() => { idx++; round(); }, 450);
+                            if (p.correct) {
+                                score++;
+                                sfxCorrect();
+                            } else {
+                                sfxWrong();
+                            }
+                            setTimeout(() => {
+                                idx++;
+                                round();
+                            }, 450);
                             return;
                         }
                     }
@@ -1617,11 +2749,14 @@
                     window.removeEventListener("keyup", onKeyUp);
                 };
             }
+
             round();
         }
 
+        /* ================= 24. AIRPLANE ================= */
         function renderAirplane(container, items) {
-            let idx = 0, score = 0;
+            let idx = 0;
+            let score = 0;
 
             function round() {
                 if (idx >= items.length) {
@@ -1636,10 +2771,12 @@
                 const gates = [
                     { label: String(choiceA), correct: true, x: 640, h: 66 },
                     { label: String(choiceB), correct: false, x: 640, h: 66 }
-                ].sort(() => Math.random() - 0.5).map((g, i) => ({
-                    ...g,
-                    y: i === 0 ? 85 : 205
-                }));
+                ]
+                    .sort(() => Math.random() - 0.5)
+                    .map((g, i) => ({
+                        ...g,
+                        y: i === 0 ? 85 : 205
+                    }));
 
                 const plane = { x: 95, y: 165 };
                 let resolved = false;
@@ -1648,10 +2785,10 @@
                 liveStats.textContent = `Score: ${score}/${items.length}`;
                 container.innerHTML = `
                     <div style="text-align:center;">
-                        <h3 style="margin-bottom:6px;">Fly into the answer for: <span style="color:var(--primary);">${target.clue}</span></h3>
-                        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">Hold Up/W or Down/S (or click buttons below) to steer the plane.</p>
+                        <h3 style="margin-bottom:6px;font-size:1.25rem;">Fly into the answer for: <span style="color:var(--accent-indigo);">${target.clue}</span></h3>
+                        <p style="font-size:0.86rem;color:var(--ink-muted);margin-bottom:8px;">Hold Up/W or Down/S (or click buttons below) to steer the plane.</p>
                         <canvas id="apCanvas" class="arcade-canvas" width="680" height="320"></canvas>
-                        <div style="display:flex;gap:10px;justify-content:center;margin-top:8px;">
+                        <div class="control-pad">
                             <button type="button" class="btn-secondary" id="apUpBtn">▲ Climb</button>
                             <button type="button" class="btn-secondary" id="apDiveBtn">▼ Dive</button>
                         </div>
@@ -1662,13 +2799,20 @@
                 const controls = { up: false, down: false };
 
                 const onKeyDown = (e) => {
-                    if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") { e.preventDefault(); controls.up = true; }
-                    if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") { e.preventDefault(); controls.down = true; }
+                    if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") {
+                        e.preventDefault();
+                        controls.up = true;
+                    }
+                    if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") {
+                        e.preventDefault();
+                        controls.down = true;
+                    }
                 };
                 const onKeyUp = (e) => {
                     if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") controls.up = false;
                     if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") controls.down = false;
                 };
+
                 window.addEventListener("keydown", onKeyDown);
                 window.addEventListener("keyup", onKeyUp);
 
@@ -1686,7 +2830,9 @@
                     if (controls.down) plane.y += 3.4;
                     plane.y = Math.max(24, Math.min(canvas.height - 24, plane.y));
 
-                    gates.forEach(g => { g.x -= 2.3; });
+                    gates.forEach(g => {
+                        g.x -= 2.3;
+                    });
 
                     const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
                     sky.addColorStop(0, "#0284c7");
@@ -1711,8 +2857,16 @@
                         if (hitX && hitY) {
                             resolved = true;
                             cancelAnimationFrame(rafId);
-                            if (g.correct) { score++; sfxCorrect(); } else { sfxWrong(); }
-                            setTimeout(() => { idx++; round(); }, 500);
+                            if (g.correct) {
+                                score++;
+                                sfxCorrect();
+                            } else {
+                                sfxWrong();
+                            }
+                            setTimeout(() => {
+                                idx++;
+                                round();
+                            }, 500);
                         }
                     });
 
@@ -1720,7 +2874,10 @@
                         resolved = true;
                         cancelAnimationFrame(rafId);
                         sfxWrong();
-                        setTimeout(() => { idx++; round(); }, 450);
+                        setTimeout(() => {
+                            idx++;
+                            round();
+                        }, 450);
                         return;
                     }
 
@@ -1747,9 +2904,11 @@
                     window.removeEventListener("keyup", onKeyUp);
                 };
             }
+
             round();
         }
 
+        /* ================= BOOTSTRAP ================= */
         initPlay();
     </script>
 </body>
