@@ -95,6 +95,7 @@
             transition: 0.15s;
         }
         .btn-secondary:hover { background: #eef2ff; border-color: var(--primary); }
+        .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
 
         /* --- Template Switcher --- */
         .switcher-bar {
@@ -291,6 +292,7 @@
             border: 2px solid #cbd5e1;
             background: #0f172a;
             max-width: 100%;
+            touch-action: none;
         }
     </style>
 </head>
@@ -448,6 +450,10 @@
         }
 
         function finishScreen(heading, subtitle) {
+            if (typeof activeCleanup === "function") {
+                activeCleanup();
+                activeCleanup = null;
+            }
             liveStats.textContent = "";
             container.innerHTML = `
                 <div style="text-align:center;padding:32px 16px;">
@@ -532,8 +538,8 @@
                 case "Hangman": renderHangman(container, items); break;
                 case "Wordsearch": renderWordsearch(container, items); break;
                 case "Crossword": renderCrossword(container, items); break;
-                case "Complete the sentence":
-                case "Missing word": renderCompleteSentence(container, items); break;
+                case "Complete the sentence": renderCompleteSentence(container, items); break;
+                case "Missing word": renderMissingWord(container, items); break;
                 case "Flip tiles": renderFlipTiles(container, items); break;
                 case "Group sort": renderGroupSort(container, items); break;
                 case "Balloon pop": renderBalloonPop(container, items); break;
@@ -929,7 +935,7 @@
             startRound();
         }
 
-        /* ================= 13–26 EXTENDED & ARCADE TEMPLATES ================= */
+        /* ================= 13–18 PUZZLE, SORT & DIAGRAM TEMPLATES ================= */
         function renderWordsearch(container, items) {
             const size = 10;
             const words = items.map(it => String(it.answer || "").toUpperCase().replace(/[^A-Z]/g, ""))
@@ -1066,7 +1072,7 @@
 
                 container.innerHTML = `
                     <div style="max-width:620px;margin:0 auto;">
-                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Item ${idx + 1} of ${items.length}</div>
+                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Sentence ${idx + 1} of ${items.length}</div>
                         <h2 style="margin-bottom:16px;line-height:1.4;">${sentence.replace(/_{2,}/g, `<span style="color:var(--primary);text-decoration:underline;">_____</span>`)}</h2>
                         <div id="csChoices"></div>
                     </div>`;
@@ -1081,6 +1087,49 @@
                         setTimeout(() => { idx++; show(); }, 950);
                     };
                     box.appendChild(b);
+                });
+            }
+            show();
+        }
+
+        function renderMissingWord(container, items) {
+            let idx = 0, score = 0;
+            function show() {
+                if (idx >= items.length) return finishScreen("🔤 Missing Word Complete!", `Score: ${score} / ${items.length}`);
+                const it = items[idx];
+                const answer = String(it.answer || "").trim();
+                const rawPrompt = String(it.clue || "Complete the missing word");
+                const displayPrompt = rawPrompt.includes("___")
+                    ? rawPrompt.replace(/_{2,}/g, `<strong style="color:var(--primary);">[ ? ]</strong>`)
+                    : `${rawPrompt} <strong style="color:var(--primary);">[ ? ]</strong>`;
+
+                const distractors = items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean);
+                const pool = [...distractors, "Word A", "Word B", "Word C"]
+                    .filter(w => String(w).toLowerCase() !== answer.toLowerCase());
+                const choices = [answer, ...pool.slice(0, 3)].sort(() => Math.random() - 0.5);
+
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `
+                    <div style="max-width:620px;margin:0 auto;">
+                        <div style="color:var(--muted);font-weight:600;margin-bottom:8px;">Missing Word ${idx + 1} of ${items.length}</div>
+                        <h2 style="margin-bottom:16px;line-height:1.45;">${displayPrompt}</h2>
+                        <div id="mwChoices"></div>
+                    </div>`;
+                const box = document.getElementById("mwChoices");
+                choices.forEach(ch => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.textContent = ch;
+                    btn.onclick = () => {
+                        box.querySelectorAll("button").forEach(b => b.disabled = true);
+                        if (String(ch).toLowerCase() === answer.toLowerCase()) {
+                            btn.classList.add("correct"); score++; sfxCorrect();
+                        } else {
+                            btn.classList.add("wrong"); sfxWrong();
+                        }
+                        setTimeout(() => { idx++; show(); }, 950);
+                    };
+                    box.appendChild(btn);
                 });
             }
             show();
@@ -1152,7 +1201,47 @@
         }
 
         function renderSpeedSorting(container, items) {
-            renderGroupSort(container, items);
+            const groups = [...new Set(items.map(it => it.group || "Group A"))];
+            if (groups.length < 2) groups.push("Group B");
+
+            let idx = 0, score = 0, timeLeft = 30;
+            liveStats.textContent = `Score: 0 | Time: ${timeLeft}s`;
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                liveStats.textContent = `Score: ${score} | Time: ${Math.max(0, timeLeft)}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    finishScreen("⏱️ Time's Up! (Speed Sorting)", `Sorted ${score} items in 30 seconds.`);
+                }
+            }, 1000);
+            activeCleanup = () => clearInterval(timer);
+
+            function showItem() {
+                if (timeLeft <= 0) return;
+                const current = items[idx % items.length];
+                container.innerHTML = `
+                    <div style="text-align:center;max-width:580px;margin:0 auto;padding:12px;">
+                        <div style="font-size:0.9rem;color:var(--muted);margin-bottom:8px;">⚡ Fast Category Rush</div>
+                        <div style="font-size:1.5rem;font-weight:800;padding:22px;border-radius:14px;background:#eef2ff;color:var(--ink);margin-bottom:16px;">
+                            ${current.clue || current.answer}
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+                            ${groups.map(g => `<button type="button" class="btn-primary" data-grp="${g}">${g}</button>`).join("")}
+                        </div>
+                    </div>`;
+
+                container.querySelectorAll("[data-grp]").forEach(btn => {
+                    btn.onclick = () => {
+                        const picked = btn.dataset.grp;
+                        const expected = current.group || "Group A";
+                        if (picked === expected) { score++; sfxCorrect(); } else { sfxWrong(); }
+                        idx++;
+                        showItem();
+                    };
+                });
+            }
+            showItem();
         }
 
         function renderLabelledDiagram(container, items) {
@@ -1309,8 +1398,10 @@
                 const canvas = document.getElementById("bpCanvas");
                 const ctx = canvas.getContext("2d");
                 let rafId = null;
+                let resolved = false;
 
                 function onClick(e) {
+                    if (resolved) return;
                     const rect = canvas.getBoundingClientRect();
                     const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
                     const my = (e.clientY - rect.top) * (canvas.height / rect.height);
@@ -1318,6 +1409,7 @@
                         if (!b.popped && Math.hypot(mx - b.x, my - b.y) <= b.r + 6) {
                             b.popped = true;
                             if (String(b.txt).toLowerCase() === String(target.answer).toLowerCase()) {
+                                resolved = true;
                                 score++; sfxCorrect(); cancelAnimationFrame(rafId); canvas.removeEventListener("click", onClick);
                                 setTimeout(() => { idx++; round(); }, 500);
                             } else { sfxWrong(); }
@@ -1327,6 +1419,7 @@
                 canvas.addEventListener("click", onClick);
 
                 function loop() {
+                    if (resolved) return;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     balloons.forEach(b => {
                         if (b.popped) return;
@@ -1340,7 +1433,7 @@
                     rafId = requestAnimationFrame(loop);
                 }
                 loop();
-                activeCleanup = () => { cancelAnimationFrame(rafId); canvas.removeEventListener("click", onClick); };
+                activeCleanup = () => { resolved = true; cancelAnimationFrame(rafId); canvas.removeEventListener("click", onClick); };
             }
             round();
         }
@@ -1374,53 +1467,151 @@
 
         function renderMazeChase(container, items) {
             let idx = 0, score = 0;
+
             function round() {
-                if (idx >= items.length) return finishScreen("🧩 Maze Chase Complete!", `Score: ${score} / ${items.length}`);
+                if (idx >= items.length) {
+                    return finishScreen("🧩 Maze Chase Complete!", `Score: ${score} / ${items.length}`);
+                }
+
                 const target = items[idx];
-                const targets = [
-                    { label: target.answer, correct: true, x: 520, y: 70 },
-                    { label: items[(idx + 1) % items.length].answer || "Wrong", correct: false, x: 520, y: 240 }
+                const wrongAns = items[(idx + 1) % items.length]?.answer || "Wrong";
+
+                const cols = 20, rows = 10, cell = 32;
+                const maze = [
+                    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1],
+                    [1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,1,0,1],
+                    [1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,1],
+                    [1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1,0,1],
+                    [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1],
+                    [1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,1,1,1,0,1],
+                    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1,0,1],
+                    [1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1],
+                    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
                 ];
-                const player = { x: 70, y: 155, r: 16 };
+
+                const player = { x: cell * 1.5, y: cell * 1.5, r: 10, speed: 2.6 };
+                const portals = [
+                    { label: String(target.answer), correct: true, gx: 18, gy: 1 },
+                    { label: String(wrongAns), correct: false, gx: 18, gy: 8 }
+                ];
+
+                let resolved = false;
                 liveStats.textContent = `Score: ${score}/${items.length}`;
-                container.innerHTML = `<div style="text-align:center;"><h3 style="margin-bottom:8px;">Guide to: <span style="color:var(--primary);">${target.clue}</span> (Arrow keys / WASD)</h3><canvas id="mzCanvas" class="arcade-canvas" width="640" height="310"></canvas></div>`;
+
+                container.innerHTML = `
+                    <div style="text-align:center;">
+                        <h3 style="margin-bottom:6px;">Maze Goal: <span style="color:var(--primary);">${target.clue}</span></h3>
+                        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">Navigate through the maze to reach the matching answer portal.</p>
+                        <canvas id="mzCanvas" class="arcade-canvas" width="${cols * cell}" height="${rows * cell}"></canvas>
+                        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
+                            <button type="button" class="btn-secondary" data-move="up">▲ Up</button>
+                            <button type="button" class="btn-secondary" data-move="down">▼ Down</button>
+                            <button type="button" class="btn-secondary" data-move="left">◀ Left</button>
+                            <button type="button" class="btn-secondary" data-move="right">▶ Right</button>
+                        </div>
+                    </div>`;
+
                 const canvas = document.getElementById("mzCanvas");
                 const ctx = canvas.getContext("2d");
                 const keys = {};
                 let rafId = null;
 
-                function onKeyDown(e) { keys[e.key.toLowerCase()] = true; }
-                function onKeyUp(e) { keys[e.key.toLowerCase()] = false; }
+                function canMoveTo(nx, ny) {
+                    const points = [
+                        [nx - player.r, ny - player.r],
+                        [nx + player.r, ny - player.r],
+                        [nx - player.r, ny + player.r],
+                        [nx + player.r, ny + player.r]
+                    ];
+                    for (const [px, py] of points) {
+                        const c = Math.floor(px / cell);
+                        const r = Math.floor(py / cell);
+                        if (r < 0 || r >= rows || c < 0 || c >= cols) return false;
+                        if (maze[r][c] === 1) return false;
+                    }
+                    return true;
+                }
+
+                const onKeyDown = (e) => {
+                    if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
+                    keys[e.key.toLowerCase()] = true;
+                };
+                const onKeyUp = (e) => { keys[e.key.toLowerCase()] = false; };
                 window.addEventListener("keydown", onKeyDown);
                 window.addEventListener("keyup", onKeyUp);
 
+                container.querySelectorAll("[data-move]").forEach(btn => {
+                    const dir = btn.dataset.move;
+                    btn.onpointerdown = () => { keys[dir] = true; };
+                    btn.onpointerup = btn.onpointerleave = () => { keys[dir] = false; };
+                });
+
                 function loop() {
-                    if (keys["arrowup"] || keys["w"]) player.y -= 3.2;
-                    if (keys["arrowdown"] || keys["s"]) player.y += 3.2;
-                    if (keys["arrowleft"] || keys["a"]) player.x -= 3.2;
-                    if (keys["arrowright"] || keys["d"]) player.x += 3.2;
-                    player.x = Math.max(20, Math.min(canvas.width - 20, player.x));
-                    player.y = Math.max(20, Math.min(canvas.height - 20, player.y));
+                    if (resolved) return;
+
+                    let dx = 0, dy = 0;
+                    if (keys["arrowup"] || keys["w"] || keys["up"]) dy -= player.speed;
+                    if (keys["arrowdown"] || keys["s"] || keys["down"]) dy += player.speed;
+                    if (keys["arrowleft"] || keys["a"] || keys["left"]) dx -= player.speed;
+                    if (keys["arrowright"] || keys["d"] || keys["right"]) dx += player.speed;
+
+                    if (dx !== 0 && canMoveTo(player.x + dx, player.y)) player.x += dx;
+                    if (dy !== 0 && canMoveTo(player.x, player.y + dy)) player.y += dy;
 
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    targets.forEach(t => {
-                        ctx.fillStyle = "#1e293b"; ctx.fillRect(t.x - 55, t.y - 24, 110, 48);
-                        ctx.strokeStyle = "#38bdf8"; ctx.lineWidth = 2; ctx.strokeRect(t.x - 55, t.y - 24, 110, 48);
-                        ctx.fillStyle = "#fff"; ctx.font = "bold 13px sans-serif"; ctx.textAlign = "center";
-                        ctx.fillText(String(t.label).slice(0, 14), t.x, t.y + 5);
-                        if (Math.abs(player.x - t.x) < 50 && Math.abs(player.y - t.y) < 30) {
-                            cancelAnimationFrame(rafId);
-                            if (t.correct) { score++; sfxCorrect(); } else { sfxWrong(); }
-                            idx++; round();
-                        }
-                    });
 
-                    ctx.beginPath(); ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
-                    ctx.fillStyle = "#22c55e"; ctx.fill();
+                    for (let r = 0; r < rows; r++) {
+                        for (let c = 0; c < cols; c++) {
+                            if (maze[r][c] === 1) {
+                                ctx.fillStyle = "#1e293b";
+                                ctx.fillRect(c * cell, r * cell, cell, cell);
+                                ctx.strokeStyle = "#334155";
+                                ctx.strokeRect(c * cell, r * cell, cell, cell);
+                            }
+                        }
+                    }
+
+                    for (const p of portals) {
+                        const px = (p.gx + 0.5) * cell;
+                        const py = (p.gy + 0.5) * cell;
+
+                        ctx.beginPath();
+                        ctx.arc(px, py, 14, 0, Math.PI * 2);
+                        ctx.fillStyle = "#0f172a";
+                        ctx.fill();
+                        ctx.lineWidth = 3;
+                        ctx.strokeStyle = "#38bdf8";
+                        ctx.stroke();
+
+                        ctx.fillStyle = "#f8fafc";
+                        ctx.font = "bold 11px sans-serif";
+                        ctx.textAlign = "center";
+                        ctx.fillText(p.label.slice(0, 12), px, py - 18);
+
+                        if (Math.hypot(player.x - px, player.y - py) < player.r + 10) {
+                            resolved = true;
+                            cancelAnimationFrame(rafId);
+                            if (p.correct) { score++; sfxCorrect(); } else { sfxWrong(); }
+                            setTimeout(() => { idx++; round(); }, 450);
+                            return;
+                        }
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+                    ctx.fillStyle = "#facc15";
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = "#0f172a";
+                    ctx.stroke();
+
                     rafId = requestAnimationFrame(loop);
                 }
+
                 loop();
                 activeCleanup = () => {
+                    resolved = true;
                     cancelAnimationFrame(rafId);
                     window.removeEventListener("keydown", onKeyDown);
                     window.removeEventListener("keyup", onKeyUp);
@@ -1430,7 +1621,133 @@
         }
 
         function renderAirplane(container, items) {
-            renderMazeChase(container, items);
+            let idx = 0, score = 0;
+
+            function round() {
+                if (idx >= items.length) {
+                    return finishScreen("✈️ Airplane Flight Complete!", `Score: ${score} / ${items.length}`);
+                }
+
+                const target = items[idx];
+                const distractors = items.filter((_, i) => i !== idx).map(x => x.answer).filter(Boolean);
+                const choiceA = target.answer;
+                const choiceB = distractors[idx % distractors.length] || "Option B";
+
+                const gates = [
+                    { label: String(choiceA), correct: true, x: 640, h: 66 },
+                    { label: String(choiceB), correct: false, x: 640, h: 66 }
+                ].sort(() => Math.random() - 0.5).map((g, i) => ({
+                    ...g,
+                    y: i === 0 ? 85 : 205
+                }));
+
+                const plane = { x: 95, y: 165 };
+                let resolved = false;
+                let rafId = null;
+
+                liveStats.textContent = `Score: ${score}/${items.length}`;
+                container.innerHTML = `
+                    <div style="text-align:center;">
+                        <h3 style="margin-bottom:6px;">Fly into the answer for: <span style="color:var(--primary);">${target.clue}</span></h3>
+                        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">Hold Up/W or Down/S (or click buttons below) to steer the plane.</p>
+                        <canvas id="apCanvas" class="arcade-canvas" width="680" height="320"></canvas>
+                        <div style="display:flex;gap:10px;justify-content:center;margin-top:8px;">
+                            <button type="button" class="btn-secondary" id="apUpBtn">▲ Climb</button>
+                            <button type="button" class="btn-secondary" id="apDiveBtn">▼ Dive</button>
+                        </div>
+                    </div>`;
+
+                const canvas = document.getElementById("apCanvas");
+                const ctx = canvas.getContext("2d");
+                const controls = { up: false, down: false };
+
+                const onKeyDown = (e) => {
+                    if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") { e.preventDefault(); controls.up = true; }
+                    if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") { e.preventDefault(); controls.down = true; }
+                };
+                const onKeyUp = (e) => {
+                    if (e.key === "ArrowUp" || e.key.toLowerCase() === "w") controls.up = false;
+                    if (e.key === "ArrowDown" || e.key.toLowerCase() === "s") controls.down = false;
+                };
+                window.addEventListener("keydown", onKeyDown);
+                window.addEventListener("keyup", onKeyUp);
+
+                const upBtn = document.getElementById("apUpBtn");
+                const dnBtn = document.getElementById("apDiveBtn");
+                upBtn.onpointerdown = () => { controls.up = true; };
+                upBtn.onpointerup = upBtn.onpointerleave = () => { controls.up = false; };
+                dnBtn.onpointerdown = () => { controls.down = true; };
+                dnBtn.onpointerup = dnBtn.onpointerleave = () => { controls.down = false; };
+
+                function loop() {
+                    if (resolved) return;
+
+                    if (controls.up) plane.y -= 3.4;
+                    if (controls.down) plane.y += 3.4;
+                    plane.y = Math.max(24, Math.min(canvas.height - 24, plane.y));
+
+                    gates.forEach(g => { g.x -= 2.3; });
+
+                    const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                    sky.addColorStop(0, "#0284c7");
+                    sky.addColorStop(1, "#0f172a");
+                    ctx.fillStyle = sky;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    gates.forEach(g => {
+                        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+                        ctx.fillRect(g.x - 65, g.y - g.h / 2, 130, g.h);
+                        ctx.strokeStyle = "#fde047";
+                        ctx.lineWidth = 2.5;
+                        ctx.strokeRect(g.x - 65, g.y - g.h / 2, 130, g.h);
+
+                        ctx.fillStyle = "#ffffff";
+                        ctx.font = "bold 13px sans-serif";
+                        ctx.textAlign = "center";
+                        ctx.fillText(g.label.slice(0, 16), g.x, g.y + 5);
+
+                        const hitX = Math.abs(plane.x - g.x) < 52;
+                        const hitY = Math.abs(plane.y - g.y) < g.h / 2 + 8;
+                        if (hitX && hitY) {
+                            resolved = true;
+                            cancelAnimationFrame(rafId);
+                            if (g.correct) { score++; sfxCorrect(); } else { sfxWrong(); }
+                            setTimeout(() => { idx++; round(); }, 500);
+                        }
+                    });
+
+                    if (!resolved && gates[0].x < -75) {
+                        resolved = true;
+                        cancelAnimationFrame(rafId);
+                        sfxWrong();
+                        setTimeout(() => { idx++; round(); }, 450);
+                        return;
+                    }
+
+                    ctx.save();
+                    ctx.translate(plane.x, plane.y);
+                    ctx.fillStyle = "#f97316";
+                    ctx.beginPath();
+                    ctx.moveTo(22, 0);
+                    ctx.lineTo(-18, -11);
+                    ctx.lineTo(-12, 0);
+                    ctx.lineTo(-18, 11);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+
+                    rafId = requestAnimationFrame(loop);
+                }
+
+                loop();
+                activeCleanup = () => {
+                    resolved = true;
+                    cancelAnimationFrame(rafId);
+                    window.removeEventListener("keydown", onKeyDown);
+                    window.removeEventListener("keyup", onKeyUp);
+                };
+            }
+            round();
         }
 
         initPlay();
